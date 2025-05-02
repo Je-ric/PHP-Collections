@@ -1,0 +1,179 @@
+
+@font-face {
+    font-family: 'oswald';
+    src:url(/PHP-Projects/1-Oswald-Font/Oswald-VariableFont_wght.ttf);
+    }
+
+    * {
+        font-family: 'oswald';
+    }
+
+         body{
+            margin: 0;
+            padding: 0;
+            background-image: url(/PHP-Projects/Job-Application-Form/src/Login.jpg);
+            background-size: cover;
+            background-position: top;
+         }
+
+  .side-login{
+    background: #ededed;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px; 
+    width: 40%;
+    height: 100vh;
+  }
+
+  .main-login{
+    display: flex;
+    justify-content: space-between;
+  }
+
+
+  .htmlmenu-container ul {
+    gap: 10px;
+    margin-right: 20px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+
+  }
+
+  .htmlmenu-container ul li {
+    background: rgba( 0, 109, 255, 0.45 );
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+backdrop-filter: blur( 5.5px );
+-webkit-backdrop-filter: blur( 5.5px );
+border-radius: 50px;
+width: 100px;
+border: 1px solid rgba( 255, 255, 255, 0.18 );
+padding: 10px;
+text-align: center;
+    margin-left: 10px;
+  }
+
+  .htmlmenu-container ul li a {
+    text-decoration: none;
+    color: #fff;
+  }
+
+  
+.input-field:hover {
+    width: 80%;
+    height: 55px;
+    padding: 0 15px;
+    margin-left: 50px;
+    margin: 10px 0;
+    color: black;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    outline: none;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.7);
+}
+.input-field {
+    width: 80%;
+    height: 55px;
+    padding: 0 15px;
+    margin-left: 50px;
+    margin: 10px 0;
+    border-radius: 10px;
+background: #ededed;
+box-shadow: inset 6px 6px 6px #b4b4b4,
+inset -6px -6px 6px #ffffff;
+color: #333;
+    font-weight: bold;
+    border: none;
+    outline: none;
+}
+
+::placeholder {
+    color: var(--text);
+    font-size: 15px;
+}
+
+.form-container h1{
+    mix-blend-mode: darken;
+    padding-bottom: 20px;
+    margin-right: 75px;
+    margin-left: 60px;
+    margin-top: 70px;
+    font-size: 50px;
+      border-bottom: 2px solid black;
+}
+
+.form-container h2{
+  margin-right: 75px;
+  margin-left: 60px;
+  margin-top: 30px;
+    border-bottom: 2px solid black;
+}
+
+.form-container p{
+  mix-blend-mode: darken;
+  margin-right: 75px;
+  margin-left: 60px;
+}
+
+.text-box{
+    margin-left: 30px;
+    padding-left: 20px;
+}
+
+span{
+  color: #4433ff;
+}
+
+input[type="submit"] {
+    margin-left: 63%;
+    margin-top: 20px;
+}
+
+.css-button-shadow-border-sliding--sky {
+  min-width: 130px;
+  height: 40px;
+  color: #fff;
+  padding: 5px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  outline: none;
+  border-radius: 40px;
+  border: none;
+ 
+  box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1);
+  background: #4433ff;
+ z-index: 1;
+}
+.css-button-shadow-border-sliding--sky:hover:after {
+  width: 100%;
+  left: 0;
+}
+.css-button-shadow-border-sliding--sky:after {
+  border-radius: 5px;
+  position: absolute;
+  content: "";
+  width: 0;
+  height: 100%;
+  top: 0;
+  z-index: -1;
+  box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1);
+  transition: all 0.3s ease;
+  background-color: #3a86ff;
+  right: 0;
+}
+.css-button-shadow-border-sliding--sky:active {
+  top: 2px;
+}
+
+.register{
+    text-align: center;
+    color: white;
+}
+
+.register a{
+    color: #89CFF0;
+}

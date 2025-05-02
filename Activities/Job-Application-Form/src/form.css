@@ -1,0 +1,244 @@
+@font-face {
+    font-family: 'oswald';
+    src:url(/PHP-Projects/1-Oswald-Font/Oswald-VariableFont_wght.ttf);
+    }
+
+    * {
+        font-family: 'oswald';
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        background-image: url('/PHP-Projects/Job-Application-Form/src/BG1.png'); 
+        height: 100vh;
+        background-attachment: fixed;
+    }
+
+    form{
+        padding-bottom: 5%;
+    }
+
+    .view-container,
+    .container{
+        background: #ededed;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px; 
+        width: 60%;
+        margin: 50px auto;
+        padding: 50px;
+        padding-bottom: 30px;
+        padding: 10px;
+    }
+
+    .view-outline,
+    .outline{
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: inset 10px 10px 15px -10px #c3c3c3,
+        inset -10px -10px 15px -10px #ffffff;
+    }
+
+    .view-container p{
+        margin: 10px 0;
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+
+    .view-container p strong {
+        text-align: center;
+        box-shadow:  5px 5px 10px #bbb8b8, -5px -5px 10px #ffffff;
+        width: 200px; 
+        padding: 6px;
+    }
+
+    .view-container p span {
+        flex: 1;
+        text-align: center; 
+        padding: 6px;
+        box-shadow: inset 10px 10px 15px -10px #c3c3c3, inset -10px -10px 15px -10px #ffffff;
+    }
+    .view-container h2{
+        text-align: center;
+        /* border-bottom: 1px solid gray; */
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+    .view-outline img{
+        width: auto;
+        height: auto;
+    }
+    .view-container h6{
+        border-bottom: 1px solid #918c8c;
+        flex: 1;
+    }  
+
+    .container h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;   
+    }
+
+    .container h3{
+        border-top: 1px solid gray;
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+
+    .container p {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #666;
+    }
+
+    .text-box, textarea {
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .text-box input,
+    .text-box select,
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background: #ededed;
+        box-shadow: inset 6px 6px 6px #b4b4b4, inset -6px -6px 6px #ffffff;
+        color: #333;
+    }
+
+    .text-box input::placeholder,
+    .text-box select::placeholder,
+    textarea {
+        color: black;
+        padding-left: 5px;
+    }
+
+    .text-box:hover input,
+    .text-box:hover select,
+    textarea {
+        background-color: rgba(255, 255, 255, 0.7);
+    }
+
+    .side-by-side{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .side-by-side .text-box{
+        flex: 1;
+    }
+
+    .side-by-side .text-box input{
+        width: 100%;
+    }
+
+    .text-box {
+        margin-bottom: 10px;
+    }
+
+    .side-by-side {
+        display: flex;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .side-by-side .text-box {
+        flex: 1;
+    }
+
+    .single-side{
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="email"],
+    textarea,
+    select, option {
+        margin-bottom: 20px;
+    }
+
+    .links{
+        display: flex;
+        gap: 5px;
+    }
+    .update-link a {
+    background-color: blue;
+    }
+    .view-link a {
+        background-color: green;
+    }
+    .delete-link a {
+        background-color: red;
+    }
+
+    .update-link a,
+    .view-link a,
+    .delete-link a{
+        text-decoration: none;
+        color:white;
+        padding: 6px;
+        border-radius: 5px;
+    }
+
+    .update-link a:hover,
+    .view-link a:hover,
+    .delete-link a:hover {
+        background-color: black;
+    }
+
+    .submit,
+    .cancel{
+        margin-top: 20px;
+        width: 100%;
+        height: 50px;
+        color: #fff;
+        padding: 5px 10px;
+        font-weight: bold;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        display: inline-block;
+        outline: none;
+        border-radius: 30px;
+        border: none;
+        background: #efefef;
+    }
+
+    .submit{
+        box-shadow:  20px 20px 18px #bebebe, -20px -20px 18px #ffffff;
+        box-shadow:  5px 5px 0px #585858, -5px -5px 0px #ffffff;
+        color: green;
+    }
+
+    .cancel{
+    box-shadow:  5px 5px 0px #585858,
+    -5px -5px 0px #ffffff;
+    color: red;
+    }
+    .submit:active {  
+        box-shadow: inset 5px 5px 5px #38e90c,
+                inset -5px -5px 5px #bbee9c;
+    }
+    .cancel:active{
+        box-shadow: inset 5px 5px 5px #f01111, inset -5px -5px 5px #f0afaf;
+        color: red;
+    }
+    .buttons{
+        border-top: 2px solid black;
+        padding-top: 20px;
+        display: flex;
+        gap: 20px; 
+        align-items: center;
+    }

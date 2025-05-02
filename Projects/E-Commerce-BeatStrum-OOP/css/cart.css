@@ -1,0 +1,250 @@
+body{
+    background-color: #f5f5f5;
+    padding: 0;
+        margin: 0;
+        /* overflow-x: hidden; */
+    }
+    @font-face {
+        font-family: 'oswald';
+        src: url(/PHP-Projects/E-Commerce-BeatStrum-OOP/src/1-Oswald-Font/Oswald-VariableFont_wght.ttf);
+      }
+      * {
+        font-family: 'oswald';
+      }
+    .cancel{
+        margin: 20px;
+    }
+    .category-links{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #000000;
+    /* padding: 5px; */
+    padding: 0;
+    color: white;
+}
+
+.category-links p{
+    background-color: #d43132;
+}
+
+.category-links a{
+    text-decoration: none;
+    padding: 6px;
+    color: white;
+}
+
+.category-links a:hover{
+    background-color: #5280e2;
+}
+
+.title{
+    background-color: #d43132;
+}
+.head {
+display: flex;
+background-color: #222222;
+justify-content:center;
+align-items: center;
+margin-right: 1%;
+width: calc(100% - 40px); 
+/* margin-top: 20px;    */
+padding: 20px
+}
+
+
+.head img{
+    max-width: 100%;
+    height: 100px;
+    /* border-radius: 50%; */
+}
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+h3{
+    text-align: center;
+}
+h1 {
+    color: #333;
+}
+:root {
+    --color1: #AF0C15;
+    --color2: #D2292D;
+    --color3: #181818;
+    --color4: #282828;
+    --color5: #1761B0;
+    --color6: #0D3580;
+}
+.tab-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+   
+}
+.active-tab-btn {
+    background-color: #ccc; /* Change to your preferred color */
+}
+.tab-btn {
+    flex: 1;
+}
+.active-tab-btn {
+    background-color: #ccc; /* Change to your preferred color */
+}
+
+.tab-btn button {
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+        width: 100%; 
+    cursor: pointer;
+      
+}
+.tab-btn button:hover {
+    background-color: var(--color3);
+    color: white;
+}
+
+
+.tab {
+    display: none;
+}
+
+.cart-items{
+    flex-wrap: wrap;
+    display: flex;
+}
+
+.cart-item{
+    display: flex;
+    flex-direction: column;
+    width: 295px;
+    border: 1px solid #0D3580;
+    justify-content: center;
+
+    align-items: center;
+    padding: 20px;
+}
+
+/* .cart-item {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+} */
+
+.cart-item img {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    margin-bottom: 10px;
+    border: 1px solid;
+}
+
+.cart-item h3 {
+    margin-top: 0;
+}
+
+.cart-item p {
+    margin: 5px 0;
+}
+
+.cart-item input[type="number"] {
+    width: 50px;
+}
+
+.cart_container_flex{
+    margin-bottom: 15%;
+}
+
+
+.orderSummary {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 100px;
+    width: 100%;
+    background-color: var(--color4);
+    /* padding: 20px; */
+    color: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;  
+
+    justify-content: space-between;
+    align-items: center;
+}
+
+.orderSummary h2 {
+    margin-top: 0;
+    margin-left: 20px;
+}
+
+.orderSummary p {
+    padding: 10px;
+    margin: 5px 0;
+}
+.summary-group{
+    display: flex;
+}
+.orderSummary button {
+    padding: 10px 20px;
+    height: 100px;
+    border: none;
+    background-color: var(--color1);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.orderSummary button:hover {
+    background-color: var(--color6);
+    color: white;
+}
+
+.delete-icon{
+    width: 100%;
+    height: auto;
+}
+button.delete-item {
+    padding: 10px 20px;
+    background-color: var(--color1);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 1%;
+}
+
+button.delete-item:hover {
+    background-color: var(--color6);
+}
+/* input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+-webkit-appearance: none;
+appearance: none;
+margin: 0; 
+} */
+input[type=number]{
+    text-align: center;
+}
+.quantity-input {
+display: flex;
+align-items: center;
+}
+
+.quantity-input p {
+margin-right: 10px; /* Adjust margin as needed */
+}
+
+.quantity-controls {
+display: flex;
+align-items: center;
+}
+
+.quantity-controls button {
+margin: 0 5px; /* Adjust margin as needed */
+}

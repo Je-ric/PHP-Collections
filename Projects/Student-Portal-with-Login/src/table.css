@@ -1,0 +1,509 @@
+@font-face {
+  font-family: "oswald";
+  src: url(/PHP-Projects/1-Oswald-Font/Oswald-VariableFont_wght.ttf);
+}
+
+* {
+  font-family: "oswald";
+}
+
+body {
+  background: rgb(255, 204, 78);
+  background: linear-gradient(
+    2deg,
+    rgba(255, 204, 78, 1) 0%,
+    rgba(21, 61, 79, 1) 92%
+  );
+  height: 100vh;
+}
+
+.table-body {
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+.body-header {
+  backdrop-filter: blur(5px) saturate(180%);
+  -webkit-backdrop-filter: blur(5px) saturate(180%);
+  background-color: rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  padding: 15px;
+  position: sticky;
+  top: 0;
+  width: 100%;
+}
+
+.table-body header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("/PHP-Projects/Student-Portal-with-Login/src/BG1.jpg");
+  background-size: cover;
+  background-position: center;
+  color: white;
+  position: sticky;
+}
+
+.header {
+  flex-grow: 1;
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.table-container {
+  margin-left: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.table-container th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-left: none;
+  border-right: none;
+}
+
+.table-container th {
+  color: #153d4f;
+  background-color: #ffcc4e;
+  /* position: sticky; */
+  padding-top: 20px;
+  top: 105.5px;
+  z-index: 99;
+}
+
+tr:nth-child(even) {
+  background-color:#C5E4F2; 
+}
+
+tr:nth-child(odd) {
+  background-color: #F2E1B6; 
+}
+  
+.update-link,
+.delete-link,
+.create-link,
+.view-link,
+.logout-link {
+  margin-right: 5px;
+  font-size: medium;
+  text-decoration: none;
+  border-radius: 4px;
+  color: white;
+  padding: 5px 10px;
+}
+
+.update-link:hover,
+.delete-link:hover,
+.create-link:hover,
+.view-link:hover,
+.logout-link:hover {
+  background-color: black;
+  color: white;
+}
+
+.delete-link,
+.logout-link {
+  background-color: #ff0000;
+}
+
+.view-link {
+  background-color: blue;
+}
+
+.create-link {
+  background-color: #4caf50;
+  margin-right: 40px;
+}
+
+.update-link {
+  background-color: #ffa500;
+}
+
+.logout {
+  position: absolute;
+  bottom: 50px;
+  left: 60px;
+  text-decoration: none;
+  color: white;
+  background-color: #ff0000;
+  margin-right: 5px;
+  font-size: medium;
+  border-radius: 4px;
+  padding: 5px 10px;
+}
+
+.logout:hover {
+  background-color: black;
+  -webkit-box-shadow: 0px 152px 15px 0px rgba(255, 0, 0, 0.9);
+  -moz-box-shadow: 0px 152px 15px 0px rgba(255, 0, 0, 0.9);
+  box-shadow: 0px 152px 15px 0px rgba(255, 0, 0, 0.9);
+}
+
+img {
+  mix-blend-mode: hard-light;
+}
+
+.student-icon {
+  text-align: center;
+  margin-bottom: 10px;
+  background-color: #153d4f;
+  padding: 10px;
+  color: #ffcc4e;
+  padding-top: 25px;
+  padding-bottom: 10px;
+  z-index: 0;
+}
+
+.student-icon img {
+  width: 80px;
+  height: auto;
+}
+
+.sidebar {
+  width: 200px;
+  float: left;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("/PHP-Practice/CRUD-with-LOGIN/src/BG1.jpg");
+  background-size: cover;
+  background-position: left;
+  height: 85vh;
+  position: fixed;
+}
+
+.sidebar-glass {
+  backdrop-filter: blur(5px) saturate(200%);
+  -webkit-backdrop-filter: blur(5px) saturate(200%);
+  background-color: rgba(0, 0, 0, 0.2);
+  height: 100%;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  color: white;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 10px;
+  font-weight: bolder;
+}
+
+.sidebar li:hover {
+  background-color: gray;
+  color: #ffcc4e;
+  cursor: pointer;
+}
+
+.horizontal-container {
+  background-color: white;
+  border-left: 10px solid #ffcc4e;
+  padding: 10px;
+  margin: 20px;
+  margin-left: 15.3%;
+  width: 82%;
+}
+
+.horizontal-container p {
+  padding-left: 10px;
+}
+
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.pagination a {
+  padding: 5px 10px;
+  margin: 0 5px;
+  text-decoration: none;
+  color: black;
+  border: 1px solid black;
+  border-radius: 3px;
+}
+
+.pagination a.active {
+  background-color: #153d4f;
+  color: #ffcc4e;
+}
+
+.password {
+  text-decoration: none;
+  color: white;
+}
+
+li {
+  color: transparent;
+}
+
+#menu input[type="checkbox"] {
+  display: none;
+}
+
+#responsive-menu {
+  display: none;
+}
+
+.menu-icon {
+  display: block;
+  cursor: pointer;
+}
+
+#menu {
+  display: none;
+}
+
+#menu input[type="checkbox"] {
+  display: none;
+}
+
+.dropdown-btn{
+  display: none;
+}
+
+
+
+@media screen and (max-width: 480px) {
+.table-container{
+  font-size: 12px;
+}
+.pagination{
+  margin-bottom: 20px;
+}
+  .header {
+    font-size: 16px;
+  }
+  .table-container th{
+    margin-bottom: 200%;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .horizontal-container {
+    margin-left: 20%;
+    margin-right: 15%;
+    width: 77%;
+    }
+}
+
+@media screen and (max-width: 850px) {
+  .horizontal-container {
+    margin-left: 25%;
+    margin-right: 15%;
+    width: 71%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+.responsive-dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 120px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+
+.dropdown-content a:hover {
+  background-color: black;
+  color: white;
+}
+
+.dropdown-btn:hover + .dropdown-content {
+  display: block;
+}
+
+
+.dropdown-btn {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.dropdown-btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+}
+
+  .table-container{
+    font-size: 15px;
+  }
+ 
+
+  .sidebar{
+    display: none;
+  }
+
+  .horizontal-container {
+  margin-left: 0;
+  width: 100%;
+  }
+
+  .horizontal-container p{
+  padding-right: 20px;
+  }
+
+  #menu{
+    color: #ffcc4e;
+  }
+
+  .student-icon{
+    border-bottom: 2px solid #ffcc4e;
+    margin-bottom: 0;
+  }
+  .table-container th{
+    margin-bottom: 110%;
+    /* z-index: 99; */
+    padding: 6px;
+  }
+
+  .table-container td {
+    padding: 10px;
+  }
+
+  .header {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .table-container {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .update-link,
+  .delete-link,
+  .create-link,
+  .view-link,
+  .logout-link {
+    font-size: small;
+    padding: 4px 8px;
+  }
+
+  .menu-icon {
+    display: block;
+  }
+
+  .logout-link,
+  .create-link {
+    display: none;
+  }
+
+  .logout-link{
+    margin-bottom: 10px;
+  }
+
+  #menu .dropdown-arrow {
+    text-decoration: none;
+    color: #ffcc4e;
+  }
+
+  #menu li {
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ffcc4e;
+  }
+
+  #responsive-menu:checked ~ #menu {
+    display: block;
+  }
+
+  #menu {
+    display: contents;
+    z-index: 9999999;
+  }
+
+  .menu-icon {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 15px;
+    z-index: 999;
+    font-size: 24px;
+  }
+
+  #menu ul {
+    background: #153d4f;
+    position: absolute;
+    top: 46px;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    height: auto;
+    display: none;
+    text-align: left;
+    transition: transform 0.3s ease;
+    transform: translateX(-100%);
+  }
+
+  #menu input:checked ~ ul {
+    display: block;
+    transform: translateX(0);
+  }
+  #menu ul {
+    padding-left: 0;
+  }
+  #menu ul.sub-menus {
+    width: 100%;
+    position: static;
+  }
+
+  #menu ul.sub-menus a {
+    padding-left: 30px;
+  }
+
+  #menu li {
+    padding: 10px;
+    display: block;
+    float: none;
+    width: auto;
+  }
+
+  #menu input,
+  #menu label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+  }
+
+  #menu input {
+    z-index: 4;
+  }
+
+  #menu input:checked + label {
+    color: #ffffff;
+    border-bottom: 2px solid #ffcc4e;
+    background: #153d4f;
+    padding: 15px;
+  }
+
+  #menu input:checked ~ ul {
+    display: block;
+  }
+}

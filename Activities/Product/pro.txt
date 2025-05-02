@@ -1,0 +1,34 @@
+<?php
+
+class Product {
+    private $name;
+    private $description;
+    private $price;
+    public $quantity;
+
+    public function __construct($name, $description, $price, $quantity) {
+        $this->name = $name;
+        $this->description = $description;
+        $this->price = $price;
+        $this->quantity = $quantity;
+    }
+
+    public function calculateTotalPrice($numItems) {
+        return $this->price * $numItems;
+    }
+
+    public function checkStock() {
+        return $this->quantity > 0;
+    }
+
+    public function updateQuantity($newQuantity) {
+        $this->quantity = $newQuantity;
+    }
+}
+
+$product1 = new Product("Laptop", "High-performance laptop", 1000, 5);
+echo "Total price for 5 laptops: $" . $product1->calculateTotalPrice(5) . "\n<br>";
+echo "Is the laptop in stock? " . ($product1->checkStock() ? "Yes" : "No") . "\n<br>";
+$product1->updateQuantity(3);
+echo "Updated quantity of laptops: " . $product1->quantity . "\n<br>";
+?>

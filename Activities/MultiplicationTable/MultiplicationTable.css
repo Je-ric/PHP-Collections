@@ -1,0 +1,50 @@
+* {
+    cursor: pointer;
+}
+
+body {
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+
+th, td {
+    border: 1px solid #34495e;
+    text-align: center;
+    padding: 6px;
+    position: relative;
+    font-size: 14px;
+}
+
+th {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+}
+
+.current-number {
+    background-color: #ffc107;
+    color: black;
+    transition: background-color 0.3s;
+}
+
+.current-number:hover {
+    background-color: #e5a00d;
+}
+
+tr:nth-child(even) td {
+    background-color: #ecf0f1;
+}
+
+tr:nth-child(odd) td {
+    background-color: #bdc3c7;
+}

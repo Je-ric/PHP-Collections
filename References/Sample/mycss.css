@@ -1,0 +1,49 @@
+#menu ul{
+	text-align: center;
+	list-style: none;
+	padding:0;
+	margin: 0;
+	overflow: hidden;
+
+}
+
+#menu li{
+	float:left;
+	border-style: solid;
+
+}
+#menu{
+	position: relative;
+	left:0px;
+}
+
+#menu a{
+	color:black;
+	display:block;
+	width: 330px;
+	font-size: 20px;
+	font-style: arial;
+	text-decoration: none;
+	background-color: tan;
+
+
+	
+}
+#menu a:hover{
+	background-color: teal;
+	text-transform: uppercase;
+}
+#body{
+	background-color: white;
+	height: 480px;
+	overflow: hidden;
+	float:center;
+	position: relative;
+}
+.footer{
+	position: absolute;
+	text-decoration: none;
+	color:black;
+	
+}
+

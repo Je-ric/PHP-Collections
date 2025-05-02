@@ -1,0 +1,91 @@
+CREATE TABLE items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    item_image VARCHAR(255),
+    average_rating DECIMAL(3, 2) DEFAULT 0.00,
+    total_reviews INT DEFAULT 0,
+    sold INT DEFAULT 0,
+    shipping_fee DECIMAL(10, 2) DEFAULT 0.00,
+    cart_quantity INT DEFAULT 0,
+    quantity_available INT DEFAULT 0;
+);
+
+CREATE TABLE item_reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    item_id INT,
+    client_name VARCHAR(100) NOT NULL,
+    rating INT NOT NULL,
+    comment TEXT,
+    FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
+);
+
+CREATE TABLE admin_accounts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE client_accounts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    age INT,
+    phone VARCHAR(20),
+    address VARCHAR(255)
+);
+
+
+CREATE TABLE shopping_cart (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT,
+    item_id INT,
+    quantity INT DEFAULT 1,
+    status VARCHAR(50) DEFAULT 'Pending' ,
+    FOREIGN KEY (client_id) REFERENCES client_accounts(id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
+);
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT,
+    total_price DECIMAL(10, 2) NOT NULL,
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(50) DEFAULT 'Pending',
+    shipping_fee DECIMAL(10, 2) DEFAULT 0.00
+    FOREIGN KEY (client_id) REFERENCES client_accounts(id) ON DELETE CASCADE
+);
+CREATE TABLE order_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT,
+    item_id INT,
+    quantity INT,
+    price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
+);
+CREATE TABLE categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    category_image VARCHAR(255)
+);
+
+CREATE TABLE item_categories (
+    item_id INT,
+    category_id INT,
+    PRIMARY KEY (item_id, category_id),
+    FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+);
+
+CREATE TABLE favorite_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT,
+    item_id INT,
+    FOREIGN KEY (client_id) REFERENCES client_accounts(id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
+);
+
+
+

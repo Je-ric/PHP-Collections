@@ -1,0 +1,258 @@
+/* Basic styles */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #000;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #000;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #000;
+    background-color: #fff;
+}
+
+/* Percentage Fields */
+#percentages-container,
+#update_percentages-container {
+    margin-top: 10px;
+}
+
+.percentage-field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.percentage-field input {
+    flex: 1;
+}
+
+.remove-percentage {
+    background-color: #f44336;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.remove-percentage:hover {
+    background-color: #d32f2f;
+}
+
+/* Add Percentage Button */
+#add-percentage,
+#add-update-percentage {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: #000;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#add-percentage:hover,
+#add-update-percentage:hover {
+    background-color: #333;
+}
+
+/* Clean modal layout */
+.modal-content {
+    padding: 20px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+.btn-submit {
+    background-color: #000;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-submit:hover {
+    background-color: #333;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #333;
+}
+
+.success {
+    color: #28a745;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.error {
+    color: #dc3545;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+
+.form-container {
+    display: none;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.discounts-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.discounts-table th, .discounts-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.discounts-table th {
+    background-color: #000;
+    color: white;
+    font-size: 16px;
+}
+
+.discounts-table td {
+    font-size: 14px;
+}
+
+
+.status-available {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-expired {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.status-soon {
+    color: #ff8c00;
+    font-weight: bold;
+}
+
+
+.form-container input[disabled] {
+    background-color: #f0f0f0;
+    color: #ccc;
+}
+
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding-top: 60px;
+    transition: opacity 0.3s ease;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+
+
+@media screen and (max-width: 768px) {
+    .form-container {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .discounts-table th, .discounts-table td {
+        font-size: 12px;
+        padding: 10px;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .modal-content {
+        width: 80%;
+    }
+}

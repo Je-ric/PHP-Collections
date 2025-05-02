@@ -1,0 +1,49 @@
+/* Editor container */
+#editor-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    background: #f0f0f0; /* Light gray background like a real workspace */
+}
+
+/* Paper Styling */
+.page {
+    width: 8.5in;  /* Letter size width */
+    min-height: 11in; /* Letter size height */
+    padding: 1in;
+    background: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-family: "Arial", sans-serif;
+    font-size: 12pt;
+    outline: none;
+    position: relative;
+}
+
+/* Page Break Simulation */
+.page::after {
+    content: "";
+    display: block;
+    height: 1in;  /* Adds spacing between pages */
+}
+
+/* Ensure text wraps properly */
+.page p {
+    margin: 0;
+    line-height: 1.5;
+    text-align: justify;
+}
+
+/* Auto-scroll for overflow */
+#editor-container {
+    overflow-y: auto;
+    height: 90vh; /* Keeps the editor scrollable */
+}
+
+/* Add a dashed line between pages (visual cue for page breaks) */
+.page + .page {
+    border-top: 2px dashed #ddd;
+    margin-top: 20px;
+    padding-top: 20px;
+}

@@ -1,0 +1,106 @@
+body {
+    font-family: "Times New Roman", Times, serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-image: url(BG1.jpg);
+    background-size: cover;
+ }
+ 
+ header {
+    color: black;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0px 13px 15px -3px #adc7be;
+ }
+ 
+ footer {
+    box-shadow: 0px -13px 15px -3px #adc7be;
+    color: black;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+ }
+ 
+ .calendar {
+    border-top: 5px solid green;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 10px;
+ 
+    padding: 15px;
+    margin: 20px auto;
+    width: 50%;
+    margin-top: 80px;
+ }
+ 
+ table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 10 0px;
+ }
+ 
+ th,
+ td {
+    border: 1px solid transparent;
+    padding: 8px;
+    text-align: center;
+ }
+ 
+ .weekdays th {
+    margin-left: 10px;
+    margin-right: 10px;
+ }
+ 
+ .highlight {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(0, 128, 0, 0.5);
+    display: inline-block;
+    color: white;
+    line-height: 30px;
+ }
+ 
+ .month {
+    font-size: 30px;
+    font-weight: bold;
+    color: green;
+}
+
+ 
+ .weekdays th {
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 8px;
+    border-radius: 10px;
+ }
+ 
+ .month-header {
+    border-bottom: 2px solid black;
+    padding-bottom: 10px;
+ }
+ 
+ .gradient-text {
+    background-image: linear-gradient(to right, #ff0000, #0000ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+ }
+ 
+ .weekdays2 {
+    background-color: white;
+ }
+ 
+ .sept {
+    background: rgba(78, 232, 255, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(2.5px);
+    -webkit-backdrop-filter: blur(2.5px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+ }
+ 

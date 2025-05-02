@@ -1,0 +1,77 @@
+
+
+Types of User: 
+
+1. ADMIN (Boss) - can access admin page & all features 
+2. TL ( Team Leader (manager)) - can access all features excluding private admin( if existing). More like eto ata yung naka toka sa cashier
+3. EMPLOYEE - can acess all features, excluding admin page
+
+
+Dashboard:
+    - Total Sales: Display total sales revenue for the current day/week/month. (Optional & Least Priority:If possible  chart or graph)
+    - Top-Selling Products: Show a list of the top three or five best-selling items to identify trends.
+    - Sales by Category: 
+
+    Slider sa dashboard or buttons ganon
+    Update sa items (change category)
+
+History: 
+    *Receipt Tab:
+        - Export Receipts: Option to export receipt details as PDF for easy printing. (sales_report_download)
+
+Inventory:
+    - filter by price (asc-desc), 
+    - by brand (even without database), 
+    - by stock availability (for easy access) (quantity =0, quantity >= 1 && quantity <= 7, quantity >7)
+
+POS:
+1. Change Item - Different page, makakapagchange-item if already nabili na.
+               - Basta may receipt pero lagyan nang 1 week
+
+Settings:
+    - Promo, sale, discount
+    - CRUD of shops info like name, address (location), shops contact info needed. 
+
+
+Pag-may sale or for example 20% discount for all products. May form para don na i-apply kung ilang percent yung discount. Tas kung hanggang kailan yung duration (for example 20% -> December 25 - December 31. If the discount or promo is not for all the item, I- allow nalang yung pag select ng category/specific item kung saan lang ito applicatble.
+
+
+suggestion hahaha diba sa dashboard ang nakikita lang eh yung total lang each day tas same din sa weekly and monthly what if pwedeng clickable yon tapos pag naclick is pwede na mas detailed na sales report like sa daily pwede na andon lahat ng products na nabili tapos kung ilan ganon 
+
+
+Directory:
+
+POS_Inventory/
+  • assets/
+    - src/
+      -- font/
+      -- images/
+    - css/
+    - js/
+  • upload_images/
+    - category_images/
+    - user_images/
+  • modules/
+    - reports/
+      -- index.php (dashboard.php)
+      -- history.php 
+      -- receipt_details.php 
+    - accounts/
+      -- accounts.php 
+      -- attendance.php 
+      -- attendance_history.php
+      -- profile.php
+    - pos/
+      -- index.php
+      -- payment.php
+      -- receipt.php
+      -- void.php
+    - inventory/
+      -- category.php
+      -- products.php
+  • includes/
+    - config.php
+    - sidebar.php
+    - logout.php
+  • index.php (login.php)
+

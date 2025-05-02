@@ -1,0 +1,22 @@
+CREATE TABLE job_applications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    firstname VARCHAR(255) NOT NULL,
+    middlename VARCHAR(255) NOT NULL,
+    lastname VARCHAR(255) NOT NULL,
+    dateofbirth DATE NOT NULL,
+    province VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    barangay VARCHAR(255) NOT NULL,
+    street VARCHAR(255) NOT NULL,
+    zip VARCHAR(10) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(15) NOT NULL,
+    linkedin VARCHAR(255) NOT NULL,
+    position VARCHAR(255) NOT NULL,
+    how VARCHAR(255) NOT NULL,
+    startdate DATE NOT NULL,
+    resumelink VARCHAR(255) NOT NULL,
+    letter TEXT NOT NULL,
+    signature VARCHAR(255) NOT NULL, 
+    comments TEXT
+);

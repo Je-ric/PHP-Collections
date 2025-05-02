@@ -1,0 +1,113 @@
+
+/* Indicator */
+/* Attendance, Attendance History */
+
+.attendance-table span:not(.user-attendance-name),
+.attendance-card-container span:not(.user-attendance-name) {
+    padding: 4px 7.2px;
+    border-radius: 25px;
+    text-align: center;
+    font-weight: 600;  
+}
+
+.present span,
+.green-background span {
+    border: 2px solid #28a745;
+    color: #28a745;
+}
+
+.absent span,
+.red-background span {
+    border: 2px solid #dc3545;
+    color: #dc3545;
+}
+
+.inactive span {
+    border: 2px solid #6c757d;
+    color: #6c757d;
+    opacity: 0.6;
+}
+
+.yellow-background span {
+    border: 2px solid #ffc107;
+    color: #ffc107;
+}
+
+.blue-background span {
+    border: 2px solid #007bff;
+    color: #007bff;
+}
+
+/* @media (min-width: 768px) and (max-width: 1024px) {
+    .attendance-table span:not(.user-attendance-name) {
+        padding: 3px 5px; 
+        border-radius: 15px; 
+        font-size: 0.5rem;
+    }
+} */
+
+/* Status - Indicator */
+/* Accounts */
+.status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 12px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    }
+    
+.active-status {
+background-color: #d1e7dd;
+border: 2px solid green;
+color: #155747;
+}
+
+.inactive-status {
+background-color: #f8d7da;
+border: 2px solid red;;
+color: #721c24;
+}
+
+
+/* History - Receipt */
+.status-completed span {
+    color: #ffffff;
+    background-color: #28a745; 
+    font-weight: 600;
+    font-size: 0.85rem;
+    border-radius: 20px;
+    padding: 5px 10px; 
+    border: 1px solid #1e7e34; 
+    display: inline-block;
+    text-align: center;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.status-voided span {
+    color: #ffffff;
+    background-color: #fd7e14;
+    font-weight: 600;
+    font-size: 0.85rem;
+    border-radius: 20px; 
+    padding: 5px 10px; 
+    border: 1px solid #e67e22; 
+    display: inline-block;
+    text-align: center;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease; 
+}
+
+.status-completed span:hover,
+.status-voided span:hover {
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); 
+}
+
+

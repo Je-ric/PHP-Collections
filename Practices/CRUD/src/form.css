@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'oswald';
+    src:url(/PHP-Projects/1-Oswald-Font/Oswald-VariableFont_wght.ttf);
+    }
+
+    * {
+        font-family: 'oswald';
+    }

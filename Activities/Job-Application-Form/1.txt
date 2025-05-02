@@ -1,0 +1,80 @@
+ <option value="Metro Manila" <?php if(isset($_POST['state']) && $_POST['state'] == "Metro Manila") echo "selected"; ?>>Metro Manila</option>
+    <option value="Abra" <?php if(isset($_POST['state']) && $_POST['state'] == "Abra") echo "selected"; ?>>Abra</option>
+    <option value="Apayao" <?php if(isset($_POST['state']) && $_POST['state'] == "Apayao") echo "selected"; ?>>Apayao</option>
+    <option value="Benguet" <?php if(isset($_POST['state']) && $_POST['state'] == "Benguet") echo "selected"; ?>>Benguet</option>
+    <option value="Ifugao" <?php if(isset($_POST['state']) && $_POST['state'] == "Ifugao") echo "selected"; ?>>Ifugao</option>
+    <option value="Kalinga" <?php if(isset($_POST['state']) && $_POST['state'] == "Kalinga") echo "selected"; ?>>Kalinga</option>
+    <option value="Mountain Province" <?php if(isset($_POST['state']) && $_POST['state'] == "Mountain Province") echo "selected"; ?>>Mountain Province</option>
+    <option value="Ilocos Norte" <?php if(isset($_POST['state']) && $_POST['state'] == "Ilocos Norte") echo "selected"; ?>>Ilocos Norte</option>
+    <option value="Ilocos Sur" <?php if(isset($_POST['state']) && $_POST['state'] == "Ilocos Sur") echo "selected"; ?>>Ilocos Sur</option>
+    <option value="La Union" <?php if(isset($_POST['state']) && $_POST['state'] == "La Union") echo "selected"; ?>>La Union</option>
+    <option value="Pangasinan" <?php if(isset($_POST['state']) && $_POST['state'] == "Pangasinan") echo "selected"; ?>>Pangasinan</option>
+    <option value="Batanes" <?php if(isset($_POST['state']) && $_POST['state'] == "Batanes") echo "selected"; ?>>Batanes</option>
+    <option value="Cagayan" <?php if(isset($_POST['state']) && $_POST['state'] == "Cagayan") echo "selected"; ?>>Cagayan</option>
+    <option value="Isabela" <?php if(isset($_POST['state']) && $_POST['state'] == "Isabela") echo "selected"; ?>>Isabela</option>
+    <option value="Nueva Vizcaya" <?php if(isset($_POST['state']) && $_POST['state'] == "Nueva Vizcaya") echo "selected"; ?>>Nueva Vizcaya</option>
+    <option value="Quirino" <?php if(isset($_POST['state']) && $_POST['state'] == "Quirino") echo "selected"; ?>>Quirino</option>
+    <option value="Aurora" <?php if(isset($_POST['state']) && $_POST['state'] == "Aurora") echo "selected"; ?>>Aurora</option>
+    <option value="Bataan" <?php if(isset($_POST['state']) && $_POST['state'] == "Bataan") echo "selected"; ?>>Bataan</option>
+    <option value="Tarlac" <?php if(isset($_POST['state']) && $_POST['state'] == "Tarlac") echo "selected"; ?>>Tarlac</option>
+    <option value="Zambales" <?php if(isset($_POST['state']) && $_POST['state'] == "Zambales") echo "selected"; ?>>Zambales</option>
+    <option value="Batangas" <?php if(isset($_POST['state']) && $_POST['state'] == "Batangas") echo "selected"; ?>>Batangas</option>
+    <option value="Cavite" <?php if(isset($_POST['state']) && $_POST['state'] == "Cavite") echo "selected"; ?>>Cavite</option>
+    <option value="Laguna" <?php if(isset($_POST['state']) && $_POST['state'] == "Laguna") echo "selected"; ?>>Laguna</option>
+    <option value="Quezon" <?php if(isset($_POST['state']) && $_POST['state'] == "Quezon") echo "selected"; ?>>Quezon</option>
+    <option value="Rizal" <?php if(isset($_POST['state']) && $_POST['state'] == "Rizal") echo "selected"; ?>>Rizal</option>
+    <option value="Marinduque" <?php if(isset($_POST['state']) && $_POST['state'] == "Marinduque") echo "selected"; ?>>Marinduque</option>
+    <option value="Occidental Mindoro" <?php if(isset($_POST['state']) && $_POST['state'] == "Occidental Mindoro") echo "selected"; ?>>Occidental Mindoro</option>
+    <option value="Oriental Mindoro" <?php if(isset($_POST['state']) && $_POST['state'] == "Oriental Mindoro") echo "selected"; ?>>Oriental Mindoro</option>
+    <option value="Palawan" <?php if(isset($_POST['state']) && $_POST['state'] == "Palawan") echo "selected"; ?>>Palawan</option>
+    <option value="Romblon" <?php if(isset($_POST['state']) && $_POST['state'] == "Romblon") echo "selected"; ?>>Romblon</option>
+    <option value="Albay" <?php if(isset($_POST['state']) && $_POST['state'] == "Albay") echo "selected"; ?>>Albay</option>
+    <option value="Camarines Norte" <?php if(isset($_POST['state']) && $_POST['state'] == "Camarines Norte") echo "selected"; ?>>Camarines Norte</option>
+    <option value="Camarines Sur" <?php if(isset($_POST['state']) && $_POST['state'] == "Camarines Sur") echo "selected"; ?>>Camarines Sur</option>
+    <option value="Catanduanes" <?php if(isset($_POST['state']) && $_POST['state'] == "Catanduanes") echo "selected"; ?>>Catanduanes</option>
+    <option value="Masbate" <?php if(isset($_POST['state']) && $_POST['state'] == "Masbate") echo "selected"; ?>>Masbate</option>
+    <option value="Sorsogon" <?php if(isset($_POST['state']) && $_POST['state'] == "Sorsogon") echo "selected"; ?>>Sorsogon</option>
+    <option value="Aklan" <?php if(isset($_POST['state']) && $_POST['state'] == "Aklan") echo "selected"; ?>>Aklan</option>
+    <option value="Antique" <?php if(isset($_POST['state']) && $_POST['state'] == "Antique") echo "selected"; ?>>Antique</option>
+    <option value="Capiz" <?php if(isset($_POST['state']) && $_POST['state'] == "Capiz") echo "selected"; ?>>Capiz</option>
+    <option value="Guimaras" <?php if(isset($_POST['state']) && $_POST['state'] == "Guimaras") echo "selected"; ?>>Guimaras</option>
+    <option value="Iloilo" <?php if(isset($_POST['state']) && $_POST['state'] == "Iloilo") echo "selected"; ?>>Iloilo</option>
+    <option value="Negros Occidental" <?php if(isset($_POST['state']) && $_POST['state'] == "Negros Occidental") echo "selected"; ?>>Negros Occidental</option>
+    <option value="Bohol" <?php if(isset($_POST['state']) && $_POST['state'] == "Bohol") echo "selected"; ?>>Bohol</option>
+    <option value="Cebu" <?php if(isset($_POST['state']) && $_POST['state'] == "Cebu") echo "selected"; ?>>Cebu</option>
+    <option value="Negros Oriental" <?php if(isset($_POST['state']) && $_POST['state'] == "Negros Oriental") echo "selected"; ?>>Negros Oriental</option>
+    <option value="Siquijor" <?php if(isset($_POST['state']) && $_POST['state'] == "Siquijor") echo "selected"; ?>>Siquijor</option>
+    <option value="Biliran" <?php if(isset($_POST['state']) && $_POST['state'] == "Biliran") echo "selected"; ?>>Biliran</option>
+    <option value="Eastern Samar" <?php if(isset($_POST['state']) && $_POST['state'] == "Eastern Samar") echo "selected"; ?>>Eastern Samar</option>
+    <option value="Leyte" <?php if(isset($_POST['state']) && $_POST['state'] == "Leyte") echo "selected"; ?>>Leyte</option>
+    <option value="Northern Samar" <?php if(isset($_POST['state']) && $_POST['state'] == "Northern Samar") echo "selected"; ?>>Northern Samar</option>
+    <option value="Samar (Western Samar)" <?php if(isset($_POST['state']) && $_POST['state'] == "Samar (Western Samar)") echo "selected"; ?>>Samar (Western Samar)</option>
+    <option value="Southern Leyte" <?php if(isset($_POST['state']) && $_POST['state'] == "Southern Leyte") echo "selected"; ?>>Southern Leyte</option>
+    <option value="Zamboanga del Norte" <?php if(isset($_POST['state']) && $_POST['state'] == "Zamboanga del Norte") echo "selected"; ?>>Zamboanga del Norte</option>
+    <option value="Zamboanga del Sur" <?php if(isset($_POST['state']) && $_POST['state'] == "Zamboanga del Sur") echo "selected"; ?>>Zamboanga del Sur</option>
+    <option value="Zamboanga Sibugay" <?php if(isset($_POST['state']) && $_POST['state'] == "Zamboanga Sibugay") echo "selected"; ?>>Zamboanga Sibugay</option>
+    <option value="Bukidnon" <?php if(isset($_POST['state']) && $_POST['state'] == "Bukidnon") echo "selected"; ?>>Bukidnon</option>
+    <option value="Camiguin" <?php if(isset($_POST['state']) && $_POST['state'] == "Camiguin") echo "selected"; ?>>Camiguin</option>
+    <option value="Lanao del Norte" <?php if(isset($_POST['state']) && $_POST['state'] == "Lanao del Norte") echo "selected"; ?>>Lanao del Norte</option>
+    <option value="Misamis Occidental" <?php if(isset($_POST['state']) && $_POST['state'] == "Misamis Occidental") echo "selected"; ?>>Misamis Occidental</option>
+    <option value="Misamis Oriental" <?php if(isset($_POST['state']) && $_POST['state'] == "Misamis Oriental") echo "selected"; ?>>Misamis Oriental</option>
+    <option value="Compostela Valley (Davao de Oro)" <?php if(isset($_POST['state']) && $_POST['state'] == "Compostela Valley (Davao de Oro)") echo "selected"; ?>>Compostela Valley (Davao de Oro)</option>
+    <option value="Davao del Norte" <?php if(isset($_POST['state']) && $_POST['state'] == "Davao del Norte") echo "selected"; ?>>Davao del Norte</option>
+    <option value="Davao del Sur" <?php if(isset($_POST['state']) && $_POST['state'] == "Davao del Sur") echo "selected"; ?>>Davao del Sur</option>
+    <option value="Davao Occidental" <?php if(isset($_POST['state']) && $_POST['state'] == "Davao Occidental") echo "selected"; ?>>Davao Occidental</option>
+    <option value="Davao Oriental" <?php if(isset($_POST['state']) && $_POST['state'] == "Davao Oriental") echo "selected"; ?>>Davao Oriental</option>
+    <option value="Cotabato (North Cotabato)" <?php if(isset($_POST['state']) && $_POST['state'] == "Cotabato (North Cotabato)") echo "selected"; ?>>Cotabato (North Cotabato)</option>
+    <option value="Cotabato City" <?php if(isset($_POST['state']) && $_POST['state'] == "Cotabato City") echo "selected"; ?>>Cotabato City</option>
+    <option value="Sarangani" <?php if(isset($_POST['state']) && $_POST['state'] == "Sarangani") echo "selected"; ?>>Sarangani</option>
+    <option value="South Cotabato" <?php if(isset($_POST['state']) && $_POST['state'] == "South Cotabato") echo "selected"; ?>>South Cotabato</option>
+    <option value="Sultan Kudarat" <?php if(isset($_POST['state']) && $_POST['state'] == "Sultan Kudarat") echo "selected"; ?>>Sultan Kudarat</option>
+    <option value="Agusan del Norte" <?php if(isset($_POST['state']) && $_POST['state'] == "Agusan del Norte") echo "selected"; ?>>Agusan del Norte</option>
+    <option value="Agusan del Sur" <?php if(isset($_POST['state']) && $_POST['state'] == "Agusan del Sur") echo "selected"; ?>>Agusan del Sur</option>
+    <option value="Dinagat Islands" <?php if(isset($_POST['state']) && $_POST['state'] == "Dinagat Islands") echo "selected"; ?>>Dinagat Islands</option>
+    <option value="Surigao del Norte" <?php if(isset($_POST['state']) && $_POST['state'] == "Surigao del Norte") echo "selected"; ?>>Surigao del Norte</option>
+    <option value="Surigao del Sur" <?php if(isset($_POST['state']) && $_POST['state'] == "Surigao del Sur") echo "selected"; ?>>Surigao del Sur</option>
+    <option value="Basilan" <?php if(isset($_POST['state']) && $_POST['state'] == "Basilan") echo "selected"; ?>>Basilan</option>
+    <option value="Lanao del Sur" <?php if(isset($_POST['state']) && $_POST['state'] == "Lanao del Sur") echo "selected"; ?>>Lanao del Sur</option>
+    <option value="Maguindanao" <?php if(isset($_POST['state']) && $_POST['state'] == "Maguindanao") echo "selected"; ?>>Maguindanao</option>
+    <option value="Sulu" <?php if(isset($_POST['state']) && $_POST['state'] == "Sulu") echo "selected"; ?>>Sulu</option>
+    <option value="Tawi-Tawi" <?php if(isset($_POST['state']) && $_POST['state'] == "Tawi-Tawi") echo "selected"; ?>>Tawi-Tawi</option>

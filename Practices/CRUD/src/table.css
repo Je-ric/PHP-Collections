@@ -1,0 +1,143 @@
+@font-face {
+    font-family: 'oswald';
+    src: url(/PHP-Projects/1-Oswald-Font/Oswald-VariableFont_wght.ttf);
+  }
+  
+  * {
+    font-family: 'oswald';
+  }
+  
+  .table-body{
+    height: 100vh;
+      padding: 0;
+      margin: 0;
+  }
+  
+  
+    
+    .body-header {
+      backdrop-filter: blur(5px) saturate(180%);
+      -webkit-backdrop-filter: blur(5px) saturate(180%);
+      background-color: rgba(255, 255, 255, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      padding: 15px;
+      position: sticky;
+      top: 0;
+      width: 100%;
+  }
+  
+    .table-body header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+     background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/PHP-Practice/CRUD/src/Body.jpg');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      position: sticky;
+    }
+    
+    .header {
+      flex-grow: 1;
+    }
+
+
+    .table th, td {
+        padding: 8px;
+        text-align: left;
+        border-left: none;
+        border-right: none;
+      }
+      
+      .table th {
+        color: #153d4f;
+        background-color: #ffcc4e;
+        position: sticky;
+        top: 105.5px;
+        z-index: 999;
+      }
+
+
+
+  
+.update-link,
+.delete-link,
+.create-link,
+.view-link,
+.logout-link {
+  min-width: 40px;
+  text-align: center;
+  height: 25px;
+  color: #fff;
+  padding: 5px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  outline: none;
+  border-radius: 40px;
+  border: none;
+  box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1);
+ z-index: 1;
+}
+
+.update-link:hover:after,
+.delete-link:hover:after,
+.create-link:hover:after,
+.view-link:hover:after,
+.logout-link:hover:after {
+  width: 100%;
+  left: 0;
+}
+.update-link:after,
+.delete-link:after,
+.create-link:after,
+.view-link:after,
+.logout-link:after {
+  border-radius: 40px;
+  position: absolute;
+  content: "";
+  width: 0;
+  height: 100%;
+  top: 0;
+  z-index: -1;
+  box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1);
+  transition: all 0.3s ease;
+  background-color: #000000;
+  right: 0;
+}
+.update-link:active,
+.delete-link:active,
+.create-link:active,
+.view-link:active,
+.logout-link:active {
+  top: 2px;
+}
+
+
+.delete-link, 
+.logout-link {
+  background-color: #FF0000;
+}
+
+.logout-link{
+  margin-right: 10px;
+}
+
+.view-link {
+  background-color: blue;
+}
+
+.create-link{
+  background-color: #4CAF50;
+  margin-right: 40px;
+}
+
+.update-link {
+  background-color: #FFA500;
+}

@@ -1,0 +1,40 @@
+#toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    background: #f8f9fa;
+    padding: 10px;
+    border-bottom: 2px solid #ccc;
+}
+
+.toolbar-section {
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    min-width: 250px;
+}
+
+.toolbar-section h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+}
+
+.toolbar-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.toolbar-group button, .toolbar-group select, .toolbar-group input[type="color"] {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.toolbar-group button:hover {
+    background: #eee;
+}

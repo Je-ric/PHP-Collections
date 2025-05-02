@@ -1,0 +1,295 @@
+
+:root {
+    --primary-color: #6e86ff;
+    --success-color: #66bb6a;
+    --danger-color: #ff8080;
+    --hover-primary-color: #5c6bc0;
+
+    --pastel-purple: #b39ddb;
+    --pastel-yellow: #ffd54f;
+    --pastel-pink: #ffb6c1;
+    --pastel-green: #a5d6a7;
+    --pastel-orange: #ffcc80;
+    --pastel-teal: #80cbc4;
+    --pastel-grey: #e0e0e0;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow-y: auto;
+}
+
+
+.labels a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 10px 0;
+    padding-left: 15px;
+}
+
+.sidebar a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 40px;
+}
+
+
+.note {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-content {
+    color: #fff;
+}
+
+.sidebar h2 {
+    margin-top: 0;
+    color: #fff;
+}
+
+.add-note-btn,
+.add-label-btn,
+.edit-label-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    margin-bottom: 10px;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: black;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.add-note-btn{
+    background-color: var(--pastel-purple);
+}
+
+.add-label-btn {
+    background-color: var(--pastel-orange);
+}
+
+.edit-label-btn{
+    background-color: var(--pastel-teal);
+}
+
+.logout {
+    background-color: var(--danger-color);
+    width: 100%;
+    color: black;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    display: block;
+    padding: 10px 0;
+}
+
+
+.labels ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.labels ul li {
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+
+.main-content {
+    margin-left: 100px;
+    padding: 20px;
+}
+
+.notes-container {
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.notes-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+/*.notes-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: baseline;
+}*/
+
+
+
+.note {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.note h3 {
+    margin-top: 0;
+    border-bottom: 1px solid black;
+}
+
+.note p {
+    margin-bottom: 0;
+    padding: 10px;
+}
+
+.note-label{
+    border-radius: 25px;
+    padding: 5px;
+    font-size: smaller;
+    padding-left: 10px;
+    margin:10px;
+    padding-right: 10px;
+    width: fit-content;
+    display: inline-block;
+}
+
+.edit-btn {
+    background-color: #ffc107;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#editLabelModal .modal-content,
+#labelModal .modal-content {
+    width: 30%;
+}
+
+#editLabelDoneBtn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 10px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+.modal-content form {
+    margin-top: 20px;
+}
+
+.modal-content input[type="text"],
+.modal-content textarea{
+    width: 100%;
+}
+
+.modal-content select{
+    width: 20%;
+}
+
+.modal-content input[type="text"],
+.modal-content textarea,
+.modal-content select{
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+
+.modal-content input[type="submit"] {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-content input[type="submit"]:hover {
+    background-color: var(--hover-primary-color);
+}
+
+.modal-content textarea {
+    height: 200px;
+    resize: vertical;
+}
+
+.note-footer {
+    border-top: 1px solid black;
+    padding-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-label-form input[type="color"]{
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+}
+
+.edit-label-form input[type="text"] {
+    width: 130px;
+    background-color: transparent;
+    border: none;
+}
+
+.label-form input[type="text"]:active {
+    border: none;
+    border-bottom: 2px blue solid;
+}
+
+.add-modal-buttons{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

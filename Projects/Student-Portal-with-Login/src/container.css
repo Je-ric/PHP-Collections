@@ -1,0 +1,228 @@
+@font-face {
+    font-family: 'oswald';
+    src: url(/PHP-Projects/1-Oswald-Font/Oswald-VariableFont_wght.ttf);
+  }
+
+  body{
+    background: rgb(255,204,78);
+  background: linear-gradient(2deg, rgba(255,204,78,1) 0%, rgba(255,204,78,1) 24%, rgba(21,61,79,1) 92%);
+  height: 100vh;
+  }
+  
+  * {
+    font-family: 'oswald';
+  }
+
+  .change-password-container,
+  .create-container,
+  .delete-container,
+  .update-container,
+.admin-view-container{
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    margin-top: 3%;
+    background-color: #fff;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 15px 20px;
+  }
+
+  .change-password-container h2,
+  .create-container h2,
+  .delete-container h2,
+  .update-container h2,
+  .admin-view-container h2 {
+    border-bottom: 2px solid #ffcc4e;
+    padding-bottom: 15px;
+    margin-top: 0;
+    color: #153d4f;
+  }
+
+
+  .create-container p.input,
+  .delete-container p,
+  .update-container p.input,
+  .admin-view-container p {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .change-password-container .input{
+    margin: 10px 0;
+    align-items: center;
+  }
+
+.change-password-container input:valid{
+  border-color: initial;
+}
+
+
+
+  .create-container p.input strong,
+  .delete-container p strong,
+  .update-container p.input strong,
+   .admin-view-container p strong {
+    width: 90px; 
+  }
+
+  .create-container strong,
+  .delete-container strong,
+  .update-container strong,
+  .admin-view-container strong {
+    font-weight: bold;
+  }
+
+  .change-password-container .back,
+  .create-container .back,
+  .delete-container .back,
+  .update-container .back,
+  .admin-view-container .back {
+    text-decoration: none;
+    color: #153d4f;
+    text-align: right;
+    display: block;
+    font-weight: bold;
+  }
+
+  .change-password-container .back:hover,
+  .create-container .back:hover
+  .delete-container .back:hover,
+  .update-container .back:hover,
+  .admin-view-container .back:hover {
+    text-decoration: none;
+    color: black;
+  }
+  
+.buttons-below{
+    display: flex;
+    /* gap: 395px; */
+    justify-content: space-between;
+}
+
+.button-below{
+    display: flex;
+    gap: 325px;
+}
+
+.change-password-container input[type="submit"],
+.update-container input[type="button"] {
+    background-color: #FFA500;
+    margin-right: 5px;
+    font-size:medium;
+    text-decoration: none;
+    border-radius: 4px;
+    color: white;
+    padding: 5px 10px;
+}
+
+.delete-container input[type="button"] {
+    background-color: #FF0000;
+    margin-right: 5px;
+    font-size:medium;
+    text-decoration: none;
+    border-radius: 4px;
+    color: white;
+    padding: 5px 10px;
+}
+
+.create-container input[type="submit"] {
+  background-color: #4CAF50;
+  margin-right: 5px;
+  font-size:medium;
+  text-decoration: none;
+  border-radius: 4px;
+  color: white;
+  padding: 5px 10px;
+}
+
+.change-password-container input[type="submit"]:hover,
+.create-container input[type="submit"]:hover,
+.delete-container input[type="button"]:hover,
+.update-container input[type="button"]:hover,
+.update-container input[type="submit"]:hover{
+    background-color: black;
+    color: white;
+}
+
+.change-password-container input[type="password"],
+.create-container input[type="text"],
+.create-container input[type="email"],
+.update-container input[type="text"],
+.update-container input[type="email"],
+.update-container input[type="pasword"]{
+    width: 230px;
+    border-radius: 30px;
+    text-align: center;
+}
+
+.change-password-container input:valid{
+  border-color: initial;
+}
+input:invalid:not(:focus) {
+  border-color: red;
+}
+
+
+input:valid {
+  border-color: initial;
+}
+
+
+@media screen and (max-width: 768px) {
+  .change-password-container,
+  .create-container,
+  .delete-container,
+  .update-container,
+.admin-view-container{
+  z-index: -999;
+width: 93%;
+margin-top: 10%;
+}
+  .buttons-below,
+  .button-below {
+      flex-direction: column;
+      gap: 15px;
+  }
+
+  .update-container input[type="text"],
+  .update-container input[type="email"],
+  .update-container input[type="password"] {
+      width: 100%;
+      margin-bottom: 15px;
+  }
+  .buttons-below{
+    text-align: center;
+}
+}
+
+
+@media screen and (max-width: 480px) {
+  .change-password-container,
+  .create-container,
+  .delete-container,
+  .update-container,
+.admin-view-container{
+width: 85%;
+}
+  .update-container input[type="text"],
+  .update-container input[type="email"],
+  .update-container input[type="password"] {
+      font-size: 14px;
+      padding: 8px;
+  }
+  
+  .buttons-below,
+  .button-below {
+      gap: 10px;
+  }
+
+  .create-container input[type="text"],
+  .create-container input[type="email"],
+  .update-container input[type="text"],
+  .update-container input[type="email"],
+  .update-container input[type="password"] {
+      width: calc(100% - 20px);
+  }
+} 

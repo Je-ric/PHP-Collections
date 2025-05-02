@@ -1,0 +1,235 @@
+* {
+  color: white;
+}
+
+.details-pos {
+  display: flex;
+  align-items: center;
+  padding: 0 170px;
+  margin: auto;
+}
+
+.details-content {
+  width: 1135px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  column-gap: 40px;
+  margin-bottom: 50px;
+}
+
+.img {
+  display: block;
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  object-position: center;  
+}
+.left-details {
+  padding-top: 5px;
+}
+
+.right-details {
+  border: 1px solid #67F9EF;
+  padding: 60px;
+}
+.right-details h3{
+  font-size: 40px;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+.con-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 20px;
+  row-gap: 40px;
+}
+.img {
+  width: 100%;
+}
+.content {
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  column-gap: 20px;
+  place-content: center;
+  align-items: center;
+}
+.content p{
+  display: inline;
+}
+.img2{
+  width: 40px;
+}
+
+/* ------ AVAILABLE SEATS ------- */
+
+.seatplan img{
+  width: 100%;
+}
+
+.seat-content {
+  text-align: center;
+  width: 1135px;
+  border: 1px solid #67F9EF;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+.seat-content span{
+  font-size: 14px;
+  border-radius: 3px;
+}
+.seat {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  border: 1px solid black;
+  margin: 5px;
+}
+
+.available {
+  background-color: #00235B;
+  color: white;
+}
+
+.reserved {
+  background-color: #E21818;
+  color: white;
+}
+
+.select-seat-btn {
+  text-decoration: none;
+  background-color: #67F9EF;
+  color: black;
+  padding: 8px 16px;
+  border-radius: 2px;
+}
+.seats {
+  display: flex; 
+  flex-wrap: wrap; 
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.checkboxsu {
+  display: inline-block;
+  padding: 5px; 
+  margin: 5px;
+  width: 25px;
+  font-size: 14px;
+  text-align: center;
+  border-radius: 3px;
+}
+.checkboxsu input[type='checkbox'] {
+  display: none;
+}
+
+
+.payment-method-container label {
+  display: inline-block;
+  border: 2px solid #ccc;
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+}
+.payment-method-container label:hover {
+  background-color: #f0f0f0;
+  color: black;
+}
+.payment-method-container input[type='radio'] {
+  display: none;
+}
+.payment-method-container input[type='radio']:checked + label {
+  border-color: #67F9EF;
+  background-color: #e7f0ffa5;
+  color: #00235B;
+}
+.rsrv-seat-btn {
+  margin-top: 20px; 
+  font-size: 15px;
+  background-color: #67F9EF;
+  color: black;
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.pay-pos {
+  padding: 0 170px;
+}
+
+.back-btn {
+  text-decoration: none;
+  background-color: #67F9EF;
+  color: black;
+  padding: 8px 16px;
+  border-radius: 2px;
+}
+.cancel-btn {
+  color: black;
+}
+
+.btn-pos {
+  width: 400px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.sel-border {
+  border: 1px solid #67F9EF;
+  padding: 10px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+
+@media (max-width: 1040px) { 
+  .details-pos,
+  .pay-pos {
+    padding: 0 100px;
+  }
+}
+@media (max-width: 1200px) { 
+  .right-details h3{
+    font-size: 30px;
+    margin-top: -10px;
+    margin-bottom: 20px;
+  }
+  .con-details {
+    column-gap: 10px;
+    row-gap: 20px;
+  }
+  .content p{
+    font-size: 13px;
+  }
+}
+@media (max-width: 890px) { 
+  
+  .details-pos,
+  .pay-pos {
+    padding: 0 90px;
+  }
+  .details-content {
+    grid-template-columns: 1fr;
+    row-gap: 20px;
+  }
+  .img {
+    width: 100%;
+    height: 200px;
+  }
+
+}
+
+@media (max-width: 590px) { 
+
+  .details-pos,
+  .pay-pos {
+    padding: 0 12px;
+  }
+  .right-details {
+    padding: 30px;
+  }
+}
+
+
+

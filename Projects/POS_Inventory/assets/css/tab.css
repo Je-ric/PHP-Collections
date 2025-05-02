@@ -1,0 +1,164 @@
+.tabs {
+    display: flex;
+    cursor: pointer;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center; 
+}
+
+.tab {
+    flex: 1 1 auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    height: 90px;
+    width: 90px;
+    transition: border 0.3s ease;
+    border-radius: 5px;
+    min-width: 100px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+.tab:hover {
+   
+    border: 1px solid black;
+}
+
+.tabs .tab:hover .bx{
+    color: #000000;
+}
+
+.tab.active {
+    background-color: rgb(0, 0, 0);
+}
+
+.tab-content {
+    display: none;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    /* margin-top: 10px; */
+}
+
+.tabs .tab.active:hover {
+    pointer-events: none; 
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tabs .tab.active .bx,
+.tabs .tab.active{
+    color: rgb(255, 255, 255);
+}
+
+
+
+.tabs .bx {
+    color: #12b6ed;
+    font-size: 1.5rem;
+    padding-right: 10px;
+    transition: color 0.3s ease;
+}
+
+
+.tabs span {
+    font-size: 1.5rem;
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .tabs {
+        gap: 20px; 
+        justify-content: flex-start; 
+    }
+
+    .tab {
+        width: 110px; 
+        text-align: center;
+        padding: 12px;
+        min-width: 100px;
+    }
+
+    .tab-content {
+        width: 100%;
+        padding: 15px;
+    }
+    
+    .tabs .bx {
+        font-size: 1.2rem;
+        padding-right: 5px;
+    }
+    
+    .tabs span {
+        font-size: 1.1rem;
+    }
+}
+
+@media (min-width: 820px) and (max-width: 900px) {
+    .tabs {
+        justify-content: flex-start; 
+    }
+
+    .tab {
+        width: 80px;  
+        height: 65px;  
+        padding: 8px;  
+    }
+
+    .tabs .bx {
+        font-size: 1.0rem;  
+        padding-right: 5px; 
+    }
+
+    .tabs span {
+        font-size: 0.8rem; 
+    }
+    
+
+    .tab:hover {
+        border: 1px solid black; 
+    }
+
+    .tab.active {
+        background-color: rgb(0, 0, 0); 
+        color: #fff; 
+    }
+
+    .tab-content {
+        padding: 10px; 
+        width: 100%;
+    }
+
+    .tabs .tab.active:hover {
+        pointer-events: none;
+    }
+
+    .tabs .tab.active .bx {
+        color: #ffffff; 
+    }
+
+   
+    .tabs {
+        flex-wrap: wrap; 
+        justify-content: flex-start;
+    }
+
+   
+    .tab {
+        flex: 1 1 70px; 
+    }
+}
+
+
+
+
+
+
+

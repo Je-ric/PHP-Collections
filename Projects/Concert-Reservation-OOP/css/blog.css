@@ -1,0 +1,153 @@
+
+.blog-pos {
+  display: flex;
+  padding: 0 170px;
+  margin: auto;
+}
+.blog-pos2 {
+  display: flex;
+  padding: 0 170px;
+  margin: auto;
+}
+.blog-grid {
+  width: 1135px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  column-gap: 40px;
+  row-gap: 30px;
+}
+
+.line {
+  width: 100%;
+  border-top: 1px solid white;
+  color: transparent;
+}
+
+.blogs img{
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  object-position: center;  
+}
+.blogs a{
+  text-decoration: none;
+  color: white;
+}
+.blogs p{
+ font-size: 12px;
+}
+.blogs h3{
+  margin-bottom: 12px;
+}
+.blog-cons {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+}
+.blog-cons span{
+  font-size: 12px;
+  margin-right: 10px;
+}
+.author {
+  align-items: center;
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  column-gap: 10px;
+  margin-bottom: 10px;
+}
+
+.page-navs {
+  margin-top: 40px;
+  width: 100%;
+  text-align: center;
+}
+.page-navs a{
+ color: white;
+ text-decoration: none;
+ padding: 6px 18px;
+ border: 1px solid white;
+ border-radius: 5px;
+ margin-left: 10px;
+}
+.page-navs a:hover{
+  color: black;
+  background-color: #67F9EF;
+  border-radius: 5px;
+  border: 1px solid white;
+ }
+
+.author img {
+  width: 20px;
+}
+
+.con-form {
+  width: 1135px;
+}
+
+.image-blog {
+  width: 1135px;
+  margin-bottom: 20px;
+}
+.image-blog img{
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  object-position: center;  
+}
+.blogC-pos {
+  padding: 0 170px;
+  margin: auto;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.blog-pos button,
+.blog-pos input[type="submit"] {
+  display: inline;
+  color: black;
+  background-color: #67F9EF;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  margin-left: 10px;
+  cursor: pointer;
+}  
+
+
+
+
+@media (max-width: 1040px) { 
+  .blog-pos,
+  .blogC-pos,
+  .blog-pos2{
+    padding: 0 100px;
+  }
+}
+
+@media (max-width: 790px) { 
+  .blog-pos, 
+  .blogC-pos,
+  .blog-pos2{
+    padding: 0 90px;
+  }
+  .blog-grid {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+    row-gap: 30px;
+  }
+}
+
+
+@media (max-width: 590px) { 
+  .blog-pos,
+  .blogC-pos
+  .blog-pos2{
+    padding: 0 12px;
+  }
+  .blogC-pos{
+    font-size: 13px;
+  }
+}
+
+
+
+

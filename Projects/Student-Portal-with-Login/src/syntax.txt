@@ -1,0 +1,47 @@
+CREATE TABLE students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT,
+    name VARCHAR(255) NOT NULL,
+    age INT NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    gpa FLOAT,
+    UNIQUE(student_id) 
+);
+
+CREATE TABLE login (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT,
+    password VARCHAR(255) NOT NULL,
+    FOREIGN KEY (student_id) REFERENCES students(student_id)
+);
+
+
+
+
+INSERT INTO `students` (`id`, `student_id`, `name`, `age`, `email`, `gpa`) VALUES
+(1, '202401', 'Jeric Dela Cruz', 18, 'jeric@gmail.com', 1.25),
+(2, '202402', 'Gwen De Guzman', 19, 'gwen@gmail.com', 0),
+(3, '202403', 'Jodilyn Sarmiento', 20, 'jodilyn@gmail.com', 0),
+(4, '202404', 'Menard Macaraeg', 21, 'menard@gmail.com', 0),
+(5, '202405', 'Kiel Palaad', 18, 'kiel@gmail.com', 0),
+(6, '202406', 'Ejay Basinga', 19, 'ejay@gmail.com', 0),
+(7, '202407', 'Franz Harry Daniel Eda', 20, 'franz@gmail.com', 0),
+(8, '202408', 'Ronnel Baldovino', 21, 'ronnel@gmail.com', 0),
+(9, '202409', 'Francis Vengazo', 18, 'francis@gmail.com', 0),
+(10, '202410', 'Liane Tomas', 19, 'liane@gmail.com', 0),
+(11, '202411', 'Joshua Bautista', 20, 'joshua@gmail.com', 0),
+(12, '202412', 'Jan Bernard Masinag', 21, 'jan@gmail.com', 0),
+(13, '202413', 'Nino Emmanuel', 18, 'nino@gmail.com', 0),
+(14, '202414', 'Hazel De Leon', 19, 'hazel@gmail.com', 0),
+(15, '202415', 'Ghieverlyn Callo', 20, 'ghieverlyn@gmail.com', 0),
+(16, '202416', 'Jhanice Abracia', 21, 'jhanice@gmail.com', 0),
+(17, '202417', 'Alliah Kate Taban', 18, 'alliah@gmail.com', 0),
+(18, '202418', 'Christine Joy Duatin', 19, 'christine@gmail.com', 0),
+(19, '202419', 'Jozen Agustin', 20, 'jozen@gmail.com', 0),
+(20, '202420', 'Krisha Manahan', 21, 'krisha@gmail.com', 0),
+(21, '202421', 'Melgie Alata', 18, 'melgie@gmail.com', 0),
+(22, '202422', 'Mac Cacho', 19, 'mac@gmail.com', 0),
+(23, '202423', 'Lorenz Bocatot', 20, 'lorenz@gmail.com', 0),
+(24, '202424', 'Aaron Palad', 21, 'aaron@gmail.com', 0),
+(25, '202425', 'Rogelio Pagay', 18, 'rogelio@gmail.com', 0),
+(26, '202426', 'Victor Sam', 19, 'victor@gmail.com', 0);

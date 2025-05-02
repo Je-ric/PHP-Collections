@@ -1,0 +1,81 @@
+/* Common styles */
+.container {
+    width: 80%; /* Use a percentage width for responsiveness */
+    max-width: 400px; /* Limit the maximum width */
+    margin: auto;
+    text-align: center;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="submit"],
+a {
+    display: block;
+    margin-bottom: 2%; /* Use percentage margin for responsiveness */
+    width: 90%; /* Use percentage width for responsiveness */
+    padding: 1em; /* Use em units for padding */
+    font-size: 1em; /* Use em units for font size */
+    border: 1px solid #ccc;
+    border-radius: 0.5em; /* Use em units for border radius */
+}
+
+.error {
+    color: red;
+}
+
+/* Specific styles for login page */
+.login-container {
+    margin-top: 5%; /* Use percentage margin for responsiveness */
+    background-color: #f0f0f0;
+    padding: 2em; /* Use em units for padding */
+    border-radius: 1em; /* Use em units for border radius */
+}
+
+.login-container h2 {
+    color: #333;
+    font-size: 1.5em; /* Use em units for font size */
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"],
+.login-container input[type="submit"] {
+    border-color: #777;
+}
+
+.login-container input[type="submit"] {
+    background-color: #4caf50;
+    color: white;
+}
+
+.login-container input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Specific styles for register page */
+.register-container {
+    margin-top: 5%; /* Use percentage margin for responsiveness */
+    background-color: #fff;
+    padding: 2em; /* Use em units for padding */
+    border-radius: 1em; /* Use em units for border radius */
+    box-shadow: 0px 0px 1em rgba(0, 0, 0, 0.1); /* Use em units for box shadow */
+}
+
+.register-container h2 {
+    color: #333;
+    font-size: 1.5em; /* Use em units for font size */
+}
+
+.register-container input[type="text"],
+.register-container input[type="password"],
+.register-container input[type="submit"] {
+    border-color: #777;
+}
+
+.register-container input[type="submit"] {
+    background-color: #2196F3;
+    color: white;
+}
+
+.register-container input[type="submit"]:hover {
+    background-color: #0b7dda;
+}

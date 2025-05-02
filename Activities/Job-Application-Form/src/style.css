@@ -1,0 +1,201 @@
+@font-face {
+    font-family: 'oswald';
+    src:url(/PHP-Projects/1-Oswald-Font/Oswald-VariableFont_wght.ttf);
+    }
+
+    * {
+        font-family: 'oswald';
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        background-image: url('/PHP-Projects/Job-Application-Form/src/BG1.png');
+        background-attachment: fixed ;
+    }
+
+    .container,
+    .view-container {
+        background: rgba(255, 255, 255, 0.25);
+        padding: 50px;
+        width: 60%;
+        margin: 50px auto;
+        box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+        backdrop-filter: blur( 0px );
+        -webkit-backdrop-filter: blur( 0px );
+        border-radius: 10px;
+        border: 1px solid rgba( 255, 255, 255, 0.18 );
+    }
+
+    .view-container h2{
+        text-align: center;
+    }
+
+    .container h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;    
+    }
+
+    .view-container p{
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+
+    .view{
+        padding: 20px;
+        border: 1px solid black;
+        border-radius: 10px;
+    }
+
+    .view p{
+        border-bottom: 1px solid gray;
+    }
+
+
+    .container h3{
+        border-top: 1px solid gray;
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+
+    .container p {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #666;
+    }
+
+    .text-box, textarea {
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .text-box input,
+    .text-box select,
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(5px);
+        color: #333;
+    }
+
+    .text-box input::placeholder,
+    .text-box select::placeholder,
+    textarea {
+        color: #aaa;
+    }
+
+    .text-box:hover input,
+    .text-box:hover select,
+    textarea {
+        background-color: rgba(255, 255, 255, 0.7);
+    }
+
+    input[type="submit"] {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #4CAF50;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    .fullname, 
+    .address{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .fullname .text-box,
+    .address .text-box{
+        flex: 1;
+    }
+
+    .fullname .text-box input,
+    .address .text-box input{
+        width: 100%;
+    }
+
+    .text-box {
+        margin-bottom: 10px;
+    }
+
+    .email-phone {
+        display: flex;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .email-phone .text-box {
+        flex: 1;
+    }
+
+    .email, .phone{
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="email"],
+    textarea,
+    select, option {
+        margin-bottom: 20px;
+    }
+
+    
+    .buttons input[type="submit"]{        
+        margin-bottom: 20px;
+        background-color: green;
+    }
+
+    .buttons input[type="submit"]:hover{        
+        background-color: black;
+    }
+
+    
+    .links{
+        display: flex;
+        gap: 5px;
+    }
+
+    .update-link a {
+    background-color: blue;
+}
+.view-link a {
+    background-color: green;
+}
+.delete-link a {
+    background-color: red;
+}
+
+.update-link a,
+.view-link a,
+.delete-link a{
+    text-decoration: none;
+    color:white;
+    padding: 6px;
+    border-radius: 5px;
+}
+
+.update-link a:hover,
+.view-link a:hover,
+.delete-link a:hover {
+    background-color: black;
+}

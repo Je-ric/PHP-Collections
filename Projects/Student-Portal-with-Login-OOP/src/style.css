@@ -1,0 +1,383 @@
+
+
+:root {
+    --primary-color: #4caf50;
+    --secondary-color: #000000;
+    --text-color: white;
+    --background-overlay: rgba(0, 0, 0, 0.2);
+    --form-input-bg: rgba(255, 255, 255, 0.14);
+    --form-input-border: rgba(209, 213, 219, 0.3);
+  }
+  
+  @font-face {
+    font-family: 'oswald';
+    src: url(/PHP-Projects/Student-Portal-with-Login-OOP/1-Oswald-Font/Oswald-VariableFont_wght.ttf);
+  }
+  
+  * {
+    font-family: 'oswald';
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+  }
+ 
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; 
+    background: url('/PHP-Projects/Student-Portal-with-Login-OOP/src/BG1.jpg') center/cover; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .container {
+    margin: 40px auto;
+    display: flex;
+    flex-direction: row;
+    width: 800px;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .image-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .image-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 20px 0 0  20px;
+  }
+  
+  .form-container {
+    flex: 1;
+    padding: 10px 20px 20px; 
+    backdrop-filter: blur(25px) saturate(200%);
+    -webkit-backdrop-filter: blur(25px) saturate(200%);
+    background-color: var(--background-overlay);
+    border-radius: 0px 20px 20px 0;
+  }
+  
+  .form-container h2,
+  .form-container p {
+    font-size: 16px;
+    margin-left: 10px;
+  }
+  
+  .form-container h2{
+      font-size: 30px;
+      border-bottom: 2px solid #153d4f;
+      padding-bottom: 20px;
+      margin-top: 20px;
+  }
+
+  .form-container h3{
+    border-bottom: 2px solid #153d4f;
+}
+  
+  .form-container p {
+    margin-bottom: 15px;
+  }
+  
+  .form-container input[type="text"],
+  .form-container input[type="email"],
+  .form-container input[type="tel"],
+  .form-container input[type="password"] {
+    width: calc(95% - 20px);
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    border-radius: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    outline: none;
+    color: white;
+    margin-left: 10px;
+    padding-left: 10px;
+    background-color: var(--form-input-bg);
+    border: 1px solid var(--form-input-border);
+  }
+  
+  .form-container input[type="checkbox"] {
+    margin-right: 5px;
+  }
+
+  .image-container {
+    position: relative;
+}
+
+
+
+.overlay-text-1 {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    color: white;
+    font-size: 70px;
+    font-weight: bold;
+    text-align: left;
+   
+}
+
+.overlay-text-2 {
+    position: absolute;
+    bottom: 10px; 
+    right: 10px; 
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: right;
+}
+
+.user{
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+.user img,
+.admin img{
+    height: 120px;
+}
+.user,
+.admin {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    color: #ffcc4e;
+    transition: all 0.3s ease;
+    border: 1px solid;
+    background-color: #153d4f;
+}
+.user:hover,
+.admin:hover {
+    background-color: rgba(0, 0, 0, 0.8); 
+    color: white;
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    mix-blend-mode: difference;
+}
+
+  
+  
+  input[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border: none;
+  }
+  
+  input[type="submit"]:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  .form-container .login-link {
+    display: block;
+    margin-top: 20px;
+    font-size: 16px;
+    color: var(--text-color);
+  }
+  
+  .form-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+  }   
+  
+  .form-group input[type="text"] {
+    width: calc(10% - 0px);
+  }
+  
+  input[type="submit"] {
+    margin-bottom: 10px;
+    border-radius: 30px;
+  }
+  
+  span,
+  a {
+    color: #ffcc4e;
+    font-weight: bolder;
+  }
+  
+  .accept-statement {
+    position: relative;
+    padding-left: 10px;
+    cursor: pointer;
+    font-size: 16px;    
+  }
+  
+  input::placeholder {
+    color: var(--text-color);
+  }
+
+  .prompt-center{
+    text-align: center;
+  }
+
+  .prompt-right{
+    text-align: end;
+  }
+
+  .prompt-blank{
+    padding-top: 10px;
+  }
+  
+  input[type="checkbox"] {
+    margin-left: 15px;
+    margin-bottom: 15px;
+  }
+  
+
+
+
+  @media only screen and (max-width: 768px) {
+    .container {
+      flex-direction: column;
+      max-width: 100%;
+      width: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  
+    .image-container,
+    .form-container{
+      margin: 10px 0;
+    }
+
+    .image-container{
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    .form-container{
+      width: 100%;
+      border-radius: 20px;
+      margin: 10px 0;
+      margin-left: 30px;
+      margin-right: 30px;
+    } 
+
+  
+    .overlay-text-1,
+      .overlay-text-2 {
+        display: none;
+      }
+    .image-container img {
+      /* border-radius: 20px 20px 0 0;
+      width: 100%;
+      height: auto; */
+      display: none;
+    }
+  
+    .form-container {
+      padding: 10px;
+    }
+  
+    .form-container h2 {
+      font-size: 24px;
+    }
+  
+    .form-container p {
+      font-size: 14px;
+    }
+  
+    .form-container input[type="text"],
+    .form-container input[type="email"],
+    .form-container input[type="tel"],
+    .form-container input[type="password"] {
+      width: calc(93% - 20px);
+      font-size: 14px;
+    }
+  
+    .user img,
+    .admin img {
+      height: 80px;
+    }
+  }
+  
+  @media only screen and (max-width: 600px) {
+    .image-container,
+    .form-container{
+      margin: 20px 0;
+    }
+
+
+    .form-container{
+      width: 100%;
+      border-radius: 20px;
+      /* margin: 10px 0; */
+    }
+
+  
+    .user,
+    .admin {
+      height: 150px;
+    }
+  
+    .user img,
+    .admin img {
+      height: 60px;
+    }
+  }
+  
+  @media only screen and (max-width: 500px) {
+    .image-container,
+    .form-container{
+      margin: 20px 0;
+    }
+
+
+    .form-container{
+      width: 90%;
+      border-radius: 20px;
+      /* margin: 10px 0; */
+    }
+
+  }
+  
+  @media only screen and (max-width: 400px) {
+    .image-container,
+    .form-container{
+      margin: 20px 0;
+    }
+
+
+    .form-container{
+      width: 80%;
+      border-radius: 20px;
+      /* margin: 10px 0; */
+    }
+
+    .overlay-text-1 {
+      font-size: 30px;
+    }
+  
+    .overlay-text-2 {
+      font-size: 16px;
+    }
+  
+    .user,
+    .admin {
+      height: 120px;
+    }
+  
+    .user img,
+    .admin img {
+      height: 50px;
+    }
+  }
+  
