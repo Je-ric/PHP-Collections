@@ -28,7 +28,7 @@ class myDB{
             $table_columns = implode(", ", array_keys($data));
             $prep=$types="";
             foreach($data as $key => $value){
-                $prep .= "?,"; // make sure theres no additional spaces
+                $prep .= "?,"; // make sure theres no additional spaces 
                 $types .= substr(gettype($value), 0, 1); //get the first letter
             }
             $prep = substr($prep, 0, -1); // remove last comma
@@ -48,8 +48,60 @@ class myDB{
         }
     }
 
-    public function select($table, $row="*", $where=NULL) {
+     public function select($table, $columns = '*', $where = NULL) {
+        $query = "SELECT $columns FROM $table";
+        if ($where) {
+            $query .= " WHERE $where";
+        }
+        $this->res = $this->conn->query($query);
+        if (!$this->res) {
+            die("Select Error! <br>".$this->conn->error);
+        }
+        return $this->res;
     }
+
+    public function update($table, $data, $where = NULL) {
+        $prep = '';
+        $types = '';
+        foreach ($data as $key => $value) {
+            $prep .= "$key = ?,";
+            $types .= substr(gettype($value), 0, 1);
+        }
+        $prep = rtrim($prep, ', '); // remove last comma
+        $stmt = $this->conn->prepare("UPDATE $table SET $prep WHERE $where");
+        $stmt->bind_param($types, ...array_values($data));
+        $stmt->execute();
+        if($stmt->affected_rows > 0){
+            $this->res = "Data updated successfully!";
+        } else {
+            $this->res = "No data inserted.";
+        }
+    }
+
+
+    public function delete($table, $data , $where = NULL) {
+        $stmt = $this->conn->prepare("DELETE FROM $table WHERE $where");
+        $stmt->execute();
+        if($stmt->affected_rows > 0){
+            $this->res = "Data deleted successfully!";
+        } else {
+            $this->res = "No data deleted.";
+        }
+        $stmt->close();
+    }
+
+    // public function fetchAssoc() {
+    //     if ($this->res) {
+    //         return $this->res->fetch_assoc();
+    //     } else {
+    //         return null;
+    //     }
+    // }
+
+    //  $full_name = $student['full_name'] ?? '';
+    // $email = $student['email'] ?? '';
+    // $course_year_section = $student['course_year_section'] ?? '';
+    
 }
 
 

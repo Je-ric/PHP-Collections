@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 require "db/db.php";
 $mydb = new myDB();
@@ -7,6 +7,7 @@ $mydb = new myDB();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +17,9 @@ $mydb = new myDB();
             width: 100%;
             border-collapse: collapse;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid black;
             padding: 8px;
             text-align: left;
@@ -35,9 +38,9 @@ $mydb = new myDB();
             background-color: black;
             color: white;
         }
-
     </style>
 </head>
+
 <body>
     <h1>
         <?php
@@ -49,20 +52,39 @@ $mydb = new myDB();
         <input type="text" name="full_name" placeholder="Enter your name">
         <input type="text" name="email" placeholder="Enter your email">
         <input type="text" name="course_year_section" placeholder="Enter your course, year and section">
-        <input type="submit"name="add_student" value="ADD">
+        <input type="submit" name="add_student" value="ADD">
     </form>
 
     <table>
         <thead>
             <tr>
+                <th>id</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Course Year & Section</th>
             </tr>
         </thead>
         <tbody>
+            <?php
+            $students = $mydb->select('tbl_students');
+            while ($row = $students->fetch_assoc()) {
+            ?>
+                <tr>
+                    <td><?php echo $row['id']; ?></td>
+                    <td><?php echo $row['full_name']; ?></td>
+                    <td><?php echo $row['email']; ?></td>
+                    <td><?php echo $row['course_year_section']; ?></td>
+                    <td>
+                        <a href="update.php?id=<?php echo $row['id']; ?>">Edit</a>&nbsp;
+                        <a href="delete.php?id=<?php echo $row['id']; ?>">Delete</a>
+                    </td>
+                </tr>
+            <?php
+            }
+            ?>
         </tbody>
     </table>
 
 </body>
+
 </html>
