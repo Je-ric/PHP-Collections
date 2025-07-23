@@ -1,7 +1,7 @@
 <?php 
 
 require "db.php";
-$mydb = new myDB(); 
+$mydb = new myDB();     
 
 if (isset($_POST['add_student'])) {
     unset($_POST['add_student']);

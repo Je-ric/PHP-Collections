@@ -3,6 +3,9 @@
 require "db/db.php";
 $mydb = new myDB();
 
+// $mydb->select("tbl_students",'*');
+$mydb->select('tbl_students', '*');
+$student_data = $mydb->res;
 ?>
 
 <!DOCTYPE html>
@@ -65,23 +68,18 @@ $mydb = new myDB();
             </tr>
         </thead>
         <tbody>
-            <?php
-            $students = $mydb->select('tbl_students');
-            while ($row = $students->fetch_assoc()) {
-            ?>
-                <tr>
-                    <td><?php echo $row['id']; ?></td>
-                    <td><?php echo $row['full_name']; ?></td>
-                    <td><?php echo $row['email']; ?></td>
-                    <td><?php echo $row['course_year_section']; ?></td>
+                <?php while ($row = mysqli_fetch_assoc($student_data)): ?>
+                <tr>                
+                    <td><?= $row['id']; ?></td>
+                    <td><?= $row['full_name']; ?></td>   
+                    <td><?= $row['email']; ?></td>
+                    <td><?= $row['course_year_section']; ?></td>
                     <td>
-                        <a href="update.php?id=<?php echo $row['id']; ?>">Edit</a>&nbsp;
-                        <a href="delete.php?id=<?php echo $row['id']; ?>">Delete</a>
+                        <a href="update.php?id=<?= $row['id']; ?>">Edit</a>&nbsp;
+                        <a href="delete.php?id=<?= $row['id']; ?>">Delete</a>
                     </td>
                 </tr>
-            <?php
-            }
-            ?>
+            <?php endwhile; ?>
         </tbody>
     </table>
 

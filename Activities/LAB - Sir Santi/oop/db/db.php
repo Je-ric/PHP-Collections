@@ -16,7 +16,7 @@ class myDB{
                                     $this->db_name);
         }catch(exception $e){
             die("Database connection error. <br> " . $e);
-        } // finally (depends on the scenario)
+        }
     }
 
     public function __destruct(){
@@ -48,7 +48,30 @@ class myDB{
         }
     }
 
-     public function select($table, $columns = '*', $where = NULL) {
+    // public function select($table,$row='*',$where=NULL){
+    //     try{   
+    //         if(!is_null($where)){
+    //         $cond=$types="";
+    //         foreach($where as $key => $value){
+    //             $cond .= $key . " = ? AND ";
+    //             $types .= substr(gettype($value),0,1);
+    //         }
+
+    //         $cond = substr($cond,0,-4);
+    //         $stmt = $this->conn->prepare("SELECT $row FROM $table WHERE $cond");
+    //         $stmt->bind_param($types, ...array_values($where));
+    //         }else{
+    //             $stmt = $this->conn->prepare("SELECT $row FROM $table");
+    //             $stmt->execute();
+    //             $this->res = $stmt->get_result();
+    //         }
+    //     }catch(Exception $e){
+    //         die("Error requesting data !. <br>".$e);
+    //     }
+    // }
+
+
+    public function select($table, $columns = '*', $where = NULL) {
         $query = "SELECT $columns FROM $table";
         if ($where) {
             $query .= " WHERE $where";
@@ -67,7 +90,8 @@ class myDB{
             $prep .= "$key = ?,";
             $types .= substr(gettype($value), 0, 1);
         }
-        $prep = rtrim($prep, ', '); // remove last comma
+        // $prep = rtrim($prep, ', '); 
+        $prep = substr($prep, 0, -1); 
         $stmt = $this->conn->prepare("UPDATE $table SET $prep WHERE $where");
         $stmt->bind_param($types, ...array_values($data));
         $stmt->execute();
@@ -79,7 +103,7 @@ class myDB{
     }
 
 
-    public function delete($table, $data , $where = NULL) {
+    public function delete($table, $data, $where = NULL) {
         $stmt = $this->conn->prepare("DELETE FROM $table WHERE $where");
         $stmt->execute();
         if($stmt->affected_rows > 0){
