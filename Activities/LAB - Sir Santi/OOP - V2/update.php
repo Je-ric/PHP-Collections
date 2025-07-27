@@ -21,7 +21,6 @@ if ($id) {
 // $id = $_GET['id'] ?? '';
 // $student = getStudentById($mydb, $id);
 
-// // Access values
 // $full_name = $student['full_name'];
 // $email = $student['email'];
 // $course_year_section = $student['course_year_section'];
@@ -34,22 +33,48 @@ if ($id) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="test.css">
 </head>
 <body>
-    <h1>
-        <?php
-        echo "Update Page";
-        ?>
-    </h1>
+    <h1>Update Page</h1>
 
-    <form action="db/request.php" method="post">
-        <h1><?php echo $id; ?></h1>
-        <input type="text" name="full_name" value="<?php echo $full_name; ?>" placeholder="Enter your name">
-        <input type="hidden" name="id" value="<?php echo $id; ?>">
-        <input type="text" name="email" value="<?php echo $email; ?>" placeholder="Enter your email">
-        <input type="text" name="course_year_section" value="<?php echo $course_year_section; ?>" placeholder="Enter your course, year and section">
-        <input type="submit"name="update_student" value="UPDATE">
-    </form>
-        
+    <div class="container">
+        <form action="db/request.php" method="post">
+            <div class="student-info">
+                <div class="input-group">
+                    <input type="hidden" name="id" value="<?php echo $id; ?>">
+                </div>
+
+                <div class="input-group">
+                    <strong>Full Name:</strong>
+                    <input type="text" 
+                        name="full_name" 
+                        value="<?php echo $full_name; ?>" 
+                        placeholder="Enter your name">
+                </div>
+
+                <div class="input-group">
+                    <strong>Email:</strong>
+                    <input type="text" 
+                        name="email" 
+                        value="<?php echo $email; ?>" 
+                        placeholder="Enter your email">
+                </div>
+
+                <div class="input-group">
+                    <strong>Course, Year and Section:</strong>
+                    <input type="text" 
+                        name="course_year_section" 
+                        value="<?php echo $course_year_section; ?>" 
+                        placeholder="Enter your course, year and section">
+                </div>
+            </div>
+
+            <div class="buttoness">
+                <input type="submit" name="update_student" value="UPDATE">
+                <a href="index.php" class="cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

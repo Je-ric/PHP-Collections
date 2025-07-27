@@ -21,7 +21,6 @@ if ($id){
 // $id = $_GET['id'] ?? '';
 // $student = getStudentById($mydb, $id);
 
-// // Access values
 // $full_name = $student['full_name'];
 // $email = $student['email'];
 // $course_year_section = $student['course_year_section'];
@@ -34,22 +33,29 @@ if ($id){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="test.css">
+    <style>
+    </style>
 </head>
 <body>
-    <h1>
-        <?php
-        echo "Delete Page";
-        ?>
-    </h1>
+    <h1>Delete Page</h1>
 
-    <form action="db/request.php" method="post">
-        <h1>Full Name: <?php echo $full_name?></h1>
-        <h1>Email: <?php echo $email?></h1>
-        <h1>Course, Year and Section: <?php echo $course_year_section?></h1>
-        <h1>ID: <?php echo $id?></h1>
-        <input type="hidden" name="id" value="<?php echo $id; ?>">
-        <input type="submit" name="delete_student" value="Delete">
-    </form>
-    
+    <div class="container">
+        <form action="db/request.php" method="post">
+            <input type="hidden" name="id" value="<?php echo $id; ?>">
+            
+            <div class="student-info">
+                <p><strong>ID:</strong> <?php echo $id ?></p>
+                <p><strong>Full Name:</strong> <?php echo $full_name ?></p>
+                <p><strong>Email:</strong> <?php echo $email ?></p>
+                <p><strong>Course, Year and Section:</strong> <?php echo $course_year_section ?></p>
+            </div>
+
+            <div class="buttoness">
+                <input type="submit" name="delete_student" value="Delete">
+                <a href="index.php" class="cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

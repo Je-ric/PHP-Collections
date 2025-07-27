@@ -18,17 +18,13 @@ $student_data = $mydb->res;
 </head>
 
 <body>
-    <h1>
-        <?php
-        echo "Main Page (index.php)";
-        ?>
-    </h1>
-
-    <form action="db/request.php" method="post">
+    <h1>Main Page</h1>
+    
+    <form action="db/request.php" method="post" class="add-student-form">
         <input type="text" name="full_name" placeholder="Enter your name">
         <input type="text" name="email" placeholder="Enter your email">
         <input type="text" name="course_year_section" placeholder="Enter your course, year and section">
-        <input type="submit" name="add_student" value="ADD">
+        <input type="submit" name="add_student" value="ADD STUDENT">
     </form>
 
     <table>
@@ -38,6 +34,7 @@ $student_data = $mydb->res;
                 <th>Name</th>
                 <th>Email</th>
                 <th>Course Year & Section</th>
+                <th>Buttonesss</th>
             </tr>
         </thead>
         <tbody>
