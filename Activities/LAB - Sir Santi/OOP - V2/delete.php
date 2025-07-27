@@ -38,7 +38,7 @@ if ($id){
 <body>
     <h1>
         <?php
-        echo "Delete Page (index.php)";
+        echo "Delete Page";
         ?>
     </h1>
 
@@ -50,6 +50,6 @@ if ($id){
         <input type="hidden" name="id" value="<?php echo $id; ?>">
         <input type="submit" name="delete_student" value="Delete">
     </form>
-        
+    
 </body>
 </html>

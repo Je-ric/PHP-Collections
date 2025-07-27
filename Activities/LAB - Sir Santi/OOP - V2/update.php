@@ -38,7 +38,7 @@ if ($id) {
 <body>
     <h1>
         <?php
-        echo "Update Page (index.php)";
+        echo "Update Page";
         ?>
     </h1>
 
