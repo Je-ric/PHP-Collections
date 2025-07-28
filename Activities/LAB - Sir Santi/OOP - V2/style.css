@@ -95,3 +95,26 @@ input[type="submit"],
     flex: 1;
     padding: 5px;
 }
+
+table a,
+.buttoness a,
+.buttoness input[type="submit"],
+.add-student-form input[type="submit"] {
+    text-decoration: none;
+    color: #f1f1f1;
+    font-weight: bold;
+    padding: 4px 7px;
+    border-radius: 4px;
+    background-color: black;
+    border: 1px solid #000000;
+}
+
+table a:hover,
+.buttoness a:hover,
+.buttoness input[type="submit"]:hover,
+.buttoness .cancel:hover,
+.add-student-form input[type="submit"]:hover {
+    background-color: #f1f1f1;
+    color: black;
+    transition: background-color 0.3s, color 0.3s;
+}
