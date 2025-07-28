@@ -3,7 +3,7 @@
 require "db/db.php";
 $mydb = new myDB();
 
-$id = $_GET['id'];
+$id = $_GET['id']; 
 $full_name = '';
 $email = '';
 $course_year_section = '';
@@ -12,7 +12,7 @@ if ($id){
     $mydb->select('tbl_students', '*', ['id' => $id]);
     if ($mydb->res && $mydb->res->num_rows > 0) {
         $student_data = $mydb->res->fetch_assoc();
-        $full_name = $student_data['full_name'] ?? '';
+        $full_name = $student_data['full_name'] ?? ''; 
         $email = $student_data['email'] ?? '';
         $course_year_section = $student_data['course_year_section'] ?? '';
     }

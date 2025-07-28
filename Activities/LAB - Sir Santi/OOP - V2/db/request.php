@@ -12,8 +12,8 @@ if (isset($_POST['add_student'])) {
 if (isset($_POST['update_student'])) {
     unset($_POST['update_student']);
     $id = $_POST['id'];
-    $data = $_POST;
-    unset($data['id']); 
+    $data = $_POST; // get all data sa form
+    unset($data['id']); // remove id para hindi ma-update
     $mydb->update('tbl_students', $data, "id = $id");
     header("Location: ../");
     exit;

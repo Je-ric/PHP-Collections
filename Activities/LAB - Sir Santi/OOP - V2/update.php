@@ -10,7 +10,7 @@ $course_year_section = '';
 
 if ($id) {
     $mydb->select('tbl_students', '*', ['id' => $id]);
-    if ($mydb->res && $mydb->res->num_rows > 0) {
+    if ($mydb->res && $mydb->res->num_rows > 0) { 
         $student_data = $mydb->res->fetch_assoc();
         $full_name = $student_data['full_name'] ?? '';
         $email = $student_data['email'] ?? '';
