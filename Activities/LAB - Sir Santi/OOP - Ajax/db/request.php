@@ -5,8 +5,7 @@ $mydb = new myDB();
 
 if (isset($_POST['add_student'])) {
     unset($_POST['add_student']);
-    $mydb->insert('tbl_students', [...$_POST]);
-    header("Location: ../");
+    $mydb->insert('tbl_students', $_POST);
 }
 
 if (isset($_POST['update_student'])) {

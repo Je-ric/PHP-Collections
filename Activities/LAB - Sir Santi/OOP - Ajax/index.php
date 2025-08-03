@@ -45,7 +45,6 @@ $student_data = $mydb->res;
 </body>
 <script type="text/javascript">
     $(document).ready(function() {
-        // Load student data
         loadStudents();
     })
 
@@ -66,7 +65,7 @@ $student_data = $mydb->res;
                         tBody +=`<td>${data['full_name']}</td>`;
                         tBody +=`<td>${data['email']}</td>`;
                         tBody +=`<td>${data['course_year_section']}</td>`;
-                        tBody +=`<td><!-- Buttonesss actions here --></td>`;
+                        // tBody +=`<td><!-- Buttonesss --></td>`;
                     tBody += `</tr>`;
                 });
                 $('#tbodyStudent').html(tBody);
@@ -77,21 +76,30 @@ $student_data = $mydb->res;
         })
     }
 
-    $("#addStudentForm").submit(function(e) {
+    $("#addStudentForm").on("submit", function(e) {
         e.preventDefault();
+        var datas = $(this).serializeArray();
+        var data_array = {};
+        $.map(datas, function(data) {
+            data_array[data['name']] = data['value'];
+        });
+        console.log(datas);
+        console.log(data_array);
         $.ajax({
             url: "db/request.php",
             method: "POST",
-            data: $(this).serialize(),
+            data: {
+                "add_student": true,
+                ...data_array
+            },
             success: function(result) {
                 loadStudents();
-                $('#addStudentForm')[0].reset();
             },
-            error: function(error){
-                alert("Something went wrong!.");
+            error: function(error) {
+                alert("Something went wrong!");
             }
         })
-    });
+    })
 </script>
 
 </html>
