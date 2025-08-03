@@ -21,9 +21,9 @@ $student_data = $mydb->res;
     <h1>Main Page</h1>
 
     <form action="db/request.php" method="post" id="addStudentForm" class="add-student-form">
-        <input type="text" name="full_name" placeholder="Enter your name">
-        <input type="text" name="email" placeholder="Enter your email">
-        <input type="text" name="course_year_section" placeholder="Enter your course, year and section">
+        <input type="text" name="full_name" placeholder="Enter your name" required>
+        <input type="text" name="email" placeholder="Enter your email" required>
+        <input type="text" name="course_year_section" placeholder="Enter your course, year and section" required>
         <input type="submit" name="add_student" value="ADD STUDENT">
     </form>
 
@@ -65,8 +65,19 @@ $student_data = $mydb->res;
                         tBody +=`<td>${data['full_name']}</td>`;
                         tBody +=`<td>${data['email']}</td>`;
                         tBody +=`<td>${data['course_year_section']}</td>`;
-                        // tBody +=`<td><!-- Buttonesss --></td>`;
-                    tBody += `</tr>`;
+                        // tBody +=`<td><button class="delete-btn" data-id="${data['id']}">Delete</button></td>`;
+                        tBody += `<td>
+                                    <button 
+                                        class="delete-btn" 
+                                        data-id="${data['id']}" 
+                                        data-full_name="${data['full_name']}" 
+                                        data-email="${data['email']}" 
+                                        data-course_year_section="${data['course_year_section']}">
+                                        Delete
+                                    </button>
+                                </td>`;
+                        tBody +=`<td><button class="update-btn" data-id="${data['id']}">Update</button></td>`;
+                        tBody += `</tr>`;
                 });
                 $('#tbodyStudent').html(tBody);
             },
@@ -99,6 +110,29 @@ $student_data = $mydb->res;
                 alert("Something went wrong!");
             }
         })
+    })
+
+    $(document).on("click", ".delete-btn", function() {
+        var id = $(this).data("id");
+        var full_name = $(this).data("full_name");
+        var email = $(this).data("email");
+        var course_year_section = $(this).data("course_year_section");
+        if (confirm(`Are you sure you want to delete this student?\nName: ${full_name}\nEmail: ${email}\nCourse Year & Section: ${course_year_section}`)) {
+            $.ajax({
+                url: "db/request.php",
+                method: "POST",
+                data: {
+                    "delete_student": true,
+                    "id": id
+                },
+                success: function(result) {
+                    loadStudents();
+                },
+                error: function(error) {
+                    alert("Something went wrong!");
+                }
+            });
+        }
     })
 </script>
 

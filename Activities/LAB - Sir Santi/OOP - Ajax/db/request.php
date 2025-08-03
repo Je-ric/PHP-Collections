@@ -33,8 +33,8 @@ if (isset($_POST['delete_student'])) {
     $id = $_POST['id'];
     $data = $_POST;
     $mydb->delete('tbl_students', $data, "id = $id");
-    header("Location: ../");
-    exit;
+    // header("Location: ../");
+    // exit;
 }
 
 ?>
