@@ -17,14 +17,17 @@ $student_data = $mydb->res;
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="js/jquery.mins.js"></script>
 </head>
+
 <body>
     <h1>Main Page</h1>
 
     <form action="db/request.php" method="post" id="addStudentForm" class="add-student-form">
-        <input type="text" name="full_name" placeholder="Enter your name" required>
-        <input type="text" name="email" placeholder="Enter your email" required>
-        <input type="text" name="course_year_section" placeholder="Enter your course, year and section" required>
+        <input type="hidden" name="id" id="student_id">
+        <input type="text" name="full_name" placeholder="Enter your name" value="" required>
+        <input type="text" name="email" placeholder="Enter your email" value="" required>
+        <input type="text" name="course_year_section" placeholder="Enter your course, year and section" value="" required>
         <input type="submit" name="add_student" value="ADD STUDENT">
+        <input type="submit" name="update_student" value="UPDATE" style="display: none;">
     </form>
 
     <table>
@@ -48,11 +51,11 @@ $student_data = $mydb->res;
         loadStudents();
     })
 
-    function loadStudents(){
+    function loadStudents() {
         $.ajax({
             url: "db/request.php",
             method: "POST",
-            data: { 
+            data: {
                 "get_students": true,
             },
             success: function(result) {
@@ -61,12 +64,12 @@ $student_data = $mydb->res;
                 var datas = JSON.parse(result);
                 datas.forEach(function(data) {
                     tBody += `<tr>`
-                        tBody +=`<td>${cnt++}</td>`;
-                        tBody +=`<td>${data['full_name']}</td>`;
-                        tBody +=`<td>${data['email']}</td>`;
-                        tBody +=`<td>${data['course_year_section']}</td>`;
-                        // tBody +=`<td><button class="delete-btn" data-id="${data['id']}">Delete</button></td>`;
-                        tBody += `<td>
+                    tBody += `<td>${cnt++}</td>`;
+                    tBody += `<td>${data['full_name']}</td>`;
+                    tBody += `<td>${data['email']}</td>`;
+                    tBody += `<td>${data['course_year_section']}</td>`;
+                    // tBody +=`<td><button class="delete-btn" data-id="${data['id']}">Delete</button></td>`;
+                    tBody += `<td>
                                     <button 
                                         class="delete-btn" 
                                         data-id="${data['id']}" 
@@ -76,8 +79,8 @@ $student_data = $mydb->res;
                                         Delete
                                     </button>
                                 </td>`;
-                        // tBody +=`<td><button class="update-btn" data-id="${data['id']}">Update</button></td>`;
-                        tBody += `<td>
+                    // tBody +=`<td><button class="update-btn" data-id="${data['id']}">Update</button></td>`;
+                    tBody += `<td>
                                     <button 
                                         class="update-btn" 
                                         data-id="${data['id']}" 
@@ -87,11 +90,11 @@ $student_data = $mydb->res;
                                         Update
                                     </button>
                                 </td>`;
-                        tBody += `</tr>`;
+                    tBody += `</tr>`;
                 });
                 $('#tbodyStudent').html(tBody);
             },
-            error: function(error){
+            error: function(error) {
                 alert("Something went wrong!.");
             }
         })
@@ -115,7 +118,7 @@ $student_data = $mydb->res;
             },
             success: function(result) {
                 loadStudents();
-                $("#addStudentForm")[0].reset(); 
+                $("#addStudentForm")[0].reset();
                 // [0] - access the 1st and usually the only raw DOM element
             },
             error: function(error) {
@@ -123,6 +126,35 @@ $student_data = $mydb->res;
             }
         })
     })
+
+    $("input[name='update_student']").on("click", function(e) {
+        e.preventDefault();
+
+        var datas = $("#addStudentForm").serializeArray();
+        var data_array = {};
+        $.map(datas, function(data) {
+            data_array[data['name']] = data['value'];
+        });
+
+        $.ajax({
+            url: "db/request.php",
+            method: "POST",
+            data: {
+                update_student: true,
+                ...data_array
+            },
+            success: function(result) {
+                loadStudents();
+                $("#addStudentForm")[0].reset();
+                $("input[name='add_student']").show();
+                $("input[name='update_student']").hide();
+            },
+            error: function(error) {
+                alert("Something went wrong!");
+            }
+        });
+    });
+
 
     $(document).on("click", ".delete-btn", function() {
         var id = $(this).data("id");
@@ -153,32 +185,14 @@ $student_data = $mydb->res;
         var email = $(this).data("email");
         var course_year_section = $(this).data("course_year_section");
 
-        // var new_name = prompt("Edit Name:", full_name);
-        // if (new_name === null) return; // cancel
+        // fill the form
+        $("#student_id").val(id);
+        $("input[name='full_name']").val(full_name);
+        $("input[name='email']").val(email);
+        $("input[name='course_year_section']").val(course_year_section);
 
-        // var new_email = prompt("Edit Email:", email);
-        // if (new_email === null) return;
-
-        // var new_course = prompt("Edit Course/Year/Section:", course_year_section);
-        // if (new_course === null) return;
-
-        $.ajax({
-            url: "db/request.php",
-            method: "POST",
-            data: {
-                "update_student": true,
-                "id": id,
-                "full_name": new_name,
-                "email": new_email,
-                "course_year_section": new_course
-            },
-            success: function(result) {
-                loadStudents();
-            },
-            error: function(error) {
-                alert("Something went wrong!");
-            }
-        });
+        $("input[name='add_student']").hide();
+        $("input[name='update_student']").show();
     })
 </script>
 
