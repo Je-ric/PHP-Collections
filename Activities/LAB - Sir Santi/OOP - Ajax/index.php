@@ -115,6 +115,8 @@ $student_data = $mydb->res;
             },
             success: function(result) {
                 loadStudents();
+                $("#addStudentForm")[0].reset(); 
+                // [0] - access the 1st and usually raw DOM element
             },
             error: function(error) {
                 alert("Something went wrong!");
