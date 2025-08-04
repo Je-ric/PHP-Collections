@@ -76,7 +76,17 @@ $student_data = $mydb->res;
                                         Delete
                                     </button>
                                 </td>`;
-                        tBody +=`<td><button class="update-btn" data-id="${data['id']}">Update</button></td>`;
+                        // tBody +=`<td><button class="update-btn" data-id="${data['id']}">Update</button></td>`;
+                        tBody += `<td>
+                                    <button 
+                                        class="update-btn" 
+                                        data-id="${data['id']}" 
+                                        data-full_name="${data['full_name']}" 
+                                        data-email="${data['email']}" 
+                                        data-course_year_section="${data['course_year_section']}">
+                                        Update
+                                    </button>
+                                </td>`;
                         tBody += `</tr>`;
                 });
                 $('#tbodyStudent').html(tBody);
@@ -118,6 +128,29 @@ $student_data = $mydb->res;
         var email = $(this).data("email");
         var course_year_section = $(this).data("course_year_section");
         if (confirm(`Are you sure you want to delete this student?\nName: ${full_name}\nEmail: ${email}\nCourse Year & Section: ${course_year_section}`)) {
+            $.ajax({
+                url: "db/request.php",
+                method: "POST",
+                data: {
+                    "delete_student": true,
+                    "id": id
+                },
+                success: function(result) {
+                    loadStudents();
+                },
+                error: function(error) {
+                    alert("Something went wrong!");
+                }
+            });
+        }
+    })
+
+    $(document).on("click", ".update-btn", function() {
+        var id = $(this).data("id");
+        var full_name = $(this).data("full_name");
+        var email = $(this).data("email");
+        var course_year_section = $(this).data("course_year_section");
+        if (confirm(`Are you sure you want to update this student?\nName: ${full_name}\nEmail: ${email}\nCourse Year & Section: ${course_year_section}`)) {
             $.ajax({
                 url: "db/request.php",
                 method: "POST",
