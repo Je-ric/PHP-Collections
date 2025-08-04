@@ -157,8 +157,11 @@ $student_data = $mydb->res;
                 url: "db/request.php",
                 method: "POST",
                 data: {
-                    "delete_student": true,
-                    "id": id
+                    "update_student": true,
+                    "id": id,
+                    "full_name": full_name,
+                    "email": email,
+                    "course_year_section": course_year_section
                 },
                 success: function(result) {
                     loadStudents();
