@@ -116,7 +116,7 @@ $student_data = $mydb->res;
             success: function(result) {
                 loadStudents();
                 $("#addStudentForm")[0].reset(); 
-                // [0] - access the 1st and usually raw DOM element
+                // [0] - access the 1st and usually the only raw DOM element
             },
             error: function(error) {
                 alert("Something went wrong!");
@@ -152,25 +152,33 @@ $student_data = $mydb->res;
         var full_name = $(this).data("full_name");
         var email = $(this).data("email");
         var course_year_section = $(this).data("course_year_section");
-        if (confirm(`Are you sure you want to update this student?\nName: ${full_name}\nEmail: ${email}\nCourse Year & Section: ${course_year_section}`)) {
-            $.ajax({
-                url: "db/request.php",
-                method: "POST",
-                data: {
-                    "update_student": true,
-                    "id": id,
-                    "full_name": full_name,
-                    "email": email,
-                    "course_year_section": course_year_section
-                },
-                success: function(result) {
-                    loadStudents();
-                },
-                error: function(error) {
-                    alert("Something went wrong!");
-                }
-            });
-        }
+
+        // var new_name = prompt("Edit Name:", full_name);
+        // if (new_name === null) return; // cancel
+
+        // var new_email = prompt("Edit Email:", email);
+        // if (new_email === null) return;
+
+        // var new_course = prompt("Edit Course/Year/Section:", course_year_section);
+        // if (new_course === null) return;
+
+        $.ajax({
+            url: "db/request.php",
+            method: "POST",
+            data: {
+                "update_student": true,
+                "id": id,
+                "full_name": new_name,
+                "email": new_email,
+                "course_year_section": new_course
+            },
+            success: function(result) {
+                loadStudents();
+            },
+            error: function(error) {
+                alert("Something went wrong!");
+            }
+        });
     })
 </script>
 
