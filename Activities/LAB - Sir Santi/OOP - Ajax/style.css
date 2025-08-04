@@ -5,7 +5,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #f1f1f1; 
+    background-color: #f1f1f1;
 }
 
 h1 {
@@ -16,27 +16,9 @@ h1 {
 .add-student-form {
     display: flex;
     flex-direction: row;
-    width: 90%;           
-    margin: 20px auto;      
+    width: 90%;
+    margin: 20px auto;
     gap: 10px;
-}
-
-.container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-
-.student-info {
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-    padding: 32px 24px;
-    margin-bottom: 10px;
 }
 
 table {
@@ -51,14 +33,13 @@ th, td {
     text-align: left;
 }
 
-input[type="text"]{
+input[type="text"] {
     width: 100%;
     padding: 5px;
     margin: 5px 0;
 }
 
-input[type="submit"],
-.cancel {
+input[type="submit"] {
     flex: 1;
     padding: 5px;
     margin: 5px 0;
@@ -66,54 +47,13 @@ input[type="submit"],
     color: white;
     text-align: center;
     text-decoration: none;
-    display: inline-block; 
-}
-
-.buttoness {
-    width: 600px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-}
-
-.input-group {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 10px;
-    gap: 10px;
-}
-
-.input-group strong {
-    width: 180px; 
-    text-align: left;
-    flex-shrink: 0;
-}
-
-.input-group input[type="text"] {
-    flex: 1;
-    padding: 5px;
-}
-
-table a,
-.buttoness a,
-.buttoness input[type="submit"],
-.add-student-form input[type="submit"] {
-    text-decoration: none;
-    color: #f1f1f1;
-    font-weight: bold;
-    padding: 4px 7px;
+    display: inline-block;
     border-radius: 4px;
-    background-color: black;
     border: 1px solid #000000;
+    font-weight: bold;
 }
 
-table a:hover,
-.buttoness a:hover,
-.buttoness input[type="submit"]:hover,
-.buttoness .cancel:hover,
-.add-student-form input[type="submit"]:hover {
+input[type="submit"]:hover {
     background-color: #f1f1f1;
     color: black;
     transition: background-color 0.3s, color 0.3s;

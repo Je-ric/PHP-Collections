@@ -69,27 +69,25 @@ $student_data = $mydb->res;
                     tBody += `<td>${data['email']}</td>`;
                     tBody += `<td>${data['course_year_section']}</td>`;
                     // tBody +=`<td><button class="delete-btn" data-id="${data['id']}">Delete</button></td>`;
-                    tBody += `<td>
-                                    <button 
-                                        class="delete-btn" 
-                                        data-id="${data['id']}" 
-                                        data-full_name="${data['full_name']}" 
-                                        data-email="${data['email']}" 
-                                        data-course_year_section="${data['course_year_section']}">
-                                        Delete
-                                    </button>
-                                </td>`;
                     // tBody +=`<td><button class="update-btn" data-id="${data['id']}">Update</button></td>`;
                     tBody += `<td>
-                                    <button 
-                                        class="update-btn" 
-                                        data-id="${data['id']}" 
-                                        data-full_name="${data['full_name']}" 
-                                        data-email="${data['email']}" 
-                                        data-course_year_section="${data['course_year_section']}">
-                                        Update
-                                    </button>
-                                </td>`;
+                                <button 
+                                    class="update-btn" 
+                                    data-id="${data['id']}" 
+                                    data-full_name="${data['full_name']}" 
+                                    data-email="${data['email']}" 
+                                    data-course_year_section="${data['course_year_section']}">
+                                    Update
+                                </button>
+                                <button 
+                                    class="delete-btn"
+                                    data-id="${data['id']}" 
+                                    data-full_name="${data['full_name']}" 
+                                    data-email="${data['email']}" 
+                                    data-course_year_section="${data['course_year_section']}">
+                                    Delete
+                                </button>
+                            </td>`;
                     tBody += `</tr>`;
                 });
                 $('#tbodyStudent').html(tBody);
@@ -180,6 +178,7 @@ $student_data = $mydb->res;
     })
 
     $(document).on("click", ".update-btn", function() {
+        // get the data from the button
         var id = $(this).data("id");
         var full_name = $(this).data("full_name");
         var email = $(this).data("email");
