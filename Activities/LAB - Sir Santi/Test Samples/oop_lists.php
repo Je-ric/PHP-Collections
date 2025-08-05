@@ -1,39 +1,68 @@
 <?php
-// Parent class (base class)
+// Parent class
 class Vehicle {
 
-    public $brand = "Generic";     // Public property: accessible anywhere
-    protected $speed = 0;          // Protected property: accessible in this class AND child classes
-    private $engineNumber = "XYZ123"; // Private property: accessible ONLY inside this class
+    public $brand;
+    protected $speed;
+    private $engineNumber;
+
+    // Constructor runs automatically when the object is created
+    public function __construct($brandValue, $engineValue) {
+        $this->brand = $brandValue;
+        $this->engineNumber = $engineValue;
+        $this->speed = 0;
+
+        echo "Vehicle constructor called.<br>";
+    }
 
     public function start() {
         echo "Vehicle started.<br>";
-        echo "Engine: " . $this->engineNumber . "<br>";
+    }
+
+    // Destructor runs automatically at the end of the script or when object is destroyed
+    public function __destruct() {
+        echo "Vehicle is being destroyed.<br>";
     }
 }
 
-// Child class (inherits from Vehicle)
+// Child class inherits from Vehicle
 class Car extends Vehicle {
 
-    public $color = "Black";
+    public $color;
 
-    // Method in child class
+    // Child constructor
+    public function __construct($brandValue, $engineValue, $colorValue) {
+        // Use parent constructor
+        parent::__construct($brandValue, $engineValue);
+
+        $this->color = $colorValue;
+        echo "Car constructor called.<br>";
+    }
+
     public function showDetails() {
-        // Accessing public property – OK
+        // public → accessible
         echo "Brand: " . $this->brand . "<br>";
 
-        // Accessing protected property – OK (because it's inherited and protected allows access in child)
+        // protected → accessible inside child
         echo "Speed: " . $this->speed . "<br>";
 
-        // Accessing private property – ERROR (uncommenting will cause fatal error)
-        // echo "Engine #: " . $this->engineNumber . "<br>";
+        // private → NOT accessible here (would cause error)
+        // echo $this->engineNumber;
+
+        echo "Color: " . $this->color . "<br>";
+    }
+
+    // Example of overriding a parent method
+    public function start() {
+        echo "Car started with a button press.<br>";
     }
 }
 
-// Create an object of the child class
-$myCar = new Car();
+// Create an object
+$myCar = new Car("Toyota", "ENG-999", "Red");
 
-$myCar->start();           // Inherited method from Vehicle
-$myCar->showDetails();     // Child method
+$myCar->start();        // calls the overridden start() in Car
+$myCar->showDetails();  // show info
 
+// When the script ends, destructor will automatically run
 ?>
