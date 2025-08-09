@@ -28,6 +28,7 @@ $student_data = $mydb->res;
         <input type="text" name="course_year_section" placeholder="Enter your course, year and section" value="" required>
         <input type="submit" name="add_student" value="ADD STUDENT">
         <input type="submit" name="update_student" value="UPDATE" style="display: none;">
+        <input type="button" id="cancelBtn" value="Cancel" style="display:none;">
     </form>
 
     <table>
@@ -146,6 +147,7 @@ $student_data = $mydb->res;
                 $("#addStudentForm")[0].reset();
                 $("input[name='add_student']").show();
                 $("input[name='update_student']").hide();
+                $("#cancelBtn").hide(); // after update
             },
             error: function(error) {
                 alert("Something went wrong!");
@@ -192,6 +194,15 @@ $student_data = $mydb->res;
 
         $("input[name='add_student']").hide();
         $("input[name='update_student']").show();
+        $("#cancelBtn").show();
+    })
+
+    $("#cancelBtn").on("click", function() {
+        $("#addStudentForm")[0].reset();
+        $("input[name='add_student']").show();
+        $("input[name='update_student']").hide();
+        $("#student_id").val("");
+        $("#cancelBtn").hide();
     })
 </script>
 
