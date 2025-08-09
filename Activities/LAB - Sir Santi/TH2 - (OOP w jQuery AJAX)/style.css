@@ -35,8 +35,22 @@ th, td {
 
 input[type="text"] {
     width: 100%;
-    padding: 5px;
-    margin: 5px 0;
+    padding: 10px 14px;
+    margin: 8px 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: linear-gradient(90deg, #f9fafc 0%, #f1f1f1 100%);
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(193, 38, 38, 0.06);
+    transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+}
+
+input[type="text"]:focus {
+    border-color: #222;
+    background: linear-gradient(90deg, #fff 0%, #f9fafc 100%);
+    box-shadow: 0 0 8px rgba(0,0,0,0.18);
+    outline: none;
 }
 
 input[type="submit"],
