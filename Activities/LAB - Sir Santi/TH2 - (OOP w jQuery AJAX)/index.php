@@ -99,6 +99,8 @@ $student_data = $mydb->res;
         })
     }
 
+    // ----------------------------------------------
+
     $("#addStudentForm").on("submit", function(e) {
         e.preventDefault();
         var datas = $(this).serializeArray();
@@ -125,6 +127,8 @@ $student_data = $mydb->res;
             }
         })
     })
+
+    // ----------------------------------------------
 
     $("input[name='update_student']").on("click", function(e) {
         e.preventDefault();
@@ -155,30 +159,6 @@ $student_data = $mydb->res;
         });
     });
 
-
-    $(document).on("click", ".delete-btn", function() {
-        var id = $(this).data("id");
-        var full_name = $(this).data("full_name");
-        var email = $(this).data("email");
-        var course_year_section = $(this).data("course_year_section");
-        if (confirm(`Are you sure you want to delete this student?\nName: ${full_name}\nEmail: ${email}\nCourse Year & Section: ${course_year_section}`)) {
-            $.ajax({
-                url: "db/request.php",
-                method: "POST",
-                data: {
-                    "delete_student": true,
-                    "id": id
-                },
-                success: function(result) {
-                    loadStudents();
-                },
-                error: function(error) {
-                    alert("Something went wrong!");
-                }
-            });
-        }
-    })
-
     $(document).on("click", ".update-btn", function() {
         // get the data from the button
         var id = $(this).data("id");
@@ -204,6 +184,32 @@ $student_data = $mydb->res;
         $("#student_id").val("");
         $("#cancelBtn").hide();
     })
+    
+    // ----------------------------------------------
+
+    $(document).on("click", ".delete-btn", function() {
+        var id = $(this).data("id");
+        var full_name = $(this).data("full_name");
+        var email = $(this).data("email");
+        var course_year_section = $(this).data("course_year_section");
+        if (confirm(`Are you sure you want to delete this student?\nName: ${full_name}\nEmail: ${email}\nCourse Year & Section: ${course_year_section}`)) {
+            $.ajax({
+                url: "db/request.php",
+                method: "POST",
+                data: {
+                    "delete_student": true,
+                    "id": id
+                },
+                success: function(result) {
+                    loadStudents();
+                },
+                error: function(error) {
+                    alert("Something went wrong!");
+                }
+            });
+        }
+    })
+
 </script>
 
 </html>
