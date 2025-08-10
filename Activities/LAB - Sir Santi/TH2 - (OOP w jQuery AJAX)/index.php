@@ -21,6 +21,13 @@ $student_data = $mydb->res;
 <body>
     <h1>PHP OOP</h1>
 
+    <div class="search-container">
+        <input type="text" 
+                id="search" 
+                placeholder="Search by name, email, or course..." 
+                autocomplete="off">
+    </div>
+
     <form action="db/request.php" method="post" id="addStudentForm" class="add-student-form">
         <input type="hidden" name="id" id="student_id">
 
@@ -72,8 +79,6 @@ $student_data = $mydb->res;
                     tBody += `<td>${data['full_name']}</td>`;
                     tBody += `<td>${data['email']}</td>`;
                     tBody += `<td>${data['course_year_section']}</td>`;
-                    // tBody +=`<td><button class="delete-btn" data-id="${data['id']}">Delete</button></td>`;
-                    // tBody +=`<td><button class="update-btn" data-id="${data['id']}">Update</button></td>`;
                     tBody += `<td>
                                 <button 
                                     class="update-btn" 
@@ -91,16 +96,29 @@ $student_data = $mydb->res;
                                     data-course_year_section="${data['course_year_section']}">
                                     Delete
                                 </button>
-                            </td>`;
+                                </td>`;
                     tBody += `</tr>`;
                 });
                 $('#tbodyStudent').html(tBody);
+                search();
             },
             error: function(error) {
                 alert("Something went wrong!.");
             }
         })
     }
+
+    // https://www.voxfor.com/how-to-build-a-live-search-box-with-php-mysql-and-ajax/
+    // https://stackoverflow.com/questions/47271727/using-js-or-ajax-to-live-search-filter-through-json-object-on-page-laravel
+    function search() {
+        var query = $('#search').val().toLowerCase();
+        $('#tbodyStudent tr').each(function () {
+            var text = $(this).text().toLowerCase();
+            $(this).toggle(text.indexOf(query) !== -1);
+        });
+    }
+
+    $('#search').on('input', search);
 
     // ----------------------------------------------
 
