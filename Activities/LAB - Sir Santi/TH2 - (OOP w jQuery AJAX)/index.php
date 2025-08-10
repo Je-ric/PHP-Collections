@@ -19,16 +19,19 @@ $student_data = $mydb->res;
 </head>
 
 <body>
-    <h1>Main Page</h1>
+    <h1>PHP OOP</h1>
 
     <form action="db/request.php" method="post" id="addStudentForm" class="add-student-form">
         <input type="hidden" name="id" id="student_id">
+
         <input type="text" name="full_name" placeholder="Enter your name" value="" required>
         <input type="text" name="email" placeholder="Enter your email" value="" required>
         <input type="text" name="course_year_section" placeholder="Enter your course, year and section" value="" required>
+
         <input type="submit" name="add_student" value="ADD STUDENT">
         <input type="submit" name="update_student" value="UPDATE" style="display: none;">
-        <input type="button" id="cancelBtn" value="Cancel" style="display:none;">
+        <input type="button" id="cancel_update" value="Cancel" style="display:none;">
+
     </form>
 
     <table>
@@ -101,15 +104,18 @@ $student_data = $mydb->res;
 
     // ----------------------------------------------
 
-    $("#addStudentForm").on("submit", function(e) {
-        e.preventDefault();
-        var datas = $(this).serializeArray();
-        var data_array = {};
+    $("#addStudentForm").on("submit", function(e) { 
+        e.preventDefault(); // stop the browser from reloading the page
+
+        var datas = $(this).serializeArray(); // ginagawang array yung form into an array, by pair
+        var data_array = {}; // tapos kino-convert into an object
         $.map(datas, function(data) {
-            data_array[data['name']] = data['value'];
+            data_array[data['name']] = data['value']; 
         });
+
         console.log(datas);
         console.log(data_array);
+
         $.ajax({
             url: "db/request.php",
             method: "POST",
@@ -151,7 +157,7 @@ $student_data = $mydb->res;
                 $("#addStudentForm")[0].reset();
                 $("input[name='add_student']").show();
                 $("input[name='update_student']").hide();
-                $("#cancelBtn").hide(); // after update
+                $("#cancel_update").hide();
             },
             error: function(error) {
                 alert("Something went wrong!");
@@ -160,13 +166,13 @@ $student_data = $mydb->res;
     });
 
     $(document).on("click", ".update-btn", function() {
-        // get the data from the button
+        // get or we can say retrieve the data from the button
         var id = $(this).data("id");
         var full_name = $(this).data("full_name");
         var email = $(this).data("email");
         var course_year_section = $(this).data("course_year_section");
 
-        // fill the form
+        // fill from get ^
         $("#student_id").val(id);
         $("input[name='full_name']").val(full_name);
         $("input[name='email']").val(email);
@@ -174,15 +180,15 @@ $student_data = $mydb->res;
 
         $("input[name='add_student']").hide();
         $("input[name='update_student']").show();
-        $("#cancelBtn").show();
+        $("#cancel_update").show();
     })
 
-    $("#cancelBtn").on("click", function() {
+    $("#cancel_update").on("click", function() {
         $("#addStudentForm")[0].reset();
         $("input[name='add_student']").show();
         $("input[name='update_student']").hide();
-        $("#student_id").val("");
-        $("#cancelBtn").hide();
+        $("#student_id").val(""); // hidden kase yung id, para maclear den
+        $("#cancel_update").hide();
     })
     
     // ----------------------------------------------
