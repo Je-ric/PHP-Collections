@@ -21,42 +21,43 @@ $student_data = $mydb->res;
 <body>
     <h1>PHP OOP</h1>
 
-    <div class="search-container">
-        <input type="text" 
+    <div class="main-container">
+        <div class="form-section">
+            <form action="db/request.php" method="post" id="addStudentForm" class="add-student-form">
+                <input type="hidden" name="id" id="student_id">
+
+                <input type="text" name="full_name" placeholder="Enter your name" value="" required>
+                <input type="text" name="email" placeholder="Enter your email" value="" required>
+                <input type="text" name="course_year_section" placeholder="Enter your course, year and section" value="" required>
+
+                <input type="submit" name="add_student" value="ADD STUDENT">
+                <input type="submit" name="update_student" value="UPDATE" style="display: none;">
+                <input type="button" id="cancel_update" value="Cancel" style="display:none;">
+            </form>
+        </div>
+
+        <div class="table-section">
+            <input type="text" 
                 id="search" 
                 placeholder="Search by name, email, or course..." 
                 autocomplete="off">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Course Year & Section</th>
+                        <th>Buttonesss</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyStudent"></tbody>
+            </table>
+        </div>
     </div>
-
-    <form action="db/request.php" method="post" id="addStudentForm" class="add-student-form">
-        <input type="hidden" name="id" id="student_id">
-
-        <input type="text" name="full_name" placeholder="Enter your name" value="" required>
-        <input type="text" name="email" placeholder="Enter your email" value="" required>
-        <input type="text" name="course_year_section" placeholder="Enter your course, year and section" value="" required>
-
-        <input type="submit" name="add_student" value="ADD STUDENT">
-        <input type="submit" name="update_student" value="UPDATE" style="display: none;">
-        <input type="button" id="cancel_update" value="Cancel" style="display:none;">
-
-    </form>
-
-    <table>
-        <thead>
-            <tr>
-                <th>id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Course Year & Section</th>
-                <th>Buttonesss</th>
-            </tr>
-        </thead>
-        <tbody id="tbodyStudent">
-
-        </tbody>
-    </table>
-
 </body>
+
 <script type="text/javascript">
     $(document).ready(function() {
         loadStudents();
