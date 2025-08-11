@@ -45,7 +45,8 @@ $student_data = $mydb->res;
             <table>
                 <thead>
                     <tr>
-                        <th>id</th>
+                        <th>Count</th>
+                        <!-- <th>Id</th> -->
                         <th>Name</th>
                         <th>Email</th>
                         <th>Course Year & Section</th>
@@ -64,7 +65,7 @@ $student_data = $mydb->res;
     })
 
     function loadStudents() {
-        $.ajax({
+        $.ajax({ 
             url: "db/request.php",
             method: "POST",
             data: {
@@ -77,6 +78,7 @@ $student_data = $mydb->res;
                 datas.forEach(function(data) {
                     tBody += `<tr>`
                     tBody += `<td>${cnt++}</td>`;
+                    // tBody += `<td>${data['id']}</td>`;
                     tBody += `<td>${data['full_name']}</td>`;
                     tBody += `<td>${data['email']}</td>`;
                     tBody += `<td>${data['course_year_section']}</td>`;
@@ -115,7 +117,7 @@ $student_data = $mydb->res;
         var query = $('#search').val().toLowerCase();
         $('#tbodyStudent tr').each(function () {
             var text = $(this).text().toLowerCase();
-            $(this).toggle(text.indexOf(query) !== -1);
+            $(this).toggle(text.indexOf(query) !== -1); 
         });
     }
 
@@ -126,7 +128,7 @@ $student_data = $mydb->res;
     $("#addStudentForm").on("submit", function(e) { 
         e.preventDefault(); // stop the browser from reloading the page
 
-        var datas = $(this).serializeArray(); // ginagawang array yung form into an array, by pair
+        var datas = $(this).serializeArray(); // ginagawang array yung form, by pair
         var data_array = {}; // tapos kino-convert into an object
         $.map(datas, function(data) {
             data_array[data['name']] = data['value']; 
