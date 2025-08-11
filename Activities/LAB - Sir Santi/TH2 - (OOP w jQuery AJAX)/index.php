@@ -71,10 +71,10 @@ $student_data = $mydb->res;
             data: {
                 "get_students": true,
             },
-            success: function(result) {
+            success: function(result) { // request - naka echo json
                 var tBody = ``;
                 var cnt = 1;
-                var datas = JSON.parse(result);
+                var datas = JSON.parse(result); // for parsing JSON response, means converting JSON string to JavaScript object
                 datas.forEach(function(data) {
                     tBody += `<tr>`
                     tBody += `<td>${cnt++}</td>`;
