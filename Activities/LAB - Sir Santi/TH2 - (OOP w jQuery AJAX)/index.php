@@ -13,13 +13,13 @@ $student_data = $mydb->res;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OOP - AJAX</title>
-    <link rel="stylesheet" href="style.css">
+    <title>PHP - OOP - AJAX Jquery</title>
+    <link rel="stylesheet" href="src/style.css">
     <script type="text/javascript" src="js/jquery.mins.js"></script>
 </head>
 
 <body>
-    <h1>PHP OOP</h1>
+    <h1>PHP - OOP - AJAX Jquery</h1>
 
     <div class="main-container">
         <div class="form-section">
@@ -157,6 +157,7 @@ $student_data = $mydb->res;
 
     // ----------------------------------------------
 
+    // https://codewithawa.com/posts/ajax-crud-%5Bcreate-update-delete%5D-with-php-and-mysql-database
     $("input[name='update_student']").on("click", function(e) {
         e.preventDefault();
 
