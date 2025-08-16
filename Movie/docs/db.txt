@@ -2,13 +2,12 @@
 CREATE TABLE `users` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(255) NOT NULL,
-  `password` VARCHAR(255) NOT NULL, -- hashed password
-  `role ENUM('user','admin')` DEFAULT 'user',
+  `password` VARCHAR(255) NOT NULL, -- store hashed password (BCrypt/Argon2)
+  `role` ENUM('user','admin') DEFAULT 'user',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 
 -- GENRES TABLE
 CREATE TABLE `genres` (
@@ -39,7 +38,7 @@ CREATE TABLE `movies` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255) NOT NULL,
   `description` TEXT DEFAULT NULL,
-  `release_year` YEAR DEFAULT NULL
+  `release_year` YEAR DEFAULT NULL,
   `poster_url` VARCHAR(255) DEFAULT NULL,
   `trailer_url` VARCHAR(255) DEFAULT NULL,
   `country_id` INT(11) DEFAULT NULL,
@@ -89,6 +88,7 @@ CREATE TABLE `ratings_reviews` (
   `review` TEXT DEFAULT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `user_movie_unique` (`user_id`,`movie_id`),
   KEY `user_id` (`user_id`),
   KEY `movie_id` (`movie_id`),
   CONSTRAINT `ratings_reviews_ibfk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
@@ -108,34 +108,24 @@ CREATE TABLE `user_favorites` (
   CONSTRAINT `user_favorites_ibfk_movie` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO users (username, password, role) VALUES ('jericjdc', '$2y$10$3VOpAi0s8RUV.tNNB1EBw.MguOXwULfAKBgpJ6I8kNklyBz.qojie', 'admin');
+
+
 
 INSERT INTO `genres` (`name`) VALUES
-('Action'),
-('Adventure'),
-('Animation'),
-('Biography'),
-('Comedy'),
-('Crime'),
-('Dance'),
-('Documentary'),
-('Drama'),
-('Family'),
-('Fantasy'),
-('History'),
-('Horror'),
-('Kids'),
-('Military'),
-('Music'),
-('Musical'),
-('Mystery'),
-('Nature'),
-('Period'),
-('Political'),
-('Science Fiction'),
-('Soap Opera'),
-('Talk Show'),
-('Thriller'),
-('TV Movie'),
-('War'),
-('Short');
+('Action'), ('Adventure'), ('Animation'), ('Biography'), ('Comedy'), 
+('Crime'), ('Dance'), ('Documentary'), ('Drama'), ('Family'),
+('Fantasy'), ('History'), ('Horror'), ('Kids'), ('Military'),
+('Music'), ('Musical'), ('Mystery'), ('Nature'), ('Period'),
+('Political'), ('Science Fiction'), ('Soap Opera'), ('Talk Show'),
+('Thriller'), ('TV Movie'), ('War'), ('Short');
+
+
+INSERT INTO movies (title, description, release_year, poster_url, trailer_url, country_id, language_id)
+VALUES 
+('Inception', 'A thief who steals corporate secrets through dream-sharing technology.', 2010, NULL, NULL, NULL, NULL),
+('Parasite', 'A poor family schemes to become employed by a wealthy family.', 2019, NULL, NULL, NULL, NULL),
+('Interstellar', 'Explorers travel through a wormhole to ensure humanity''s survival.', 2014, NULL, NULL, NULL, NULL);
+
+
+INSERT INTO `users` (username, password, role) 
+VALUES ('jericjdc', '$2y$10$l9MDiCtVtI31R1282hKHKO1eSnj4FNMzJ/HnWF5TAr/aYJvWpiZpK', 'admin'); 

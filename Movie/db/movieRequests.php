@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../functions/Movie.php';
 session_start();
+require_once __DIR__ . '/../functions/Movie.php';
 
 $movie = new Movie();
 
