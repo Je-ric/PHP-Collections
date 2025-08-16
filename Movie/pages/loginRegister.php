@@ -8,7 +8,7 @@
 <body>
     <div id="register-form-container" class="form-container">
     <h2>Register</h2>
-    <form action="../db/requests.php" method="POST">
+    <form action="../db/authRequests.php" method="POST">
         <input type="hidden" name="action" value="register">
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
@@ -18,7 +18,7 @@
 
 <div id="login-form-container" class="form-container">
     <h2>Login</h2>
-    <form action="../db/requests.php" method="POST">
+    <form action="../db/authRequests.php" method="POST">
         <input type="hidden" name="action" value="login">
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
