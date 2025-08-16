@@ -25,6 +25,22 @@ if (!empty($_GET['id'])) {
 
 $actionText = $editing ? "Update Movie" : "Add Movie";
 $submitAction = $editing ? "update" : "add";
+
+// ==================================================
+// References:
+// https://stackoverflow.com/questions/19758954/get-data-from-json-file-with-php
+
+$countryJsonContent = file_get_contents(__DIR__ . '/../JSON/country.json'); // Load the JSON content
+$languageJsonContent = file_get_contents(__DIR__ . '/../JSON/language.json'); 
+
+// Decode JSON into PHP array
+$countries = json_decode($countryJsonContent, true); // true = associative array
+$languages = json_decode($languageJsonContent, true); 
+
+// foreach ($countries as $country) {
+//     echo $country['name'] . ' (' . $country['code'] . ')<br>';
+// }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,7 +72,30 @@ $submitAction = $editing ? "update" : "add";
     <label>Trailer URL:</label>
     <input type="text" name="trailer_url" value="<?= htmlspecialchars($movieData['trailer_url']) ?>"><br>
 
-    <button type="submit"><?= $actionText ?></button>
+<label>Country:</label>
+<select name="countryName" required>
+    <option value="">-- Select Country --</option>
+    <?php foreach ($countries as $country): ?>
+        <option value="<?= htmlspecialchars($country['name']) ?>" 
+            <?= ($editing && $movieData['country_name'] === $country['name']) ? 'selected' : '' ?>>
+            <?= htmlspecialchars($country['name']) ?>
+        </option>
+    <?php endforeach; ?>
+</select><br>
+
+<label>Language:</label>
+<select name="languageName" required>
+    <option value="">-- Select Language --</option>
+    <?php foreach ($languages as $language): ?>
+        <option value="<?= htmlspecialchars($language['name']) ?>" 
+            <?= ($editing && $movieData['language_name'] === $language['name']) ? 'selected' : '' ?>>
+            <?= htmlspecialchars($language['name']) ?>
+        </option>
+    <?php endforeach; ?>
+</select><br>
+
+    <button type="submit"><?php echo htmlspecialchars($actionText); ?></button>
+
 </form>
 
 

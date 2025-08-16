@@ -14,7 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_POST['description'],
                 $_POST['release_year'],
                 $_FILES['poster_file'],
-                $_POST['trailer_url']
+                $_POST['trailer_url'],
+                $_POST['countryName'],
+                $_POST['languageName']
             );
             header("Location: ../index.php?success=movie_added");
             exit;
@@ -25,8 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_POST['title'],
                 $_POST['description'],
                 $_POST['release_year'],
-                $_FILES['poster_file'],
-                $_POST['trailer_url']
+                $_FILES['poster_file'], 
+                $_POST['trailer_url'],
+                $_POST['countryName'],
+                $_POST['languageName'] 
             );
             header("Location: ../index.php?success=movie_updated");
             exit;
