@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header("Location: ../pages/loginRegister.php?error=register_failed");
                 exit;
             }
-            break;
+            // break;
 
         case 'login':
             $username = trim($_POST['username']);
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header("Location: ../pages/loginRegister.php?error=login_failed");
                 exit;
             }
-            break;
+            // break;
 
         case 'logout':
             $auth->logoutUser();
