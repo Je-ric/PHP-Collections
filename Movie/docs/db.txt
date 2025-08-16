@@ -106,3 +106,5 @@ CREATE TABLE `user_favorites` (
   CONSTRAINT `user_favorites_ibfk_movie` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+ALTER TABLE movies 
+MODIFY release_year YEAR DEFAULT NULL;
