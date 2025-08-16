@@ -10,7 +10,7 @@ class Authentication {
         session_start(); 
     }
 
-    public function registerUser($username, $password) {
+    public function registerUser($username, $password, $role = 'user') {
         $stmt = $this->db->prepare("SELECT id FROM users WHERE username = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
@@ -37,6 +37,7 @@ class Authentication {
             if (password_verify($password, $row['password'])) {
                 $_SESSION['user_id'] = $row['id'];
                 $_SESSION['username'] = $row['username'];
+                $_SESSION['role'] = $row['role'];
                 return true;
             }
         }

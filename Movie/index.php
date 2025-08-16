@@ -30,7 +30,7 @@ $movies = $movie->getAllMovies();
         <span class="text-gray-400 hidden sm:inline">Welcome, <?= htmlspecialchars($_SESSION['username']) ?>!</span>
 
         <!-- Logout -->
-        <form action="db/requests.php" method="POST" class="inline-flex">
+        <form action="db/authRequests.php" method="POST" class="inline-flex">
           <input type="hidden" name="action" value="logout" />
           <button type="submit" class="inline-flex items-center gap-1 px-3 py-2 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors">
             <i data-lucide="log-out" class="w-4 h-4 stroke-[1.5]"></i>
@@ -39,10 +39,12 @@ $movies = $movie->getAllMovies();
         </form>
 
         <!-- Add Movie -->
-        <a href="pages/manageMovie.php" class="inline-flex items-center gap-1 px-3 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 transition-colors">
-          <i data-lucide="plus" class="w-4 h-4 stroke-[1.5]"></i>
-          <span class="hidden sm:inline">Add Movie</span>
-        </a>
+          <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+          <a href="pages/manageMovie.php" class="inline-flex items-center gap-1 px-3 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 transition-colors">
+            <i data-lucide="plus" class="w-4 h-4 stroke-[1.5]"></i>
+            <span class="hidden sm:inline">Add Movie</span>
+          </a>
+          <?php endif; ?>
       <?php else: ?>
         <a href="pages/loginRegister.php" class="inline-flex items-center gap-1 px-3 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 transition-colors">
           <i data-lucide="log-in" class="w-4 h-4 stroke-[1.5]"></i>
@@ -83,7 +85,7 @@ $movies = $movie->getAllMovies();
                 Trailer
               </a>
 
-              <?php if (isset($_SESSION['username'])): ?>
+              <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                 <span class="h-4 w-px bg-gray-700"></span>
 
                 <!-- Edit -->

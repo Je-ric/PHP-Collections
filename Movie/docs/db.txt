@@ -3,10 +3,12 @@ CREATE TABLE `users` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(255) NOT NULL,
   `password` VARCHAR(255) NOT NULL, -- hashed password
+  `role ENUM('user','admin')` DEFAULT 'user',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 -- GENRES TABLE
 CREATE TABLE `genres` (
@@ -37,7 +39,7 @@ CREATE TABLE `movies` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255) NOT NULL,
   `description` TEXT DEFAULT NULL,
-  `release_year` INT(11) DEFAULT NULL,
+  `release_year` YEAR DEFAULT NULL
   `poster_url` VARCHAR(255) DEFAULT NULL,
   `trailer_url` VARCHAR(255) DEFAULT NULL,
   `country_id` INT(11) DEFAULT NULL,
@@ -106,8 +108,7 @@ CREATE TABLE `user_favorites` (
   CONSTRAINT `user_favorites_ibfk_movie` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-ALTER TABLE movies 
-MODIFY release_year YEAR DEFAULT NULL;
+INSERT INTO users (username, password, role) VALUES ('jericjdc', '$2y$10$3VOpAi0s8RUV.tNNB1EBw.MguOXwULfAKBgpJ6I8kNklyBz.qojie', 'admin');
 
 INSERT INTO `genres` (`name`) VALUES
 ('Action'),
