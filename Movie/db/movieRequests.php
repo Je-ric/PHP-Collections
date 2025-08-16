@@ -6,6 +6,7 @@ $movie = new Movie();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
+    $genre_Ids = $_POST['genres'] ?? [];
 
     switch ($action) {
         case 'add':
@@ -16,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_FILES['poster_file'],
                 $_POST['trailer_url'],
                 $_POST['countryName'],
-                $_POST['languageName']
+                $_POST['languageName'],
+                $genre_Ids
             );
             header("Location: ../index.php?success=movie_added");
             exit;
@@ -30,7 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_FILES['poster_file'], 
                 $_POST['trailer_url'],
                 $_POST['countryName'],
-                $_POST['languageName'] 
+                $_POST['languageName'],
+                $genre_Ids
             );
             header("Location: ../index.php?success=movie_updated");
             exit;

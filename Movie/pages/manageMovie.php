@@ -12,16 +12,22 @@ $movieData = [
     'trailer_url' => ''
 ];
 
-// If id is provided, we are editing
+$allGenres = $movie->getAllGenres(); 
+$selectedGenres = [];
+
+// if may id, edit mode
 if (!empty($_GET['id'])) {
     $editing = true;
     $movieData = $movie->getMovieById($_GET['id']);
-    if (!$movieData) {
-        // Invalid id, redirect back
+    $movieId = $_GET['id'];
+    $selectedGenres = $movie->getGenresByMovie($movieId);
+    if (!$movieData) { // invalid id
         header("Location: ../index.php");
         exit;
     }
 }
+
+
 
 $actionText = $editing ? "Update Movie" : "Add Movie";
 $submitAction = $editing ? "update" : "add";
@@ -62,6 +68,14 @@ $languages = json_decode($languageJsonContent, true);
 
     <label>Description:</label>
     <textarea name="description"><?= htmlspecialchars($movieData['description']) ?></textarea><br>
+
+    <label>Genres:</label>
+<?php foreach ($allGenres as $genre): ?>
+    <input type="checkbox" name="genres[]" value="<?= $genre['id'] ?>" 
+        <?= in_array($genre['id'], $selectedGenres) ? 'checked' : '' ?>>
+    <?= htmlspecialchars($genre['name']) ?><br>
+<?php endforeach; ?>    
+
 
     <label>Release Year:</label>
     <input type="number" name="release_year" value="<?= $movieData['release_year'] ?>"><br>

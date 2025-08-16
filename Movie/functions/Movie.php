@@ -40,45 +40,58 @@ class Movie
     return $stmt->get_result()->fetch_assoc();
   }
 
-  public function addMovie($title, $description, $release_year, $posterFile, $trailer_url, $countryName, $languageName)
-  {
-    // Get IDs from names
+public function addMovie($title, $description, $release_year, $posterFile, $trailer_url, $countryName, $languageName, $genreIds = []) {
     $country_id = $this->getCountryId($countryName);
     $language_id = $this->getLanguageId($languageName);
-
     $posterPath = $this->handleUpload($posterFile, $title, $release_year);
 
     $stmt = $this->db->prepare(
       "INSERT INTO movies (
-            title, description, release_year, 
-            poster_url, trailer_url, 
-            country_id, language_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                  title, description, release_year, 
+                  poster_url, trailer_url, 
+                  country_id, language_id)
+              VALUES (?, ?, ?, ?, ?, ?, ?)"
     );
-    $stmt->bind_param("ssissii", $title, $description, $release_year, $posterPath, $trailer_url, $country_id, $language_id);
-    return $stmt->execute();
-  }
+    $stmt->bind_param("ssissii", 
+              $title, $description, $release_year, 
+              $posterPath, $trailer_url, 
+              $country_id, $language_id);
+    $stmt->execute();
 
-  public function updateMovie($id, $title, $description, $release_year, $posterFile, $trailer_url, $countryName, $languageName)
-  {
+    $movieId = $stmt->insert_id;
+
+    if (!empty($genreIds)) {
+        $this->updateMovieGenres($movieId, $genreIds);
+    }
+
+    return $movieId;
+}
+
+public function updateMovie($id, $title, $description, $release_year, $posterFile, $trailer_url, $countryName, $languageName, $genreIds = []) {
     $country_id = $this->getCountryId($countryName);
     $language_id = $this->getLanguageId($languageName);
 
     $posterPath = $posterFile['error'] === UPLOAD_ERR_OK
-      ? $this->handleUpload($posterFile, $title, $release_year)
-      : $this->getMovieById($id)['poster_url'];
+        ? $this->handleUpload($posterFile, $title, $release_year)
+        : $this->getMovieById($id)['poster_url'];
 
     $stmt = $this->db->prepare(
       "UPDATE movies 
-        SET title=?, description=?, release_year=?, 
-            poster_url=?, trailer_url=?, 
-            country_id=?, language_id=? 
-        WHERE id=?"
+              SET title=?, description=?, release_year=?, 
+                  poster_url=?, trailer_url=?, 
+                  country_id=?, language_id=?
+              WHERE id=?"
     );
-    $stmt->bind_param("ssissiii", $title, $description, $release_year, $posterPath, $trailer_url, $country_id, $language_id, $id);
-    return $stmt->execute();
-  }
+    $stmt->bind_param("ssissiii", 
+        $title, $description, $release_year, 
+              $posterPath, $trailer_url, 
+              $country_id, $language_id, $id);
+    $stmt->execute();
 
+    $this->updateMovieGenres($id, $genreIds);
+
+    return true;
+}
 
   public function deleteMovie($id)
   {
@@ -91,6 +104,7 @@ class Movie
     return $stmt->execute();
   }
 
+  
   private function handleUpload($uploadedFile, $movieTitle, $releaseYear)
   {
     $safeTitle = preg_replace("/[^a-zA-Z0-9]/", "_", strtolower($movieTitle));
@@ -111,10 +125,35 @@ class Movie
   }
 
 
+// ========================================================================
+public function getAllGenres() {
+    $result = $this->db->query("SELECT * FROM genres ORDER BY name ASC");
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
 
+public function getGenresByMovie($movieId) {
+    $stmt = $this->db->prepare("SELECT genre_id FROM movie_genres WHERE movie_id = ?");
+    $stmt->bind_param("i", $movieId);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    return $result ? array_column($result, 'genre_id') : [];
+}
 
+public function updateMovieGenres($movieId, $genreIds) {
+    // Remove old genres
+    $stmt = $this->db->prepare("DELETE FROM movie_genres WHERE movie_id = ?");
+    $stmt->bind_param("i", $movieId);
+    $stmt->execute();
 
+    // Insert new genres
+    $stmt = $this->db->prepare("INSERT INTO movie_genres (movie_id, genre_id) VALUES (?, ?)");
+    foreach ($genreIds as $genreId) {
+        $stmt->bind_param("ii", $movieId, $genreId);
+        $stmt->execute();
+    }
+}
 
+// ========================================================================
   private function getCountryId($countryName)
   {
     // if country exists, get its ID

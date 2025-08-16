@@ -108,3 +108,33 @@ CREATE TABLE `user_favorites` (
 
 ALTER TABLE movies 
 MODIFY release_year YEAR DEFAULT NULL;
+
+INSERT INTO `genres` (`name`) VALUES
+('Action'),
+('Adventure'),
+('Animation'),
+('Biography'),
+('Comedy'),
+('Crime'),
+('Dance'),
+('Documentary'),
+('Drama'),
+('Family'),
+('Fantasy'),
+('History'),
+('Horror'),
+('Kids'),
+('Military'),
+('Music'),
+('Musical'),
+('Mystery'),
+('Nature'),
+('Period'),
+('Political'),
+('Science Fiction'),
+('Soap Opera'),
+('Talk Show'),
+('Thriller'),
+('TV Movie'),
+('War'),
+('Short');
