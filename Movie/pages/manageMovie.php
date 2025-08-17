@@ -4,12 +4,12 @@ $movie = new Movie();
 
 $editing = false;
 $movieData = [
-    'id' => '',
-    'title' => '',
-    'description' => '',
-    'release_year' => '',
-    'poster_url' => '',
-    'trailer_url' => ''
+  'id' => '',
+  'title' => '',
+  'description' => '',
+  'release_year' => '',
+  'poster_url' => '',
+  'trailer_url' => ''
 ];
 
 $allGenres = $movie->getAllGenres();
@@ -17,14 +17,14 @@ $selectedGenres = [];
 
 // if may id, edit mode
 if (!empty($_GET['id'])) {
-    $editing = true;
-    $movieData = $movie->getMovieById($_GET['id']);
-    $movieId = $_GET['id'];
-    $selectedGenres = $movie->getGenresByMovie($movieId);
-    if (!$movieData) { // invalid id
-        header("Location: ../index.php");
-        exit;
-    }
+  $editing = true;
+  $movieData = $movie->getMovieById($_GET['id']);
+  $movieId = $_GET['id'];
+  $selectedGenres = $movie->getGenresByMovie($movieId, 'id');
+  if (!$movieData) { // invalid id
+    header("Location: ../index.php");
+    exit;
+  }
 }
 
 $actionText = $editing ? "Update Movie" : "Add Movie";
@@ -48,6 +48,7 @@ $languages = json_decode($languageJsonContent, true);
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -62,26 +63,35 @@ $languages = json_decode($languageJsonContent, true);
       background-color: #0f0f0f;
       color: #f8f9fa;
     }
-    header, footer {
+
+    header,
+    footer {
       background: rgba(24, 24, 27, 0.6);
       backdrop-filter: blur(8px);
     }
-    .form-control, .form-select {
+
+    .form-control,
+    .form-select {
       background-color: #1f1f1f;
       border: 1px solid #333;
       color: #f8f9fa;
     }
-    .form-control:focus, .form-select:focus {
+
+    .form-control:focus,
+    .form-select:focus {
       border-color: #ffc107;
       box-shadow: 0 0 0 .2rem rgba(255, 193, 7, .25);
     }
+
     .form-check-input:checked {
       background-color: #ffc107;
       border-color: #ffc107;
     }
+
     .form-check-label {
       color: #f8f9fa;
     }
+
     .card-dark {
       background: rgba(24, 24, 27, 0.6);
       border: 1px solid #2d2d2d;
@@ -143,46 +153,46 @@ $languages = json_decode($languageJsonContent, true);
             </select>
           </div>
 
-<!-- Poster -->
-<div class="col-md-6">
-  <label class="form-label text-warning">Poster Image <?= $editing ? '' : '<span class="text-danger">*</span>' ?></label>
-  <input type="file" name="poster_file" <?= $editing ? '' : 'required' ?> class="form-control">
+          <!-- Poster -->
+          <div class="col-md-6">
+            <label class="form-label text-warning">Poster Image <?= $editing ? '' : '<span class="text-danger">*</span>' ?></label>
+            <input type="file" name="poster_file" <?= $editing ? '' : 'required' ?> class="form-control">
 
-  <?php if ($editing && !empty($movieData['poster_url'])): ?>
-    <div class="mt-3">
-      <img src="../<?= htmlspecialchars($movieData['poster_url']) ?>" 
-           alt="Current Poster" 
-           class="img-fluid rounded shadow-sm border" 
-           style="max-height: 300px; object-fit: cover;">
-    </div>
-  <?php endif; ?>
-</div>
+            <?php if ($editing && !empty($movieData['poster_url'])): ?>
+              <div class="mt-3">
+                <img src="../<?= htmlspecialchars($movieData['poster_url']) ?>"
+                  alt="Current Poster"
+                  class="img-fluid rounded shadow-sm border"
+                  style="max-height: 300px; object-fit: cover;">
+              </div>
+            <?php endif; ?>
+          </div>
 
-<!-- Trailer -->
-<div class="col-md-6">
-  <label class="form-label text-warning">Trailer URL</label>
-  <input type="text" name="trailer_url" value="<?= htmlspecialchars($movieData['trailer_url']) ?>" class="form-control">
+          <!-- Trailer -->
+          <div class="col-md-6">
+            <label class="form-label text-warning">Trailer URL</label>
+            <input type="text" name="trailer_url" value="<?= htmlspecialchars($movieData['trailer_url']) ?>" class="form-control">
 
-  <?php if ($editing && !empty($movieData['trailer_url'])): ?>
-    <div class="mt-3 ratio ratio-16x9">
-      <?php
-        $trailerUrl = $movieData['trailer_url'];
-        if (strpos($trailerUrl, "youtube.com") !== false || strpos($trailerUrl, "youtu.be") !== false) {
-          if (preg_match('/(youtu\.be\/|v=)([^&]+)/', $trailerUrl, $matches)) {
-            $videoId = $matches[2];
-            echo '<iframe src="https://www.youtube.com/embed/' . htmlspecialchars($videoId) . '" 
+            <?php if ($editing && !empty($movieData['trailer_url'])): ?>
+              <div class="mt-3 ratio ratio-16x9">
+                <?php
+                $trailerUrl = $movieData['trailer_url'];
+                if (strpos($trailerUrl, "youtube.com") !== false || strpos($trailerUrl, "youtu.be") !== false) {
+                  if (preg_match('/(youtu\.be\/|v=)([^&]+)/', $trailerUrl, $matches)) {
+                    $videoId = $matches[2];
+                    echo '<iframe src="https://www.youtube.com/embed/' . htmlspecialchars($videoId) . '" 
                    title="Trailer" allowfullscreen></iframe>';
-          }
-        } else {
-          echo '<video controls class="w-100 rounded shadow-sm">
+                  }
+                } else {
+                  echo '<video controls class="w-100 rounded shadow-sm">
                   <source src="' . htmlspecialchars($trailerUrl) . '" type="video/mp4">
                   Your browser does not support the video tag.
                 </video>';
-        }
-      ?>
-    </div>
-  <?php endif; ?>
-</div>
+                }
+                ?>
+              </div>
+            <?php endif; ?>
+          </div>
 
 
 
@@ -229,4 +239,5 @@ $languages = json_decode($languageJsonContent, true);
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

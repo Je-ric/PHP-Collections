@@ -115,29 +115,40 @@ class Movie {
     // Getter
     // ===========================
     public function getAllGenres() {
-        $sql = "SELECT * FROM genres ORDER BY name ASC";
-        $result = $this->db->query($sql);
+      $sql = "SELECT * FROM genres ORDER BY name ASC";
+      $result = $this->db->query($sql);
+
+      if ($result) {
         return $result->fetch_all(MYSQLI_ASSOC);
+      }
+
+      return [];
     }
 
-    public function getGenresByMovie($movieId) {
-        $sql = "
-            SELECT g.id, 
-            FROM movie_genres mg
-            JOIN genres g ON mg.genre_id = g.id
-            WHERE mg.movie_id = ?
-        ";
-        $query = $this->db->prepare($sql);
-        $query->bind_param("i", $movieId);
-        $query->execute();
-        $result = $query->get_result();
+    public function getGenresByMovie($movieId, $return = 'name') {
+      // $return = 'name' or 'id'
+      $sql = "
+          SELECT g.id, g.name
+          FROM movie_genres mg
+          JOIN genres g ON mg.genre_id = g.id
+          WHERE mg.movie_id = ?
+      ";
+      $query = $this->db->prepare($sql);
+      $query->bind_param("i", $movieId);
+      $query->execute();
+      $result = $query->get_result();
 
-        $genreIds = [];
-        while ($row = $result->fetch_assoc()) {
-            $genreIds[] = $row['id']; 
-        }
-        return $genreIds;
-    }
+      $genres = [];
+      while ($row = $result->fetch_assoc()) {
+          if ($return === 'id') {
+              $genres[] = $row['id'];
+          } else {
+              $genres[] = $row['name'];
+          }
+      }
+      return $genres;
+  }
+
     public function updateMovieGenres($movieId, $genreIds) {
         $sql = "DELETE FROM movie_genres WHERE movie_id = ?";
         $query = $this->db->prepare($sql);
