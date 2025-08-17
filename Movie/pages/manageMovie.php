@@ -46,46 +46,6 @@ $languages = json_decode($languageJsonContent, true);
 // }
 
 ?>
-<?php
-require_once __DIR__ . '/../functions/Movie.php';
-$movie = new Movie();
-
-$editing = false;
-$movieData = [
-    'id' => '',
-    'title' => '',
-    'description' => '',
-    'release_year' => '',
-    'poster_url' => '',
-    'trailer_url' => ''
-];
-
-$allGenres = $movie->getAllGenres();
-$selectedGenres = [];
-
-if (!empty($_GET['id'])) {
-    $editing = true;
-    $movieData = $movie->getMovieById($_GET['id']);
-    $movieId = $_GET['id'];
-    $selectedGenres = $movie->getGenresByMovie($movieId);
-    if (!$movieData) {
-        header("Location: ../index.php");
-        exit;
-    }
-}
-
-$actionText = $editing ? "Update Movie" : "Add Movie";
-$submitAction = $editing ? "update" : "add";
-
-$countryJsonContent = file_get_contents(__DIR__ . '/../JSON/country.json');
-$languageJsonContent = file_get_contents(__DIR__ . '/../JSON/language.json');
-
-$countries = json_decode($countryJsonContent, true);
-$languages = json_decode($languageJsonContent, true);
-?>
-<!DOCTYPE html>
-<html lang="en">
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
