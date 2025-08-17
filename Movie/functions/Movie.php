@@ -1,191 +1,189 @@
 <?php
 require_once __DIR__ . '/../db/config.php';
 
-class Movie
-{
-  private $db;
-  private $uploadDir;
+class Movie {
+    private $db;
+    private $uploadDir;
 
-  public function __construct()
-  {
-    $database = new Database();
-    $this->db = $database->conn;
-    $this->uploadDir = __DIR__ . '/../uploads/';
-    if (!is_dir($this->uploadDir)) mkdir($this->uploadDir, 0777, true);
-  }
+    public function __construct() {
+        $database = new Database();
+        $this->db = $database->conn;
 
-  public function getAllMovies()
-  {
-    $result = $this->db->query("
+        $this->uploadDir = __DIR__ . '/../uploads/posters/';
+        if (!is_dir($this->uploadDir)) mkdir($this->uploadDir, 0777, true);
+    }
+
+    public function getAllMovies() {
+        $sql = "
             SELECT m.*, c.name AS country_name, l.name AS language_name
             FROM movies m
             LEFT JOIN countries c ON m.country_id = c.id
             LEFT JOIN languages l ON m.language_id = l.id
             ORDER BY release_year DESC
-        ");
-    return $result->fetch_all(MYSQLI_ASSOC);
-  }
+        ";
+        $result = $this->db->query($sql);
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
 
-  public function getMovieById($id)
-  {
-    $stmt = $this->db->prepare("
+    public function getMovieById($id) {
+        $sql = "
             SELECT m.*, c.name AS country_name, l.name AS language_name
             FROM movies m
             LEFT JOIN countries c ON m.country_id = c.id
             LEFT JOIN languages l ON m.language_id = l.id
-            WHERE m.id=?
-        ");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    return $stmt->get_result()->fetch_assoc();
-  }
-
-public function addMovie($title, $description, $release_year, $posterFile, $trailer_url, $countryName, $languageName, $genreIds = []) {
-    $country_id = $this->getCountryId($countryName);
-    $language_id = $this->getLanguageId($languageName);
-    $posterPath = $this->handleUpload($posterFile, $title, $release_year);
-
-    $stmt = $this->db->prepare(
-      "INSERT INTO movies (
-                  title, description, release_year, 
-                  poster_url, trailer_url, 
-                  country_id, language_id)
-              VALUES (?, ?, ?, ?, ?, ?, ?)"
-    );
-    $stmt->bind_param("ssissii", 
-              $title, $description, $release_year, 
-              $posterPath, $trailer_url, 
-              $country_id, $language_id);
-    $stmt->execute();
-
-    $movieId = $stmt->insert_id;
-
-    if (!empty($genreIds)) {
-        $this->updateMovieGenres($movieId, $genreIds);
+            WHERE m.id = ?
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bind_param("i", $id);
+        $query->execute();
+        $result = $query->get_result();
+        return $result->fetch_assoc();
     }
 
-    return $movieId;
-}
+    // ==========================
+    // manageMovie.php
+    // =========================== 
+    public function addMovie($title, $description, $releaseYear, $posterFile, $trailerUrl, $countryName, $languageName, $genreIds = []) {
+        $countryId = $this->getCountryId($countryName);
+        $languageId = $this->getLanguageId($languageName);
+        $posterPath = $this->handleUpload($posterFile, $title, $releaseYear);
 
-public function updateMovie($id, $title, $description, $release_year, $posterFile, $trailer_url, $countryName, $languageName, $genreIds = []) {
-    $country_id = $this->getCountryId($countryName);
-    $language_id = $this->getLanguageId($languageName);
+        $sql = "
+            INSERT INTO movies (title, description, release_year, poster_url, trailer_url, country_id, language_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bind_param("ssissii", $title, $description, $releaseYear, $posterPath, $trailerUrl, $countryId, $languageId);
+        $query->execute();
 
-    $posterPath = $posterFile['error'] === UPLOAD_ERR_OK
-        ? $this->handleUpload($posterFile, $title, $release_year)
-        : $this->getMovieById($id)['poster_url'];
+        $movieId = $query->insert_id;
+        if (!empty($genreIds)) $this->updateMovieGenres($movieId, $genreIds);
 
-    $stmt = $this->db->prepare(
-      "UPDATE movies 
-              SET title=?, description=?, release_year=?, 
-                  poster_url=?, trailer_url=?, 
-                  country_id=?, language_id=?
-              WHERE id=?"
-    );
-    $stmt->bind_param("ssissiii", 
-        $title, $description, $release_year, 
-              $posterPath, $trailer_url, 
-              $country_id, $language_id, $id);
-    $stmt->execute();
-
-    $this->updateMovieGenres($id, $genreIds);
-
-    return true;
-}
-
-  public function deleteMovie($id)
-  {
-    $movie = $this->getMovieById($id);
-    if ($movie && !empty($movie['poster_url']) && file_exists(__DIR__ . '/../' . $movie['poster_url'])) {
-      unlink(__DIR__ . '/../' . $movie['poster_url']); // delete file
-    }
-    $stmt = $this->db->prepare("DELETE FROM movies WHERE id=?");
-    $stmt->bind_param("i", $id);
-    return $stmt->execute();
-  }
-
-  
-  private function handleUpload($uploadedFile, $movieTitle, $releaseYear)
-  {
-    $safeTitle = preg_replace("/[^a-zA-Z0-9]/", "_", strtolower($movieTitle));
-    $fileExtension = pathinfo($uploadedFile['name'], PATHINFO_EXTENSION);
-    $newFileName = $safeTitle . '_' . $releaseYear . '.' . $fileExtension;
-
-    $uploadDirectory = __DIR__ . '/../uploads/posters/';
-    if (!is_dir($uploadDirectory)) {
-      mkdir($uploadDirectory, 0777, true);
+        return $movieId;
     }
 
-    $destinationPath = $uploadDirectory . $newFileName;
-    if (move_uploaded_file($uploadedFile['tmp_name'], $destinationPath)) {
-      return 'uploads/posters/' . $newFileName;
+    public function updateMovie($id, $title, $description, $releaseYear, $posterFile, $trailerUrl, $countryName, $languageName, $genreIds = []) {
+        $countryId = $this->getCountryId($countryName);
+        $languageId = $this->getLanguageId($languageName);
+
+        $posterPath = $posterFile['error'] === UPLOAD_ERR_OK
+            ? $this->handleUpload($posterFile, $title, $releaseYear)
+            : $this->getMovieById($id)['poster_url'];
+
+        $sql = "
+            UPDATE movies 
+            SET title=?, description=?, release_year=?, poster_url=?, trailer_url=?, country_id=?, language_id=?
+            WHERE id=?
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bind_param("ssissiii", $title, $description, $releaseYear, $posterPath, $trailerUrl, $countryId, $languageId, $id);
+        $query->execute();
+
+        $this->updateMovieGenres($id, $genreIds);
+        return true;
     }
 
-    return null; // failed
-  }
+    public function deleteMovie($id) {
+        $movie = $this->getMovieById($id);
 
+        if ($movie && !empty($movie['poster_url']) && file_exists(__DIR__ . '/../' . $movie['poster_url'])) {
+            unlink(__DIR__ . '/../' . $movie['poster_url']);
+        }
 
-// ========================================================================
-public function getAllGenres() {
-    $result = $this->db->query("SELECT * FROM genres ORDER BY name ASC");
-    return $result->fetch_all(MYSQLI_ASSOC);
-}
-
-public function getGenresByMovie($movieId) {
-    $stmt = $this->db->prepare("SELECT genre_id FROM movie_genres WHERE movie_id = ?");
-    $stmt->bind_param("i", $movieId);
-    $stmt->execute();
-    $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    return $result ? array_column($result, 'genre_id') : [];
-}
-
-public function updateMovieGenres($movieId, $genreIds) {
-    // Remove old genres
-    $stmt = $this->db->prepare("DELETE FROM movie_genres WHERE movie_id = ?");
-    $stmt->bind_param("i", $movieId);
-    $stmt->execute();
-
-    // Insert new genres
-    $stmt = $this->db->prepare("INSERT INTO movie_genres (movie_id, genre_id) VALUES (?, ?)");
-    foreach ($genreIds as $genreId) {
-        $stmt->bind_param("ii", $movieId, $genreId);
-        $stmt->execute();
-    }
-}
-
-// ========================================================================
-  private function getCountryId($countryName)
-  {
-    // if country exists, get its ID
-    $stmt = $this->db->prepare("SELECT id FROM countries WHERE name = ?");
-    $stmt->bind_param("s", $countryName);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($row = $result->fetch_assoc()) {
-      return $row['id'];
+        $sql = "DELETE FROM movies WHERE id=?";
+        $query = $this->db->prepare($sql);
+        $query->bind_param("i", $id);
+        return $query->execute();
     }
 
-    // If not exists, insert
-    $stmt = $this->db->prepare("INSERT INTO countries (name) VALUES (?)");
-    $stmt->bind_param("s", $countryName);
-    $stmt->execute();
-    return $stmt->insert_id;
-  }
+    // ==========================
+    // FILE UPLOAD HANDLER 
+    // ===========================
+    private function handleUpload($uploadedFile, $movieTitle, $releaseYear) {
+        $safeTitle = preg_replace("/[^a-zA-Z0-9]/", "_", strtolower($movieTitle));
+        $fileExtension = pathinfo($uploadedFile['name'], PATHINFO_EXTENSION);
+        $newFileName = $safeTitle . '_' . $releaseYear . '.' . $fileExtension;
 
-  // Same 
-  private function getLanguageId($languageName)
-  {
-    $stmt = $this->db->prepare("SELECT id FROM languages WHERE name = ?");
-    $stmt->bind_param("s", $languageName);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($row = $result->fetch_assoc()) {
-      return $row['id'];
+        $destinationPath = $this->uploadDir . $newFileName;
+        if (move_uploaded_file($uploadedFile['tmp_name'], $destinationPath)) {
+            return 'uploads/posters/' . $newFileName;
+        }
+        return null;
     }
 
-    $stmt = $this->db->prepare("INSERT INTO languages (name) VALUES (?)");
-    $stmt->bind_param("s", $languageName);
-    $stmt->execute();
-    return $stmt->insert_id;
-  }
+    // ==========================
+    // Getter
+    // ===========================
+    public function getAllGenres() {
+        $sql = "SELECT * FROM genres ORDER BY name ASC";
+        $result = $this->db->query($sql);
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getGenresByMovie($movieId) {
+        $sql = "
+            SELECT g.id, 
+            FROM movie_genres mg
+            JOIN genres g ON mg.genre_id = g.id
+            WHERE mg.movie_id = ?
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bind_param("i", $movieId);
+        $query->execute();
+        $result = $query->get_result();
+
+        $genreIds = [];
+        while ($row = $result->fetch_assoc()) {
+            $genreIds[] = $row['id']; 
+        }
+        return $genreIds;
+    }
+    public function updateMovieGenres($movieId, $genreIds) {
+        $sql = "DELETE FROM movie_genres WHERE movie_id = ?";
+        $query = $this->db->prepare($sql);
+        $query->bind_param("i", $movieId);
+        $query->execute();
+
+        $sql = "INSERT INTO movie_genres (movie_id, genre_id) VALUES (?, ?)";
+        $query = $this->db->prepare($sql);
+        foreach ($genreIds as $genreId) {
+            $query->bind_param("ii", $movieId, $genreId);
+            $query->execute();
+        }
+    }
+
+    // ==========================
+    // Getter
+    // ===========================
+    private function getCountryId($countryName) {
+        $sql = "SELECT id FROM countries WHERE name = ?";
+        $query = $this->db->prepare($sql);
+        $query->bind_param("s", $countryName);
+        $query->execute();
+        $result = $query->get_result();
+
+        if ($row = $result->fetch_assoc()) return $row['id'];
+
+        $sql = "INSERT INTO countries (name) VALUES (?)";
+        $query = $this->db->prepare($sql);
+        $query->bind_param("s", $countryName);
+        $query->execute();
+        return $query->insert_id;
+    }
+
+    private function getLanguageId($languageName) {
+        $sql = "SELECT id FROM languages WHERE name = ?";
+        $query = $this->db->prepare($sql);
+        $query->bind_param("s", $languageName);
+        $query->execute();
+        $result = $query->get_result();
+
+        if ($row = $result->fetch_assoc()) return $row['id'];
+
+        $sql = "INSERT INTO languages (name) VALUES (?)";
+        $query = $this->db->prepare($sql);
+        $query->bind_param("s", $languageName);
+        $query->execute();
+        return $query->insert_id;
+    }
 }

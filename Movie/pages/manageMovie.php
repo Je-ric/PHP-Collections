@@ -52,183 +52,181 @@ $languages = json_decode($languageJsonContent, true);
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title><?= $actionText ?></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
-  <!-- Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0f0f0f;
+      color: #f8f9fa;
+    }
+    header, footer {
+      background: rgba(24, 24, 27, 0.6);
+      backdrop-filter: blur(8px);
+    }
+    .form-control, .form-select {
+      background-color: #1f1f1f;
+      border: 1px solid #333;
+      color: #f8f9fa;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: #ffc107;
+      box-shadow: 0 0 0 .2rem rgba(255, 193, 7, .25);
+    }
+    .form-check-input:checked {
+      background-color: #ffc107;
+      border-color: #ffc107;
+    }
+    .form-check-label {
+      color: #f8f9fa;
+    }
+    .card-dark {
+      background: rgba(24, 24, 27, 0.6);
+      border: 1px solid #2d2d2d;
+    }
+  </style>
 </head>
 
-<body class="font-[Inter] bg-gray-950 text-gray-100 antialiased selection:bg-yellow-500 selection:text-gray-900">
+<body>
   <!-- HEADER -->
-  <header class="border-b border-gray-800 bg-gray-900/60 backdrop-blur-md px-4 md:px-8 py-4">
-    <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-yellow-400"><?= $actionText ?></h1>
+  <header class="border-bottom px-3 px-md-5 py-3">
+    <h1 class="h3 fw-semibold text-warning mb-0"><?= $actionText ?></h1>
   </header>
 
   <!-- MAIN -->
-  <main class="flex-1 max-w-5xl mx-auto px-4 md:px-8 py-10">
-    <section class="bg-gray-900/60 border border-gray-800 shadow-xl rounded-xl p-6 md:p-10">
-      <form action="../db/movieRequests.php" method="POST" enctype="multipart/form-data" class="grid gap-6 md:gap-8 grid-cols-1 md:grid-cols-2">
-        <input type="hidden" name="action" value="<?= $submitAction ?>" />
-        <?php if ($editing): ?>
-          <input type="hidden" name="id" value="<?= $movieData['id'] ?>" />
-        <?php endif; ?>
+  <main class="container py-5">
+    <div class="card card-dark shadow-lg rounded-3">
+      <div class="card-body p-4 p-md-5">
+        <form action="../db/movieRequests.php" method="POST" enctype="multipart/form-data" class="row g-4">
+          <input type="hidden" name="action" value="<?= $submitAction ?>" />
+          <?php if ($editing): ?>
+            <input type="hidden" name="id" value="<?= $movieData['id'] ?>" />
+          <?php endif; ?>
 
-        <!-- Title -->
-        <div>
-          <label class="flex items-center gap-1 mb-2 font-medium text-yellow-400">
-            Title <span class="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="title"
-            value="<?= htmlspecialchars($movieData['title']) ?>"
-            required
-            class="w-full rounded-md bg-gray-800 border border-gray-700 px-3 py-2 text-sm focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition"
-          />
-        </div>
-
-        <!-- Release Year -->
-        <div>
-          <label class="mb-2 font-medium text-yellow-400">Release Year</label>
-          <input
-            type="number"
-            name="release_year"
-            value="<?= $movieData['release_year'] ?>"
-            min="1960"
-            max="<?= date('Y') ?>"
-            class="w-full rounded-md bg-gray-800 border border-gray-700 px-3 py-2 text-sm focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition"
-          />
-        </div>
-
-        <!-- Country -->
-        <div>
-          <label class="flex items-center gap-1 mb-2 font-medium text-yellow-400">
-            Country <span class="text-red-500">*</span>
-          </label>
-          <select
-            name="countryName"
-            required
-            class="w-full rounded-md bg-gray-800 border border-gray-700 px-3 py-2 text-sm focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition"
-          >
-            <option value="">-- Select Country --</option>
-            <?php foreach ($countries as $country): ?>
-              <option
-                value="<?= htmlspecialchars($country['name']) ?>"
-                <?= ($editing && $movieData['country_name'] === $country['name']) ? 'selected' : '' ?>
-              >
-                <?= htmlspecialchars($country['name']) ?>
-              </option>
-            <?php endforeach; ?>
-          </select>
-        </div>
-
-        <!-- Language -->
-        <div>
-          <label class="flex items-center gap-1 mb-2 font-medium text-yellow-400">
-            Language <span class="text-red-500">*</span>
-          </label>
-          <select
-            name="languageName"
-            required
-            class="w-full rounded-md bg-gray-800 border border-gray-700 px-3 py-2 text-sm focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition"
-          >
-            <option value="">-- Select Language --</option>
-            <?php foreach ($languages as $language): ?>
-              <option
-                value="<?= htmlspecialchars($language['name']) ?>"
-                <?= ($editing && $movieData['language_name'] === $language['name']) ? 'selected' : '' ?>
-              >
-                <?= htmlspecialchars($language['name']) ?>
-              </option>
-            <?php endforeach; ?>
-          </select>
-        </div>
-
-        <!-- Poster -->
-        <div>
-          <label class="mb-2 font-medium text-yellow-400">
-            Poster Image <?= $editing ? '' : '<span class="text-red-500">*</span>' ?>
-          </label>
-          <input
-            type="file"
-            name="poster_file"
-            <?= $editing ? '' : 'required' ?>
-            class="w-full rounded-md bg-gray-800 border border-gray-700 file:bg-yellow-500 file:text-gray-900 file:font-medium file:border-0 file:px-4 file:py-2 file:rounded-l-md cursor-pointer text-sm"
-          />
-        </div>
-
-        <!-- Trailer -->
-        <div>
-          <label class="mb-2 font-medium text-yellow-400">Trailer URL</label>
-          <input
-            type="text"
-            name="trailer_url"
-            value="<?= htmlspecialchars($movieData['trailer_url']) ?>"
-            class="w-full rounded-md bg-gray-800 border border-gray-700 px-3 py-2 text-sm focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition"
-          />
-        </div>
-
-        <!-- Description (full width) -->
-        <div class="md:col-span-2">
-          <label class="mb-2 font-medium text-yellow-400">Description</label>
-          <textarea
-            name="description"
-            rows="5"
-            class="w-full rounded-md bg-gray-800 border border-gray-700 px-3 py-2 text-sm focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition resize-y"
-          ><?= htmlspecialchars($movieData['description']) ?></textarea>
-        </div>
-
-        <!-- Genres -->
-        <div class="md:col-span-2">
-          <label class="mb-2 font-medium text-yellow-400">Genres</label>
-          <div class="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            <?php foreach ($allGenres as $genre): ?>
-              <label class="flex items-center gap-2 rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm hover:border-yellow-500 transition">
-                <input
-                  type="checkbox"
-                  name="genres[]"
-                  value="<?= $genre['id'] ?>"
-                  <?= in_array($genre['id'], $selectedGenres) ? 'checked' : '' ?>
-                  class="accent-yellow-500 w-4 h-4"
-                />
-                <span><?= htmlspecialchars($genre['name']) ?></span>
-              </label>
-            <?php endforeach; ?>
+          <!-- Title -->
+          <div class="col-md-6">
+            <label class="form-label text-warning">Title <span class="text-danger">*</span></label>
+            <input type="text" name="title" value="<?= htmlspecialchars($movieData['title']) ?>" required class="form-control">
           </div>
-        </div>
 
-        <!-- Actions -->
-        <div class="md:col-span-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
-          <button
-            type="submit"
-            class="inline-flex justify-center items-center gap-2 rounded-md bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-semibold px-6 py-3 transition-colors"
-          >
-            <i data-lucide="<?= $editing ? 'save' : 'plus' ?>" class="w-4 h-4 stroke-[1.5]"></i>
-            <?= htmlspecialchars($actionText) ?>
-          </button>
+          <!-- Release Year -->
+          <div class="col-md-6">
+            <label class="form-label text-warning">Release Year</label>
+            <input type="number" name="release_year" value="<?= $movieData['release_year'] ?>" min="1960" max="<?= date('Y') ?>" class="form-control">
+          </div>
 
-          <a
-            href="../index.php"
-            class="inline-flex justify-center items-center gap-2 rounded-md border border-gray-700 hover:border-yellow-500 text-gray-300 hover:text-yellow-400 px-6 py-3 transition-colors"
-          >
-            <i data-lucide="arrow-left" class="w-4 h-4 stroke-[1.5]"></i>
-            Back to Movies
-          </a>
-        </div>
-      </form>
-    </section>
+          <!-- Country -->
+          <div class="col-md-6">
+            <label class="form-label text-warning">Country <span class="text-danger">*</span></label>
+            <select name="countryName" required class="form-select">
+              <option value="">-- Select Country --</option>
+              <?php foreach ($countries as $country): ?>
+                <option value="<?= htmlspecialchars($country['name']) ?>" <?= ($editing && $movieData['country_name'] === $country['name']) ? 'selected' : '' ?>>
+                  <?= htmlspecialchars($country['name']) ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+
+          <!-- Language -->
+          <div class="col-md-6">
+            <label class="form-label text-warning">Language <span class="text-danger">*</span></label>
+            <select name="languageName" required class="form-select">
+              <option value="">-- Select Language --</option>
+              <?php foreach ($languages as $language): ?>
+                <option value="<?= htmlspecialchars($language['name']) ?>" <?= ($editing && $movieData['language_name'] === $language['name']) ? 'selected' : '' ?>>
+                  <?= htmlspecialchars($language['name']) ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+
+<!-- Poster -->
+<div class="col-md-6">
+  <label class="form-label text-warning">Poster Image <?= $editing ? '' : '<span class="text-danger">*</span>' ?></label>
+  <input type="file" name="poster_file" <?= $editing ? '' : 'required' ?> class="form-control">
+
+  <?php if ($editing && !empty($movieData['poster_url'])): ?>
+    <div class="mt-3">
+      <img src="../<?= htmlspecialchars($movieData['poster_url']) ?>" 
+           alt="Current Poster" 
+           class="img-fluid rounded shadow-sm border" 
+           style="max-height: 300px; object-fit: cover;">
+    </div>
+  <?php endif; ?>
+</div>
+
+<!-- Trailer -->
+<div class="col-md-6">
+  <label class="form-label text-warning">Trailer URL</label>
+  <input type="text" name="trailer_url" value="<?= htmlspecialchars($movieData['trailer_url']) ?>" class="form-control">
+
+  <?php if ($editing && !empty($movieData['trailer_url'])): ?>
+    <div class="mt-3 ratio ratio-16x9">
+      <?php
+        $trailerUrl = $movieData['trailer_url'];
+        if (strpos($trailerUrl, "youtube.com") !== false || strpos($trailerUrl, "youtu.be") !== false) {
+          if (preg_match('/(youtu\.be\/|v=)([^&]+)/', $trailerUrl, $matches)) {
+            $videoId = $matches[2];
+            echo '<iframe src="https://www.youtube.com/embed/' . htmlspecialchars($videoId) . '" 
+                   title="Trailer" allowfullscreen></iframe>';
+          }
+        } else {
+          echo '<video controls class="w-100 rounded shadow-sm">
+                  <source src="' . htmlspecialchars($trailerUrl) . '" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>';
+        }
+      ?>
+    </div>
+  <?php endif; ?>
+</div>
+
+
+
+          <!-- Description -->
+          <div class="col-12">
+            <label class="form-label text-warning">Description</label>
+            <textarea name="description" rows="5" class="form-control"><?= htmlspecialchars($movieData['description']) ?></textarea>
+          </div>
+
+          <!-- Genres -->
+          <div class="col-12">
+            <label class="form-label text-warning">Genres</label>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2">
+              <?php foreach ($allGenres as $genre): ?>
+                <div class="col">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="genres[]" value="<?= $genre['id'] ?>" <?= in_array($genre['id'], $selectedGenres) ? 'checked' : '' ?>>
+                    <label class="form-check-label"><?= htmlspecialchars($genre['name']) ?></label>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="col-12 d-flex flex-column flex-sm-row gap-3 pt-3">
+            <button type="submit" class="btn btn-warning text-dark fw-semibold d-flex align-items-center gap-2">
+              <i class="bx <?= $editing ? 'bx-save' : 'bx-plus' ?>"></i>
+              <?= htmlspecialchars($actionText) ?>
+            </button>
+            <a href="../index.php" class="btn btn-outline-secondary text-light d-flex align-items-center gap-2">
+              <i class="bx bx-arrow-back"></i> Back to Movies
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
   </main>
 
   <!-- FOOTER -->
-  <footer class="border-t border-gray-800 bg-gray-900/60 backdrop-blur-md text-center py-4">
-    <p class="text-sm text-gray-500">© <?= date('Y') ?> Movie Database</p>
+  <footer class="border-top text-center py-3">
+    <p class="text-muted small mb-0">© <?= date('Y') ?> Movie Database</p>
   </footer>
 
-  <script>
-    lucide.createIcons()
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
