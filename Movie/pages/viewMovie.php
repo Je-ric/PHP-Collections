@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/../functions/Movie.php';
 require_once __DIR__ . '/../functions/RateReview.php';
+require_once __DIR__ . '/../functions/People.php';
 
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     header("Location: ../index.php");
@@ -15,6 +16,10 @@ if (!$m) die("Movie not found.");
 $rate = new RateReview();
 $reviews = $rate->getReviewsByMovie($m['id']);
 $genres = $movie->getGenresByMovie($m['id'], 'name');
+
+$peopleObj = new People();
+$directors = $peopleObj->getMoviePeople($m['id'], 'Director');
+$actors = $peopleObj->getMoviePeople($m['id'], 'Cast');
 ?>
 
 <!DOCTYPE html>
@@ -63,6 +68,13 @@ $genres = $movie->getGenresByMovie($m['id'], 'name');
                 <h2><?= htmlspecialchars($m['title']) ?> (<?= htmlspecialchars($m['release_year']) ?>)</h2>
                 <p><strong>Country:</strong> <?= htmlspecialchars($m['country_name']) ?> | <strong>Language:</strong> <?= htmlspecialchars($m['language_name']) ?></p>
                 <p><strong>Genres:</strong> <?= !empty($genres) ? implode(", ", $genres) : "N/A" ?></p>
+               <p><strong>Directors:</strong> 
+    <?= !empty($directors) ? implode(", ", array_column($directors, 'name')) : "N/A" ?>
+</p>
+
+<p><strong>Actors:</strong> 
+    <?= !empty($actors) ? implode(", ", array_column($actors, 'name')) : "N/A" ?>
+</p>
                 <p class="text-secondary"><?= nl2br(htmlspecialchars($m['description'])) ?></p>
 
                 <?php if (!empty($m['trailer_url'])): ?>
