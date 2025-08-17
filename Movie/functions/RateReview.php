@@ -58,16 +58,23 @@ class RateReview {
         $stmt->execute();
         return $stmt->get_result()->fetch_assoc();
     }
+public function getAverageRating($movieId) {
+    $sql = "
+        SELECT AVG(rating) AS avg_rating, COUNT(*) AS total
+        FROM ratings_reviews
+        WHERE movie_id = ?
+    ";
+    $stmt = $this->db->prepare($sql);
+    $stmt->bind_param("i", $movieId);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+    
+    // Format average rating as float or null if no ratings
+    $avg = $result['avg_rating'] ? floatval($result['avg_rating']) : null;
+    $total = intval($result['total']);
+    
+    return ['avg' => $avg, 'total' => $total];
+}
 
-    public function getAverageRating($movieId) {
-        $sql = "
-            SELECT AVG(rating) AS avg_rating, COUNT(*) AS total 
-            FROM ratings_reviews 
-            WHERE movie_id = ?
-        ";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("i", $movieId);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
-    }
+
 }

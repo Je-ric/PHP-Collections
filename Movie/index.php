@@ -16,7 +16,6 @@ $rate = new RateReview();
   <meta charset="UTF-8" />
   <title>Movie Recommendation System</title>
 
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -83,10 +82,17 @@ $rate = new RateReview();
     </div>
   </header>
 
-  <!-- MOVIES GRID -->
+ <!-- MOVIES GRID -->
   <main class="container py-5">
     <div class="row g-4">
       <?php foreach ($movies as $m): ?>
+        <?php
+        // Get average rating and total reviews
+        $ratingInfo = $rate->getAverageRating($m['id']);
+        $avgRating = $ratingInfo['avg'];
+        $totalReviews = $ratingInfo['total'];
+        $ratingDisplay = $avgRating ? number_format($avgRating, 1) . " ⭐" : "No ratings yet";
+        ?>
         <div class="col-sm-6 col-lg-4 col-xl-3">
           <div class="movie-card rounded-3 overflow-hidden h-100 d-flex flex-column">
             <img src="<?= htmlspecialchars($m['poster_url']) ?>" alt="<?= htmlspecialchars($m['title']) ?>" class="w-100 movie-poster">
@@ -94,10 +100,16 @@ $rate = new RateReview();
             <div class="flex-grow-1 p-3 d-flex flex-column">
               <div>
                 <h5 class="mb-1"><?= htmlspecialchars($m['title']) ?> (<?= htmlspecialchars($m['release_year']) ?>)</h5>
-                <p class="text-secondary small mb-3">
+                <p class="text-secondary small mb-2">
                   <?= htmlspecialchars(substr($m['description'], 0, 100)) ?>
                   <?= strlen($m['description']) > 100 ? '...' : '' ?>
                 </p>
+                <div class="text-warning small mb-2">
+                  <strong>Rating:</strong> <?= $ratingDisplay ?>
+                  <?php if ($totalReviews > 0): ?>
+                    (<?= $totalReviews ?> review<?= $totalReviews > 1 ? 's' : '' ?>)
+                  <?php endif; ?>
+                </div>
               </div>
 
               <div class="mt-auto d-flex flex-column gap-2 small">
