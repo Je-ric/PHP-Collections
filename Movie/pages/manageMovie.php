@@ -30,12 +30,21 @@ if (!empty($_GET['id'])) {
 $actionText = $editing ? "Update Movie" : "Add Movie";
 $submitAction = $editing ? "update" : "add";
 
-// Load JSON data for countries and languages
-$countryJsonContent = file_get_contents(__DIR__ . '/../JSON/country.json');
+
+// References:
+// https://stackoverflow.com/questions/19758954/get-data-from-json-file-with-php
+// https://stackoverflow.com/questions/412467/how-to-embed-youtube-videos-in-php
+// https://stackoverflow.com/questions/19050890/find-youtube-link-in-php-string-and-convert-it-into-embed-code
+
+$countryJsonContent = file_get_contents(__DIR__ . '/../JSON/country.json'); // load
 $languageJsonContent = file_get_contents(__DIR__ . '/../JSON/language.json');
 
-$countries = json_decode($countryJsonContent, true);
+$countries = json_decode($countryJsonContent, true); // true = associative array
 $languages = json_decode($languageJsonContent, true);
+
+// foreach ($countries as $country) {
+//     echo $country['name'] . ' (' . $country['code'] . ')<br>';
+// }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -461,7 +470,6 @@ $languages = json_decode($languageJsonContent, true);
   <script>
     const movieId = <?= $editing ? $movieData['id'] : 0 ?>;
 
-    // Load people data on page ready
     $(document).ready(function() {
         if (movieId > 0) {
             loadPeople('Director');
@@ -519,7 +527,6 @@ $languages = json_decode($languageJsonContent, true);
         $(containerId).html(html);
     }
 
-    // Add person
     function addPerson(name, role) {
         const trimmed = name.trim();
         if (trimmed === '') {
@@ -553,7 +560,6 @@ $languages = json_decode($languageJsonContent, true);
         });
     }
 
-    // Remove person
     $(document).on('click', '.remove-person', function() {
         const id = $(this).data('id');
         const role = $(this).data('role');
@@ -594,7 +600,6 @@ $languages = json_decode($languageJsonContent, true);
         }
     });
 
-    // Handle Enter key for adding people
     $('#director-input, #actor-input').on('keydown', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -604,7 +609,7 @@ $languages = json_decode($languageJsonContent, true);
         }
     });
 
-    // Setup autocomplete for people inputs
+    // more like input search with autocomplete
     function setupAutocomplete() {
       $('#director-input, #actor-input').autocomplete({
         source: function(request, response) {

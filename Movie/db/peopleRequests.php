@@ -14,7 +14,6 @@ $query   = isset($_POST['query']) ? trim($_POST['query']) : '';
 $people = new People();
 
 try {
-    // alias for backward compatibility if you used 'load' before
     if ($action === 'load' || $action === 'fetch') {
         if ($movieId <= 0 || ($role !== 'Director' && $role !== 'Cast')) {
             throw new Exception('Invalid params');

@@ -20,6 +20,12 @@ $genres = $movie->getGenresByMovie($m['id'], 'name');
 $peopleObj = new People();
 $directors = $peopleObj->getMoviePeople($m['id'], 'Director');
 $actors = $peopleObj->getMoviePeople($m['id'], 'Cast');
+
+// Average rating (same as index.php)
+$ratingInfo   = $rate->getAverageRating($m['id']);
+$avgRating    = $ratingInfo['avg'] ?? null;
+$totalReviews = $ratingInfo['total'] ?? 0;
+$ratingLabel  = $avgRating ? number_format($avgRating, 1) . ' ⭐' : 'No ratings yet';
 ?>
 
 <!DOCTYPE html>
@@ -68,38 +74,54 @@ $actors = $peopleObj->getMoviePeople($m['id'], 'Cast');
                 <h2><?= htmlspecialchars($m['title']) ?> (<?= htmlspecialchars($m['release_year']) ?>)</h2>
                 <p><strong>Country:</strong> <?= htmlspecialchars($m['country_name']) ?> | <strong>Language:</strong> <?= htmlspecialchars($m['language_name']) ?></p>
                 <p><strong>Genres:</strong> <?= !empty($genres) ? implode(", ", $genres) : "N/A" ?></p>
-               <p><strong>Directors:</strong> 
+                <p><strong>Directors:</strong> 
     <?= !empty($directors) ? implode(", ", array_column($directors, 'name')) : "N/A" ?>
 </p>
 
-<p><strong>Actors:</strong> 
-    <?= !empty($actors) ? implode(", ", array_column($actors, 'name')) : "N/A" ?>
-</p>
+    <p><strong>Average Rating:</strong>
+        <?= $ratingLabel ?>
+        <?php if ($totalReviews > 0): ?>
+            (<?= $totalReviews ?> review<?= $totalReviews > 1 ? 's' : '' ?>)
+        <?php endif; ?>
+    </p>
+
+    <p><strong>Actors:</strong> 
+        <?= !empty($actors) ? implode(", ", array_column($actors, 'name')) : "N/A" ?>
+    </p>
                 <p class="text-secondary"><?= nl2br(htmlspecialchars($m['description'])) ?></p>
 
+                <!-- 
+                    https://stackoverflow.com/questions/412467/how-to-embed-youtube-videos-in-php 
+                    https://stackoverflow.com/questions/19050890/find-youtube-link-in-php-string-and-convert-it-into-embed-code
+                    
+                    -->
+                
                 <?php if (!empty($m['trailer_url'])): ?>
                     <div class="mt-4">
                         <?php
                         $trailerUrl = $m['trailer_url'];
-                        if (strpos($trailerUrl, "youtube.com") !== false || strpos($trailerUrl, "youtu.be") !== false) {
-                            preg_match('/(youtu\.be\/|v=)([^&]+)/', $trailerUrl, $matches);
+                        if (strpos($trailerUrl, "youtube.com") !== false || 
+                            strpos($trailerUrl, "youtu.be") !== false) {
+                            preg_match(
+                                '/(youtu\.be\/|v=)([^&]+)/', 
+                                $trailerUrl, 
+                                $matches);
                             $videoId = $matches[2] ?? '';
                             if ($videoId) {
                                 echo '<div class="ratio ratio-16x9"><iframe src="https://www.youtube.com/embed/' . htmlspecialchars($videoId) . '" allowfullscreen></iframe></div>';
                             }
                         } else {
                             echo '<video controls class="w-100 rounded"><source src="../' . htmlspecialchars($trailerUrl) . '" type="video/mp4"></video>';
-                        }
+                        }   
                         ?>
                     </div>
                 <?php endif; ?>
 
                 <hr>
 
-                <?php if (isset($_SESSION['user_id'])): ?>
+                <?php if (isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'user'): ?>
                     <?php if (!$rate->hasReviewed($_SESSION['user_id'], $m['id'])): ?>
                         <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#reviewModal">⭐ Leave a Review</button>
-                        <!-- Modal code here -->
                     <?php else: ?>
                         <?php $userReview = $rate->getUserReview($_SESSION['user_id'], $m['id']); ?>
                         <div class="review-box mt-3 border border-success">
@@ -108,6 +130,8 @@ $actors = $peopleObj->getMoviePeople($m['id'], 'Cast');
                             <p class="fst-italic small text-success">(Your review is highlighted above)</p>
                         </div>
                     <?php endif; ?>
+                <?php elseif (isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'admin'): ?>
+                    <p class="text-secondary">Admins cannot leave reviews.</p>
                 <?php else: ?>
                     <p class="text-secondary">Please <a href="loginRegister.php">login</a> to leave a review.</p>
                 <?php endif; ?>
@@ -130,7 +154,7 @@ $actors = $peopleObj->getMoviePeople($m['id'], 'Cast');
         </div>
     </main>
 
-    <!-- Review Modal -->
+    <?php if (isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'user'): ?>
     <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <form action="../db/rateRequests.php" method="POST" class="modal-content">
@@ -161,6 +185,7 @@ $actors = $peopleObj->getMoviePeople($m['id'], 'Cast');
             </form>
         </div>
     </div>
+    <?php endif; ?>
 
 
     <footer class="border-top text-center py-3">

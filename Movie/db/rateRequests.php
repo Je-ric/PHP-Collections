@@ -7,6 +7,12 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+if (!isset($_SESSION['user_id']) || (isset($_SESSION['role']) && $_SESSION['role'] !== 'user')) {
+    http_response_code(403);
+    echo "Only normal users can submit reviews.";
+    exit;
+}
+
 $rate = new RateReview();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
