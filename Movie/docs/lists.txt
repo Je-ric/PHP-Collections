@@ -10,3 +10,30 @@ More like this based on: viewMovie
     Genre (each)
     Casts
     Directors
+
+when adding person in add movie (theres an error) di ko pa alam reason, but in edit its working
+when renaming movie, dapat machange name then yung image (get movieID, then call function na image handler)
+add to favorites
+fix user review display, for now star emoji muna, later should be fixed with icons (loop by 5 each) 
+    - determine which position is clicked (mas better if tailwind component)
+style modal
+
+Fields: Undecided
+    - average_rating (in movies for easy avg - less query)
+    - runtime
+    - rated 
+        G (General Audience)
+        Suitable for all ages. No offensive content. (Toy Story)
+
+        PG (Parental Guidance Suggested)
+        Some material may not be suitable for children. (Harry Potter and the Sorcerer’s Stone)
+
+        PG-13 (Parents Strongly Cautioned)
+        Some material may be inappropriate for children under 13 (violence, mild language). (Most Marvel movies (Avengers, Spider-Man))
+
+        R (Restricted)
+        Under 17 requires accompanying parent or adult. Strong language, violence, nudity. (Deadpool, Logan)
+
+        NC-17 (Adults Only)
+        No one 17 and under admitted. Explicit adult content. (Very rare in mainstream, usually indie films.)
+    
