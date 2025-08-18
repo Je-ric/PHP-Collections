@@ -1,7 +1,12 @@
-New
-Trending
-Release Year
-Based on rating
-Country
-Language
-Genre
+Filter, Search: index
+    New (latest)
+    Trending (rating)
+    Genre
+    Release Year
+    Country
+    Language
+
+More like this based on: viewMovie
+    Genre (each)
+    Casts
+    Directors
