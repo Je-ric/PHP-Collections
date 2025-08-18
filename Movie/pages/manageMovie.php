@@ -470,38 +470,27 @@ $languages = json_decode($languageJsonContent, true);
         setupAutocomplete();
     });
 
-    // Load people from server (similar to loadStudents structure)
+    // Load people from server
     function loadPeople(role) {
         $.ajax({
             url: "../db/peopleRequests.php",
             method: "POST",
+            dataType: "json",
             data: {
-                "action": "fetch",
-                "movie_id": movieId,
-                "role": role
+                action: "fetch",
+                movie_id: movieId,
+                role: role
             },
-            success: function(result) {
-              // try {
-              //     var people = JSON.parse(result);
-              //     renderPeople(role, people);
-                  
-              // } catch (e) {
-              //     console.error("Failed to parse JSON:", result);
-              // }
-              if (res.success) {
-                      let container = role === 'Director' ? $("#director-list") : $("#actor-list");
-                      container.empty();
-                      res.data.forEach(function(person) {
-                          container.append(`
-                              <li>
-                                  ${person.name}
-                                  <button class="remove-btn" data-id="${person.id}">Remove</button>
-                              </li>
-                          `);
-                      });
-                  }
-                // var people = JSON.parse(result);
-                // renderPeople(role, people);
+            success: function(res) {
+                let people = [];
+                if (Array.isArray(res)) { // if array (ex. [ { id: 1, name: "John Doe" }, ... ])
+                    people = res; 
+                } else if (res && res.data) { // if object with data
+                    people = res.data; // extract people from data (ex. [ { id: 1, name: "John Doe" }, ... ])
+                } else { 
+                    people = [];
+                }
+                renderPeople(role, people);
             },
             error: function(error) {
                 console.error("Error loading " + role.toLowerCase() + "s:", error);
@@ -509,7 +498,6 @@ $languages = json_decode($languageJsonContent, true);
         });
     }
 
-    // Render people badges (similar to table rendering in loadStudents)
     function renderPeople(role, people) {
         const containerId = role === 'Director' ? '#directors-list' : '#actors-list';
         let html = '';
@@ -531,63 +519,78 @@ $languages = json_decode($languageJsonContent, true);
         $(containerId).html(html);
     }
 
-    // Add person (similar to add student structure)
+    // Add person
     function addPerson(name, role) {
-        if (name.trim() === '') return;
-        
+        const trimmed = name.trim();
+        if (trimmed === '') {
+            console.warn('[People] Add -> empty name, abort.');
+            return;
+        }
+
+        const payload = {
+            action: "add",
+            movie_id: movieId,
+            name: trimmed,
+            role: role
+        };
+        console.log('[People] Add -> request', payload);
+
         $.ajax({
             url: "../db/peopleRequests.php",
             method: "POST",
-            data: {
-                "action": "add",
-                "movie_id": movieId,
-                "name": name.trim(),
-                "role": role
-            },
-            success: function(result) {
-              try {
-            var people = JSON.parse(result);
-            renderPeople(role, people);
-        } catch (e) {
-            console.error("Failed to parse JSON:", result);
-        }
-               
-                // // Clear input
+            dataType: "json",
+            data: payload,
+            success: function(res, textStatus, jqXHR) {
+                console.log('[People] Add -> response', { res, status: textStatus, http: jqXHR.status });
                 const inputId = role === 'Director' ? '#director-input' : '#actor-input';
                 $(inputId).val('');
+                loadPeople(role);
             },
-            error: function(error) {
+            error: function(xhr, status, err) {
+                console.error('[People] Add -> error', { status, err, http: xhr.status, responseText: xhr.responseText });
                 alert("Error adding " + role.toLowerCase() + "!");
-                console.error(error);
             }
         });
     }
 
-    // Remove person (similar to delete student structure)
+    // Remove person
     $(document).on('click', '.remove-person', function() {
         const id = $(this).data('id');
         const role = $(this).data('role');
         const personName = $(this).parent().text().trim();
-        
+
+        console.log('[People] Remove -> clicked', { id, role, personName });
+
         if (confirm(`Are you sure you want to remove this ${role.toLowerCase()}?\nName: ${personName}`)) {
+            const payload = {
+                action: "remove",
+                id: id,
+                movie_id: movieId,
+                role: role
+            };
+            console.log('[People] Remove -> request', payload);
+
             $.ajax({
                 url: "../db/peopleRequests.php",
                 method: "POST",
-                data: {
-                    "action": "remove",
-                    "id": id,
-                    "movie_id": movieId,
-                    "role": role
+                dataType: "json",
+                data: payload,
+                success: function(res, textStatus, jqXHR) {
+                    console.log('[People] Remove -> response', { res, status: textStatus, http: jqXHR.status });
+                    if (Array.isArray(res) || Array.isArray(res?.data)) {
+                        const people = Array.isArray(res) ? res : res.data;
+                        renderPeople(role, people);
+                    } else {
+                        loadPeople(role);
+                    }
                 },
-                success: function(result) {
-                    var people = JSON.parse(result);
-                    renderPeople(role, people);
-                },
-                error: function(error) {
+                error: function(xhr, status, err) {
+                    console.error('[People] Remove -> error', { status, err, http: xhr.status, responseText: xhr.responseText });
                     alert("Error removing " + role.toLowerCase() + "!");
-                    console.error(error);
                 }
             });
+        } else {
+            console.log('[People] Remove -> cancelled');
         }
     });
 
@@ -608,16 +611,14 @@ $languages = json_decode($languageJsonContent, true);
                 $.ajax({
                     url: "../db/peopleRequests.php",
                     method: "POST",
+                    dataType: "json",
                     data: {
-                        "action": "search",
-                        "query": request.term
+                        action: "search",
+                        query: request.term
                     },
-                    success: function(result) {
-                        var people = JSON.parse(result);
-                        var names = people.map(function(person) {
-                            return person.name;
-                        });
-                        response(names);
+                    success: function(res) {
+                        const people = Array.isArray(res) ? res : (res.data || []);
+                        response(people.map(p => p.name));
                     },
                     error: function(error) {
                         console.error("Autocomplete error:", error);
