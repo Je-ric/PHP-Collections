@@ -23,25 +23,98 @@ $rate = new RateReview();
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #0f0f0f;
-      color: #f8f9fa;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      color: #ffffff;
+      min-height: 100vh;
     }
+    
     header {
-      background: rgba(24, 24, 27, 0.6);
-      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid #22c55e;
     }
+    
     .movie-card {
-      background: rgba(24, 24, 27, 0.6);
-      border: 1px solid #2d2d2d;
-      transition: all 0.3s ease;
+      background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+      border: 1px solid #2a2a2a;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      height: 100%;
     }
+    
     .movie-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(34, 197, 94, 0.2);
+      border-color: #22c55e;
     }
+    
     .movie-poster {
-      height: 260px;
+      height: 300px;
       object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    
+    .movie-card:hover .movie-poster {
+      transform: scale(1.05);
+    }
+    
+    .rating-badge {
+      background: linear-gradient(45deg, #22c55e, #16a34a);
+      color: white;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(45deg, #22c55e, #16a34a);
+      border: none;
+      font-weight: 500;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(45deg, #16a34a, #15803d);
+      transform: translateY(-2px);
+    }
+    
+    .text-primary {
+      color: #22c55e !important;
+    }
+    
+    .text-primary:hover {
+      color: #16a34a !important;
+    }
+    
+    .movie-title {
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 1.1rem;
+      line-height: 1.3;
+    }
+    
+    .movie-description {
+      color: #a1a1aa;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    
+    .admin-actions {
+      border-top: 1px solid #2a2a2a;
+      padding-top: 0.75rem;
+      margin-top: 0.75rem;
+    }
+    
+    .movie-actions a, .movie-actions button {
+      font-size: 0.85rem;
+      padding: 0.25rem 0;
+    }
+    
+    @media (max-width: 576px) {
+      .movie-poster {
+        height: 250px;
+      }
+      
+      .movie-title {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
@@ -78,56 +151,110 @@ $rate = new RateReview();
     </div>
   </header>
 
-  <main class="container py-5">
-    <div class="row g-4">
+  <main class="container-fluid px-3 px-md-4 py-4">
+    <!-- Added search and filter section -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+          <div>
+            <h2 class="h3 mb-1">Discover Movies</h2>
+            <p class="text-secondary mb-0">Find your next favorite film</p>
+          </div>
+          <div class="d-flex gap-2">
+            <div class="input-group" style="width: 300px;">
+              <span class="input-group-text bg-dark border-secondary">
+                <i class="bx bx-search text-secondary"></i>
+              </span>
+              <input type="text" class="form-control bg-dark border-secondary text-white" placeholder="Search movies...">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Improved movie grid layout -->
+    <div class="row g-3 g-md-4">
       <?php foreach ($movies as $m): ?>
         <?php
         // Get average rating and total reviews
         $ratingInfo = $rate->getAverageRating($m['id']);
         $avgRating = $ratingInfo['avg'];
         $totalReviews = $ratingInfo['total'];
-        $ratingDisplay = $avgRating ? number_format($avgRating, 1) . " ⭐" : "No ratings yet";
+        $ratingDisplay = $avgRating ? number_format($avgRating, 1) : "N/A";
         ?>
-        <div class="col-sm-6 col-lg-4 col-xl-3">
-          <div class="movie-card rounded-3 overflow-hidden h-100 d-flex flex-column">
-            <img src="<?= htmlspecialchars($m['poster_url']) ?>" alt="<?= htmlspecialchars($m['title']) ?>" class="w-100 movie-poster">
-
-            <div class="flex-grow-1 p-3 d-flex flex-column">
-              <div>
-                <h5 class="mb-1"><?= htmlspecialchars($m['title']) ?> (<?= htmlspecialchars($m['release_year']) ?>)</h5>
-                <p class="text-secondary small mb-2">
-                  <?= htmlspecialchars(substr($m['description'], 0, 100)) ?>
-                  <?= strlen($m['description']) > 100 ? '...' : '' ?>
-                </p>
-                <div class="text-warning small mb-2">
-                  <strong>Rating:</strong> <?= $ratingDisplay ?>
-                  <?php if ($totalReviews > 0): ?>
-                    (<?= $totalReviews ?> review<?= $totalReviews > 1 ? 's' : '' ?>)
-                  <?php endif; ?>
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+          <div class="movie-card rounded-3 overflow-hidden">
+            <div class="position-relative">
+              <img src="<?= htmlspecialchars($m['poster_url']) ?>" 
+                   alt="<?= htmlspecialchars($m['title']) ?>" 
+                   class="w-100 movie-poster">
+              
+              <!-- Added rating badge overlay -->
+              <?php if ($avgRating): ?>
+                <div class="position-absolute top-0 end-0 m-2">
+                  <span class="badge rating-badge px-2 py-1">
+                    <i class="bx bx-star"></i> <?= $ratingDisplay ?>
+                  </span>
                 </div>
+              <?php endif; ?>
+            </div>
+
+            <div class="p-3 d-flex flex-column" style="min-height: 180px;">
+              <div class="flex-grow-1">
+                <h5 class="movie-title mb-2">
+                  <?= htmlspecialchars($m['title']) ?>
+                  <small class="text-secondary">(<?= htmlspecialchars($m['release_year']) ?>)</small>
+                </h5>
+                
+                <p class="movie-description mb-2">
+                  <?= htmlspecialchars(substr($m['description'], 0, 80)) ?>
+                  <?= strlen($m['description']) > 80 ? '...' : '' ?>
+                </p>
+                
+                <!-- Improved review count display -->
+                <?php if ($totalReviews > 0): ?>
+                  <div class="text-secondary small mb-2">
+                    <i class="bx bx-message-dots"></i>
+                    <?= $totalReviews ?> review<?= $totalReviews > 1 ? 's' : '' ?>
+                  </div>
+                <?php endif; ?>
               </div>
 
-              <div class="mt-auto d-flex flex-column gap-2 small">
-                <a href="pages/viewMovie.php?id=<?= $m['id'] ?>" class="text-primary text-decoration-none d-flex align-items-center gap-1">
-                  <i class="bx bx-info-circle"></i> View Details
+              <!-- Improved action buttons layout -->
+              <div class="movie-actions d-flex flex-column gap-1">
+                <a href="pages/viewMovie.php?id=<?= $m['id'] ?>" 
+                   class="text-primary text-decoration-none d-flex align-items-center gap-2">
+                  <i class="bx bx-info-circle"></i>
+                  <span>View Details</span>
                 </a>
 
-                <a href="<?= htmlspecialchars($m['trailer_url']) ?>" target="_blank" class="text-primary text-decoration-none d-flex align-items-center gap-1">
-                  <i class="bx bx-play-circle"></i> Trailer
+                <a href="<?= htmlspecialchars($m['trailer_url']) ?>" 
+                   target="_blank" 
+                   class="text-primary text-decoration-none d-flex align-items-center gap-2">
+                  <i class="bx bx-play-circle"></i>
+                  <span>Watch Trailer</span>
                 </a>
 
                 <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                  <hr class="my-1 border-secondary">
-                  <a href="pages/manageMovie.php?id=<?= $m['id'] ?>" class="text-secondary text-decoration-none d-flex align-items-center gap-1">
-                    <i class="bx bx-pencil"></i> Edit
-                  </a>
-                  <form action="db/movieRequests.php" method="POST" onsubmit="return confirm('Delete this movie?')" class="d-inline">
-                    <input type="hidden" name="action" value="delete" />
-                    <input type="hidden" name="id" value="<?= $m['id'] ?>" />
-                    <button type="submit" class="btn btn-link text-danger text-decoration-none p-0 d-flex align-items-center gap-1">
-                      <i class="bx bx-trash"></i> Delete
-                    </button>
-                  </form>
+                  <div class="admin-actions">
+                    <a href="pages/manageMovie.php?id=<?= $m['id'] ?>" 
+                       class="text-secondary text-decoration-none d-flex align-items-center gap-2 mb-1">
+                      <i class="bx bx-edit"></i>
+                      <span>Edit Movie</span>
+                    </a>
+                    
+                    <form action="db/movieRequests.php" method="POST" 
+                          onsubmit="return confirm('Are you sure you want to delete this movie?')" 
+                          class="d-inline w-100">
+                      <input type="hidden" name="action" value="delete" />
+                      <input type="hidden" name="id" value="<?= $m['id'] ?>" />
+                      <button type="submit" 
+                              class="btn btn-link text-danger text-decoration-none p-0 d-flex align-items-center gap-2">
+                        <i class="bx bx-trash"></i>
+                        <span>Delete</span>
+                      </button>
+                    </form>
+                  </div>
                 <?php endif; ?>
               </div>
             </div>
