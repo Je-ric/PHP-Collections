@@ -35,6 +35,9 @@ $submitAction = $editing ? "update" : "add";
 // https://stackoverflow.com/questions/19758954/get-data-from-json-file-with-php
 // https://stackoverflow.com/questions/412467/how-to-embed-youtube-videos-in-php
 // https://stackoverflow.com/questions/19050890/find-youtube-link-in-php-string-and-convert-it-into-embed-code
+// https://stackoverflow.com/questions/5830387/how-do-i-find-all-youtube-video-ids-in-a-string-using-a-regex
+// https://stackoverflow.com/questions/19050890/find-youtube-link-in-php-string-and-convert-it-into-embed-code
+// https://stackoverflow.com/questions/9656523/jquery-autocomplete-with-callback-ajax-json
 
 $countryJsonContent = file_get_contents(__DIR__ . '/../JSON/country.json'); // load
 $languageJsonContent = file_get_contents(__DIR__ . '/../JSON/language.json');
