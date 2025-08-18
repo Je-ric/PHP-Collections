@@ -52,9 +52,16 @@ try {
     }
 
     if ($action === 'search') {
-        // $results = $query === '' ? [] : ($people->search($query) ?? []);
-        // echo json_encode(['success' => true, 'data' => $results]);
-        // exit;
+        // return [] for empty queries
+        if ($query === '') {
+            echo json_encode([]);
+            exit;
+        }
+
+        // Use People::search (returns array of ['id','name'])
+        $results = $people->search($query) ?? [];
+        echo json_encode($results);
+        exit;
     }
 
     throw new Exception('Unknown action');

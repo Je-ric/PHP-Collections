@@ -100,4 +100,32 @@ class People {
         $stmt->close();
         return $ok;
     }
+
+    public function search(string $term): array {
+        $term = trim($term);
+        if ($term === '') return [];
+
+        // mysqli connection used by this class
+        $db = $this->db; // ensure this is your mysqli instance
+
+        $sql = "SELECT id, name
+                FROM movie_people
+                WHERE name LIKE CONCAT('%', ?, '%')
+                ORDER BY name ASC
+                LIMIT 15";
+        $stmt = $db->prepare($sql);
+        if (!$stmt) {
+            return [];
+        }
+        $stmt->bind_param('s', $term);
+        $stmt->execute();
+        $res = $stmt->get_result();
+
+        $rows = [];
+        while ($row = $res->fetch_assoc()) {
+            $rows[] = ['id' => (int)$row['id'], 'name' => $row['name']];
+        }
+        $stmt->close();
+        return $rows;
+    }
 }

@@ -606,29 +606,28 @@ $languages = json_decode($languageJsonContent, true);
 
     // Setup autocomplete for people inputs
     function setupAutocomplete() {
-        $('#director-input, #actor-input').autocomplete({
-            source: function(request, response) {
-                $.ajax({
-                    url: "../db/peopleRequests.php",
-                    method: "POST",
-                    dataType: "json",
-                    data: {
-                        action: "search",
-                        query: request.term
-                    },
-                    success: function(res) {
-                        const people = Array.isArray(res) ? res : (res.data || []);
-                        response(people.map(p => p.name));
-                    },
-                    error: function(error) {
-                        console.error("Autocomplete error:", error);
-                        response([]);
-                    }
-                });
+      $('#director-input, #actor-input').autocomplete({
+        source: function(request, response) {
+          console.log('[Autocomplete] query:', request.term);
+          $.ajax({
+            url: "../db/peopleRequests.php",
+            method: "POST",
+            dataType: "json",
+            data: { action: "search", query: request.term },
+            success: function(res) {
+              console.log('[Autocomplete] results:', res);
+              const people = Array.isArray(res) ? res : (res.data || []);
+              response(people.map(p => p.name)); // or map to {label:p.name, value:p.name, id:p.id}
             },
-            minLength: 2,
-            delay: 300
-        });
+            error: function(xhr, status, err) {
+              console.error('[Autocomplete] error:', { status, err, http: xhr.status, responseText: xhr.responseText });
+              response([]);
+            }
+          });
+        },
+        minLength: 2,
+        delay: 300
+      });
     }
   </script>
 </body>
