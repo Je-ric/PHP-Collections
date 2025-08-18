@@ -8,8 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 if (!isset($_SESSION['user_id']) || (isset($_SESSION['role']) && $_SESSION['role'] !== 'user')) {
-    http_response_code(403);
-    echo "Only normal users can submit reviews.";
+    echo "Only users can submit reviews.";
     exit;
 }
 

@@ -17,9 +17,7 @@ $rate = new RateReview();
   <title>Movie Recommendation System</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <!-- Boxicons -->
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
   <style>
@@ -57,7 +55,6 @@ $rate = new RateReview();
       <?php if (isset($_SESSION['username'])): ?>
         <span class="text-secondary d-none d-sm-inline">Welcome, <?= htmlspecialchars($_SESSION['username']) ?>!</span>
 
-        <!-- Logout -->
         <form action="db/authRequests.php" method="POST" class="d-inline-flex">
           <input type="hidden" name="action" value="logout" />
           <button type="submit" class="btn btn-sm btn-dark d-flex align-items-center gap-1">
@@ -66,7 +63,6 @@ $rate = new RateReview();
           </button>
         </form>
 
-        <!-- Add Movie -->
         <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
           <a href="pages/manageMovie.php" class="btn btn-sm btn-primary d-flex align-items-center gap-1">
             <i class="bx bx-plus"></i>
@@ -82,7 +78,6 @@ $rate = new RateReview();
     </div>
   </header>
 
- <!-- MOVIES GRID -->
   <main class="container py-5">
     <div class="row g-4">
       <?php foreach ($movies as $m): ?>

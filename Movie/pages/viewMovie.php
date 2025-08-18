@@ -21,7 +21,7 @@ $peopleObj = new People();
 $directors = $peopleObj->getMoviePeople($m['id'], 'Director');
 $actors = $peopleObj->getMoviePeople($m['id'], 'Cast');
 
-// Average rating (same as index.php)
+// (same as index.php)
 $ratingInfo   = $rate->getAverageRating($m['id']);
 $avgRating    = $ratingInfo['avg'] ?? null;
 $totalReviews = $ratingInfo['total'] ?? 0;
