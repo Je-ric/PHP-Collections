@@ -193,7 +193,6 @@ $languages = json_decode($languageJsonContent, true);
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100">
   
-  <!-- Header -->
   <header class="bg-slate-800 shadow-lg border-b border-slate-600 px-4 md:px-8 py-6">
     <div class="max-w-6xl mx-auto">
       <div class="flex items-center gap-4">
@@ -208,7 +207,7 @@ $languages = json_decode($languageJsonContent, true);
     </div>
   </header>
 
-  <!-- Main Content -->
+  <!-- Main -->
   <main class="max-w-6xl mx-auto py-8 px-4 md:px-8">
     <div class="bg-slate-800 border border-slate-600 rounded-2xl shadow-2xl overflow-hidden">
       <form action="../db/movieRequests.php" method="POST" enctype="multipart/form-data">
@@ -217,7 +216,7 @@ $languages = json_decode($languageJsonContent, true);
           <input type="hidden" name="id" value="<?= $movieData['id'] ?>" />
         <?php endif; ?>
 
-        <!-- Basic Information Section -->
+        <!-- Basic Info -->
         <details class="accordion-section border-b border-slate-600" open>
           <summary class="bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 cursor-pointer p-6 flex items-center gap-3 text-lg font-semibold text-white transition-all duration-300">
             <i class="bx bx-chevron-right accordion-icon text-xl"></i>
@@ -281,7 +280,7 @@ $languages = json_decode($languageJsonContent, true);
           </div>
         </details>
 
-        <!-- Media Files Section -->
+        <!-- Media -->
         <details class="accordion-section border-b border-slate-600">
           <summary class="bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 cursor-pointer p-6 flex items-center gap-3 text-lg font-semibold text-white transition-all duration-300">
             <i class="bx bx-chevron-right accordion-icon text-xl"></i>
@@ -348,7 +347,7 @@ $languages = json_decode($languageJsonContent, true);
           </div>
         </details>
 
-        <!-- Cast & Crew Section -->
+        <!-- Casts  -->
         <details class="accordion-section border-b border-slate-600">
           <summary class="bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 cursor-pointer p-6 flex items-center gap-3 text-lg font-semibold text-white transition-all duration-300">
             <i class="bx bx-chevron-right accordion-icon text-xl"></i>
@@ -357,7 +356,6 @@ $languages = json_decode($languageJsonContent, true);
           </summary>
           <div class="p-8 bg-slate-800">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <!-- Directors Section -->
               <div class="bg-slate-700 border-2 border-slate-600 rounded-xl p-6 space-y-4">
                 <h5 class="flex items-center gap-3 text-purple-400 font-semibold text-lg">
                   <i class="bx bx-user-voice"></i>
@@ -371,11 +369,10 @@ $languages = json_decode($languageJsonContent, true);
                        placeholder="Type director name and press Enter..." />
               </div>
               
-              <!-- Cast & Actors Section -->
               <div class="bg-slate-700 border-2 border-slate-600 rounded-xl p-6 space-y-4">
                 <h5 class="flex items-center gap-3 text-purple-400 font-semibold text-lg">
                   <i class="bx bx-group"></i>
-                  Cast & Actors
+                  Casts: (Actors & Actresses)
                 </h5>
                 <div id="actors-list" class="min-h-[80px] p-4 bg-slate-800 rounded-lg border-2 border-slate-600">
                   <div class="text-slate-400 text-center italic py-4">No actors added yet</div>
@@ -388,7 +385,7 @@ $languages = json_decode($languageJsonContent, true);
           </div>
         </details>
 
-        <!-- Description & Genres Section -->
+        <!-- Description & Genres -->
         <details class="accordion-section">
           <summary class="bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 cursor-pointer p-6 flex items-center gap-3 text-lg font-semibold text-white transition-all duration-300">
             <i class="bx bx-chevron-right accordion-icon text-xl"></i>
@@ -424,7 +421,7 @@ $languages = json_decode($languageJsonContent, true);
           </div>
         </details>
 
-        <!-- Action Buttons -->
+        <!-- Buttoness -->
         <div class="flex flex-col sm:flex-row gap-4 p-8 bg-slate-700 border-t border-slate-600">
           <button type="submit" 
                   class="flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-600 to-emerald-500 hover:from-cyan-500 hover:to-emerald-400 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
