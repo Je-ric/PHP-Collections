@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once __DIR__ . '/functions/Movie.php';
-require_once __DIR__ . '/functions/RateReview.php';
+require_once __DIR__ . '/classes/Movie.php';
+require_once __DIR__ . '/classes/RateReview.php';
 
 $movie = new Movie();
 $movies = $movie->getAllMovies();
@@ -262,6 +262,8 @@ $rate = new RateReview();
         </div>
       <?php endforeach; ?>
     </div>
+
+
   </main>
 
   <!-- Bootstrap JS -->

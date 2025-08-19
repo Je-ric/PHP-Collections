@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../functions/RateReview.php';
+require_once __DIR__ . '/../classes/RateReview.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../pages/loginRegister.php");

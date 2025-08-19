@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once __DIR__ . '/../functions/Movie.php';
-require_once __DIR__ . '/../functions/RateReview.php';
-require_once __DIR__ . '/../functions/People.php';
+require_once __DIR__ . '/../classes/Movie.php';
+require_once __DIR__ . '/../classes/RateReview.php';
+require_once __DIR__ . '/../classes/People.php';
 
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     header("Location: ../index.php");

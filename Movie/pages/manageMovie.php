@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../functions/Movie.php';
+require_once __DIR__ . '/../classes/Movie.php';
 $movie = new Movie();
 
 $editing = false;
@@ -530,6 +530,9 @@ $languages = json_decode($languageJsonContent, true);
         $(containerId).html(html);
     }
 
+    // the downside is that, working lang ang adding ng person if the movieId exists.
+    // let's say movie is the parent, person is the child
+    // we need a parent to have a child, getch?
     function addPerson(name, role) {
         const trimmed = name.trim();
         if (trimmed === '') {
@@ -539,7 +542,7 @@ $languages = json_decode($languageJsonContent, true);
 
         const payload = {
             action: "add",
-            movie_id: movieId,
+            movie_id: movieId, 
             name: trimmed,
             role: role
         };

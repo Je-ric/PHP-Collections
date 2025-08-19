@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../functions/People.php';
+require_once __DIR__ . '/../classes/People.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
