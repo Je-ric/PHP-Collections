@@ -15,12 +15,32 @@ if (!isset($_SESSION['user_id']) || (isset($_SESSION['role']) && $_SESSION['role
 $rate = new RateReview();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $movieId = $_POST['movie_id'];
-    $rating = $_POST['rating'];
-    $review = trim($_POST['review']);
-    $userId = $_SESSION['user_id'];
+    header('Content-Type: application/json');
 
-    $rate->addReview($userId, $movieId, $rating, $review);
-    header("Location: ../index.php?success=review_submitted");
+    $movieId = isset($_POST['movie_id']) ? (int)$_POST['movie_id'] : 0;
+    $rating = isset($_POST['rating']) ? (int)$_POST['rating'] : 0;
+    $review = trim($_POST['review'] ?? '');
+    $userId = (int)$_SESSION['user_id'];
+
+    if ($movieId <= 0 || $rating < 1 || $rating > 5 || $review === '') {
+        echo json_encode([ 'success' => false, 'message' => 'Invalid input.' ]);
+        exit;
+    }
+
+    try {
+        $ok = $rate->addReview($userId, $movieId, $rating, $review);
+        if ($ok) {
+            $avg = $rate->getAverageRating($movieId);
+            echo json_encode([
+                'success' => true,
+                'message' => 'Review submitted.',
+                'average' => $avg
+            ]);
+        } else {
+            echo json_encode([ 'success' => false, 'message' => 'Failed to submit review.' ]);
+        }
+    } catch (Throwable $e) {
+        echo json_encode([ 'success' => false, 'message' => $e->getMessage() ]);
+    }
     exit;
 }

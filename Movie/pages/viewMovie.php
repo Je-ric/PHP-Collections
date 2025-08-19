@@ -42,6 +42,7 @@ $favCount = $fav->countByMovie($m['id']);
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -398,10 +399,8 @@ $favCount = $fav->countByMovie($m['id']);
     </div> -->
 
 
-    <!-- Content sections with improved spacing and two-column layout -->
     <section class="relative z-10 max-w-7xl mx-auto px-4 pb-16 space-y-8">
         
-        <!-- Overview Section -->
         <div class="bg-secondary-bg/90 backdrop-blur-sm border border-border-color rounded-lg p-6 md:p-8">
             <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3 text-accent">
                 <i class='bx bx-detail'></i> Overview
@@ -411,10 +410,8 @@ $favCount = $fav->countByMovie($m['id']);
             </p>
         </div>
 
-        <!-- Two-column layout for trailer and reviews -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
-            <!-- Trailer Section -->
             <?php if (!empty($m['trailer_url'])): ?>
                 <div id="trailer-section" class="bg-secondary-bg/90 backdrop-blur-sm border border-border-color rounded-lg p-6">
                     <h2 class="text-2xl font-bold mb-6 text-accent flex items-center gap-3">
@@ -438,13 +435,11 @@ $favCount = $fav->countByMovie($m['id']);
                 </div>
             <?php endif; ?>
 
-            <!-- Reviews section with improved star display and layout -->
             <div class="bg-secondary-bg/90 backdrop-blur-sm border border-border-color rounded-lg p-6">
                 <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-accent">
                     <i class='bx bx-message-dots'></i> User Reviews
                 </h2>
 
-                <!-- Review Action -->
                 <?php if (isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'user'): ?>
                     <?php if (!$rate->hasReviewed($_SESSION['user_id'], $m['id'])): ?>
                         <button class="btn btn-accent mb-6" onclick="review_modal.showModal()">
@@ -479,7 +474,6 @@ $favCount = $fav->countByMovie($m['id']);
                     </div>
                 <?php endif; ?>
 
-                <!-- Review cards with improved star display -->
                 <div class="space-y-4 max-h-96 overflow-y-auto">
                     <?php if (!empty($reviews)): ?>
                         <?php foreach ($reviews as $r): ?>
@@ -510,9 +504,106 @@ $favCount = $fav->countByMovie($m['id']);
 
     <?php if (isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'user'): ?>
         <?php include __DIR__ . '/../partials/rateReviewModal.php'; ?>
+        <dialog id="review_modal" class="modal">
+    <div class="modal-box bg-secondary-bg border border-border-color flex flex-col items-center">
+        <!-- Close button -->
+        <form method="dialog" class="self-end">
+            <button class="btn btn-sm btn-circle btn-ghost">✕</button>
+        </form>
+
+        <!-- Modal title -->
+        <h3 class="font-bold text-lg mb-4 text-accent text-center flex items-center gap-2">
+            <i class='bx bx-star'></i> Review: <?= htmlspecialchars($m['title']) ?>
+        </h3>
+
+    <form id="review-form" action="../db/rateRequests.php" method="POST" class="w-full space-y-4">
+            <input type="hidden" name="movie_id" value="<?= $m['id'] ?>">
+
+            <div class="form-control">
+                <label class="label text-center">
+                    <span class="label-text">Rating (1-5 stars)</span>
+                </label>
+                <div class="rating rating-lg justify-center">
+                    <!-- <?php for ($i = 1; $i <= 5; $i++): ?>
+                        <input
+                            type="radio"
+                            name="rating"
+                            value="<?= $i ?>"
+                            class="mask mask-star-2 bg-base-200 hover:bg-warning checked:bg-warning"
+                            required />
+                    <?php endfor; ?> -->
+                    <input type="radio" name="rating" value=1 class="mask mask-star bg-gray-200 hover:bg-yellow-500 checked:bg-warning" aria-label="1 star" />
+                    <input type="radio" name="rating" value=2 class="mask mask-star bg-gray-200 hover:bg-yellow-500 checked:bg-warning" aria-label="2 star" />
+                    <input type="radio" name="rating" value=3 class="mask mask-star bg-gray-200 hover:bg-yellow-500 checked:bg-warning" aria-label="3 star" />
+                    <input type="radio" name="rating" value=4 class="mask mask-star bg-gray-200 hover:bg-yellow-500 checked:bg-warning" aria-label="4 star" />
+                    <input type="radio" name="rating" value=5 class="mask mask-star bg-gray-200 hover:bg-yellow-500 checked:bg-warning" aria-label="5 star" />
+                </div>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">Your Review</span>
+                </label>
+                <textarea
+                    name="review"
+                    class="textarea textarea-bordered bg-card-bg border-border-color h-24"
+                    placeholder="Share your thoughts about this movie..."
+                    required></textarea>
+            </div>
+
+            <div class="modal-action justify-center gap-4">
+                <button type="button" class="btn btn-outline" onclick="review_modal.close()">Cancel</button>
+                <button type="submit" id="submit-review" class="btn btn-accent">Submit Review</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<script>
+$(function(){
+    $('#review-form').on('submit', function(e){
+        e.preventDefault(); 
+
+        var $form = $(this);
+        var $btn = $('#submit-review');
+        $btn.prop('disabled', true).text('Submitting...');
+
+        $.ajax({
+            url: $form.attr('action'),
+            method: 'POST',
+            data: $form.serialize(),
+            dataType: 'json'
+        })
+        .done(function(res){
+            console.log('Review response:', res);
+
+            if(res && res.success){
+                console.log('Review submitted successfully!');
+
+                if(res.average){
+                    $('#average-rating').text(res.average.avg.toFixed(1));
+                    $('#total-reviews').text(res.average.total);
+                }
+
+                $form.find('textarea[name="review"]').val('');
+                $form.find('input[name="rating"]').prop('checked', false);
+
+                $('<p class="text-success mt-2">Thank you! Your review was submitted.</p>')
+                    .appendTo($form)
+                    .delay(3000)
+                    .fadeOut(500, function(){ $(this).remove(); });
+
+            } else {
+                console.warn('Error submitting review:', (res && res.message) ? res.message : 'Unknown error');
+            }
+        })
+    });
+});
+
+
+</script>
     <?php endif; ?>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
         $(function() {
             var $btn = $('#favorite-btn');

@@ -106,10 +106,10 @@ $rate = new RateReview();
                 <small class="text-gray-400 font-normal">(<?= htmlspecialchars($m['release_year']) ?>)</small>
               </h5>
 
-              <p class="text-gray-400 text-sm mb-3 leading-snug">
+              <!-- <p class="text-gray-400 text-sm mb-3 leading-snug">
                 <?= htmlspecialchars(substr($m['description'], 0, 90)) ?>
                 <?= strlen($m['description']) > 90 ? '...' : '' ?>
-              </p>
+              </p> -->
 
               <?php if ($totalReviews > 0): ?>
                 <div class="text-gray-500 text-xs mb-3 flex items-center gap-1">
