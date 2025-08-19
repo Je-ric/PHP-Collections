@@ -92,7 +92,6 @@ class People {
         return $rows;
     }
 
-    // Remove person from a movie
     public function removeFromMovie(int $id): bool {
         $stmt = $this->db->prepare("DELETE FROM movie_cast WHERE id = ?");
         $stmt->bind_param("i", $id);
@@ -105,8 +104,7 @@ class People {
         $term = trim($term);
         if ($term === '') return [];
 
-        // mysqli connection used by this class
-        $db = $this->db; // ensure this is your mysqli instance
+        $db = $this->db; 
 
         $sql = "SELECT id, name
                 FROM movie_people
