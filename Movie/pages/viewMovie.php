@@ -142,7 +142,7 @@ $favCount = $fav->countByMovie($m['id']);
             </div>
         </div>
     </header>
-        
+
     <div class="mx-auto relative z-10">
         <?php if (!empty($m['background_url'])): ?>
             <div class="cover_follow mb-8 absolute top-0 left-0 w-full h-screen -z-10">
@@ -156,7 +156,7 @@ $favCount = $fav->countByMovie($m['id']);
 
         <div class="relative z-10 max-w-6xl mx-auto px-4 py-10">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-    
+
                 <div class="dp-i-c-poster">
                     <div class="film-poster">
                         <img src="../<?= htmlspecialchars($m['poster_url']); ?>"
@@ -164,33 +164,33 @@ $favCount = $fav->countByMovie($m['id']);
                             class="film-poster-img">
                     </div>
                 </div>
-    
+
                 <div class="lg:col-span-2 space-y-6">
                     <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                            <?= htmlspecialchars($m['title']) ?>
-                            <span class="text-text-muted text-2xl md:text-3xl ml-2">
-                                (<?= htmlspecialchars($m['release_year']) ?>)
-                            </span>
-                        </h1>
+                        <?= htmlspecialchars($m['title']) ?>
+                        <span class="text-text-muted text-2xl md:text-3xl ml-2">
+                            (<?= htmlspecialchars($m['release_year']) ?>)
+                        </span>
+                    </h1>
 
-                        <div class="flex flex-wrap items-center gap-3 text-text-secondary text-base md:text-lg">
-                            <span><?= htmlspecialchars($m['country_name']) ?></span>
-                            <span class="text-accent">•</span>
-                            <span><?= htmlspecialchars($m['language_name']) ?></span>
-                        </div>
-    
+                    <div class="flex flex-wrap items-center gap-3 text-text-secondary text-base md:text-lg">
+                        <span><?= htmlspecialchars($m['country_name']) ?></span>
+                        <span class="text-accent">•</span>
+                        <span><?= htmlspecialchars($m['language_name']) ?></span>
+                    </div>
+
                     <div class="flex flex-wrap gap-2">
-                            <?php if (!empty($genres)): ?>
-                                <?php foreach ($genres as $genre): ?>
-                                    <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-sm font-medium border border-accent/30">
-                                        <?= htmlspecialchars($genre) ?>
-                                    </span>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <span class="text-text-muted">No genres available</span>
-                            <?php endif; ?>
-                        </div>
-    
+                        <?php if (!empty($genres)): ?>
+                            <?php foreach ($genres as $genre): ?>
+                                <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-sm font-medium border border-accent/30">
+                                    <?= htmlspecialchars($genre) ?>
+                                </span>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <span class="text-text-muted">No genres available</span>
+                        <?php endif; ?>
+                    </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-4">
                             <div>
@@ -220,11 +220,11 @@ $favCount = $fav->countByMovie($m['id']);
                                         <?php
                                         $filledStars = floor($avgRating);
                                         $emptyStars = 5 - $filledStars;
-                                        
+
                                         for ($i = 0; $i < $filledStars; $i++): ?>
                                             <i class="bx bxs-star star"></i>
                                         <?php endfor; ?>
-                                        
+
                                         <?php for ($i = 0; $i < $emptyStars; $i++): ?>
                                             <i class="bx bx-star star empty"></i>
                                         <?php endfor; ?>
@@ -242,14 +242,14 @@ $favCount = $fav->countByMovie($m['id']);
                         </div>
                     </div>
 
-    
+
                     <div class="flex flex-wrap gap-3">
                         <?php if (!empty($m['trailer_url'])): ?>
                             <a href="#trailer-section" class="btn btn-accent">
                                 <i class='bx bx-play'></i> Watch Trailer
                             </a>
                         <?php endif; ?>
-    
+
                         <?php if (!empty($_SESSION['user_id'])): ?>
                             <button id="favorite-btn" type="button"
                                 class="btn <?= $isFavorited ? 'btn-accent' : 'btn-outline btn-accent' ?>"
@@ -400,7 +400,7 @@ $favCount = $fav->countByMovie($m['id']);
 
 
     <section class="relative z-10 max-w-7xl mx-auto px-4 pb-16 space-y-8">
-        
+
         <div class="bg-secondary-bg/90 backdrop-blur-sm border border-border-color rounded-lg p-6 md:p-8">
             <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3 text-accent">
                 <i class='bx bx-detail'></i> Overview
@@ -411,7 +411,7 @@ $favCount = $fav->countByMovie($m['id']);
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            
+
             <?php if (!empty($m['trailer_url'])): ?>
                 <div id="trailer-section" class="bg-secondary-bg/90 backdrop-blur-sm border border-border-color rounded-lg p-6">
                     <h2 class="text-2xl font-bold mb-6 text-accent flex items-center gap-3">
@@ -504,104 +504,6 @@ $favCount = $fav->countByMovie($m['id']);
 
     <?php if (isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'user'): ?>
         <?php include __DIR__ . '/../partials/rateReviewModal.php'; ?>
-        <dialog id="review_modal" class="modal">
-    <div class="modal-box bg-secondary-bg border border-border-color flex flex-col items-center">
-        <!-- Close button -->
-        <form method="dialog" class="self-end">
-            <button class="btn btn-sm btn-circle btn-ghost">✕</button>
-        </form>
-
-        <!-- Modal title -->
-        <h3 class="font-bold text-lg mb-4 text-accent text-center flex items-center gap-2">
-            <i class='bx bx-star'></i> Review: <?= htmlspecialchars($m['title']) ?>
-        </h3>
-
-    <form id="review-form" action="../db/rateRequests.php" method="POST" class="w-full space-y-4">
-            <input type="hidden" name="movie_id" value="<?= $m['id'] ?>">
-
-            <div class="form-control">
-                <label class="label text-center">
-                    <span class="label-text">Rating (1-5 stars)</span>
-                </label>
-                <div class="rating rating-lg justify-center">
-                    <!-- <?php for ($i = 1; $i <= 5; $i++): ?>
-                        <input
-                            type="radio"
-                            name="rating"
-                            value="<?= $i ?>"
-                            class="mask mask-star-2 bg-base-200 hover:bg-warning checked:bg-warning"
-                            required />
-                    <?php endfor; ?> -->
-                    <input type="radio" name="rating" value=1 class="mask mask-star bg-gray-200 hover:bg-yellow-500 checked:bg-warning" aria-label="1 star" />
-                    <input type="radio" name="rating" value=2 class="mask mask-star bg-gray-200 hover:bg-yellow-500 checked:bg-warning" aria-label="2 star" />
-                    <input type="radio" name="rating" value=3 class="mask mask-star bg-gray-200 hover:bg-yellow-500 checked:bg-warning" aria-label="3 star" />
-                    <input type="radio" name="rating" value=4 class="mask mask-star bg-gray-200 hover:bg-yellow-500 checked:bg-warning" aria-label="4 star" />
-                    <input type="radio" name="rating" value=5 class="mask mask-star bg-gray-200 hover:bg-yellow-500 checked:bg-warning" aria-label="5 star" />
-                </div>
-            </div>
-
-            <div class="form-control">
-                <label class="label">
-                    <span class="label-text">Your Review</span>
-                </label>
-                <textarea
-                    name="review"
-                    class="textarea textarea-bordered bg-card-bg border-border-color h-24"
-                    placeholder="Share your thoughts about this movie..."
-                    required></textarea>
-            </div>
-
-            <div class="modal-action justify-center gap-4">
-                <button type="button" class="btn btn-outline" onclick="review_modal.close()">Cancel</button>
-                <button type="submit" id="submit-review" class="btn btn-accent">Submit Review</button>
-            </div>
-        </form>
-    </div>
-</dialog>
-
-<script>
-$(function(){
-    $('#review-form').on('submit', function(e){
-        e.preventDefault(); 
-
-        var $form = $(this);
-        var $btn = $('#submit-review');
-        $btn.prop('disabled', true).text('Submitting...');
-
-        $.ajax({
-            url: $form.attr('action'),
-            method: 'POST',
-            data: $form.serialize(),
-            dataType: 'json'
-        })
-        .done(function(res){
-            console.log('Review response:', res);
-
-            if(res && res.success){
-                console.log('Review submitted successfully!');
-
-                if(res.average){
-                    $('#average-rating').text(res.average.avg.toFixed(1));
-                    $('#total-reviews').text(res.average.total);
-                }
-
-                $form.find('textarea[name="review"]').val('');
-                $form.find('input[name="rating"]').prop('checked', false);
-
-                $('<p class="text-success mt-2">Thank you! Your review was submitted.</p>')
-                    .appendTo($form)
-                    .delay(3000)
-                    .fadeOut(500, function(){ $(this).remove(); });
-
-            } else {
-                console.warn('Error submitting review:', (res && res.message) ? res.message : 'Unknown error');
-            }
-        })
-    });
-});
-
-
-</script>
     <?php endif; ?>
 
     <script>
