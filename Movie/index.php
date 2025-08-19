@@ -13,18 +13,11 @@ $rate = new RateReview();
 <head>
   <meta charset="UTF-8" />
   <title>Movie Recommendation System</title>
-
-  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Boxicons -->
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-
-  <!-- Google Font: Oswald -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
-
   <style>
     body { font-family: "Oswald", sans-serif; }
   </style>
@@ -126,11 +119,10 @@ $rate = new RateReview();
               <?php endif; ?>
             </div>
 
-            <!-- Actions -->
             <div class="flex flex-col gap-2 mt-auto">
-              <a href="pages/viewMovie.php?id=<?= $m['id'] ?>" class="text-green-500 hover:text-green-400 flex items-center gap-2 text-sm font-medium">
+              <!-- <a href="pages/viewMovie.php?id=<?= $m['id'] ?>" class="text-green-500 hover:text-green-400 flex items-center gap-2 text-sm font-medium">
                 <i class="bx bx-info-circle"></i> View Details
-              </a>
+              </a> -->
               <a href="<?= htmlspecialchars($m['trailer_url']) ?>" target="_blank" class="text-green-500 hover:text-green-400 flex items-center gap-2 text-sm font-medium">
                 <i class="bx bx-play-circle"></i> Watch Trailer
               </a>

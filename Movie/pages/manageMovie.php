@@ -40,7 +40,8 @@ $submitAction = $editing ? "update" : "add";
 // https://stackoverflow.com/questions/19050890/find-youtube-link-in-php-string-and-convert-it-into-embed-code
 // https://stackoverflow.com/questions/9656523/jquery-autocomplete-with-callback-ajax-json
 
-$countryJsonContent = file_get_contents(__DIR__ . '/../JSON/country.json'); // load
+$countryJsonContent = file_get_contents(__DIR__ . '/../JSON/countries.json'); // load
+// $countryJsonContent = file_get_contents(__DIR__ . '/../JSON/country.json'); // load
 $languageJsonContent = file_get_contents(__DIR__ . '/../JSON/language.json');
 
 $countries = json_decode($countryJsonContent, true); // true = associative array
@@ -254,8 +255,11 @@ $languages = json_decode($languageJsonContent, true);
                         class="w-full px-4 py-3 bg-slate-700 border-2 border-slate-600 rounded-lg text-white focus:border-cyan-500 focus:ring-0 focus:outline-none transition-all duration-300" required>
                   <option value="">-- Select Country --</option>
                   <?php foreach ($countries as $country): ?>
-                    <option value="<?= htmlspecialchars($country['name']) ?>" <?= ($editing && $movieData['country_name'] === $country['name']) ? 'selected' : '' ?>>
+                    <!-- <option value="<?= htmlspecialchars($country['name']) ?>" <?= ($editing && $movieData['country_name'] === $country['name']) ? 'selected' : '' ?>>
                       <?= htmlspecialchars($country['name']) ?>
+                    </option> -->
+                     <option value="<?= htmlspecialchars($country['country']) ?>" <?= ($editing && $movieData['country_name'] === $country['country']) ? 'selected' : '' ?>>
+                      <?= htmlspecialchars($country['country']) ?>
                     </option>
                   <?php endforeach; ?>
                 </select>

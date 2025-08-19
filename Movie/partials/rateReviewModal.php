@@ -16,7 +16,7 @@
                 </label>
                 <div class="rating rating-lg">
                     <?php for ($i = 1; $i <= 5; $i++): ?>
-                        <input type="radio" name="rating" value="<?= $i ?>" class="mask mask-star-2 bg-warning" required />
+                        <input type="radio" name="rating" value="<?= $i ?>" class="mask mask-star-2 bg-transparent checked:bg-warning" required />
                     <?php endfor; ?>
                 </div>
             </div>
