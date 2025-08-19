@@ -50,6 +50,10 @@ CREATE TABLE `movies` (
   CONSTRAINT `movies_ibfk_language` FOREIGN KEY (`language_id`) REFERENCES `languages` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+ALTER TABLE `movies`
+ADD COLUMN `background_url` VARCHAR(255) DEFAULT NULL AFTER `poster_url`;
+
+
 -- MOVIE GENRES (Many-to-Many)
 CREATE TABLE `movie_genres` (
   `movie_id` INT(11) NOT NULL,

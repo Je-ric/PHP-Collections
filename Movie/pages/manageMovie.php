@@ -9,6 +9,7 @@ $movieData = [
   'description' => '',
   'release_year' => '',
   'poster_url' => '',
+  'background_url' => '',
   'trailer_url' => ''
 ];
 
@@ -58,201 +59,404 @@ $languages = json_decode($languageJsonContent, true);
   <title><?= $actionText ?></title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Sans:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/ui-darkness/jquery-ui.css">
-
+  <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-bg': '#0f172a',
+                        'secondary-bg': '#1e293b',
+                        'card-bg': '#334155',
+                        'accent': '#10b981',
+                        'accent-hover': '#059669',
+                        'text-primary': '#f8fafc',
+                        'text-secondary': '#cbd5e1',
+                        'text-muted': '#64748b',
+                        'border-color': '#475569',
+                    },
+                    fontFamily: {
+                        'oswald': ['Oswald', 'sans-serif'],
+                        'anton': ['Anton', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><?= $actionText ?></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Sans:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/ui-darkness/jquery-ui.css">
+  <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-bg': '#0f172a',
+                        'secondary-bg': '#1e293b',
+                        'card-bg': '#334155',
+                        'accent': '#10b981',
+                        'accent-hover': '#059669',
+                        'text-primary': '#f8fafc',
+                        'text-secondary': '#cbd5e1',
+                        'text-muted': '#64748b',
+                        'border-color': '#475569',
+                    },
+                    fontFamily: {
+                        'oswald': ['Oswald', 'sans-serif'],
+                        'anton': ['Anton', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
   <style>
-    :root {
-      --imdb-black: #0f0f0f;
-      --imdb-dark: #1a1a1a;
-      --imdb-card: #2a2a2a;
-      --imdb-yellow: #f5c518;
-      --imdb-red: #dc2626;
-      --imdb-white: #ffffff;
-      --imdb-gray: #6b7280;
-      --imdb-light-gray: #9ca3af;
-    }
     body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, var(--imdb-black) 0%, var(--imdb-dark) 100%);
-      color: var(--imdb-white);
-      min-height: 100vh;
+      font-family: 'Geist Sans', sans-serif;
     }
-    .people-section { background: var(--imdb-dark); border: 1px solid #404040; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
-    .people-section h5 { color: var(--imdb-yellow); font-weight: 600; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-    .person-badge { background: linear-gradient(135deg, var(--imdb-red) 0%, #b91c1c 100%); color: var(--imdb-white); padding: 8px 12px; border-radius: 20px; margin: 4px; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; }
-    .remove-person { background: none; border: none; color: var(--imdb-white); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .empty-state { color: var(--imdb-gray); font-style: italic; text-align: center; padding: 20px; }
+
+    .accordion-icon {
+      transition: transform 0.3s ease;
+    }
+
+    .accordion-section[open] .accordion-icon {
+      transform: rotate(90deg);
+    }
+
+    /* jQuery UI autocomplete styling */
+    .ui-autocomplete {
+      background: #334155 !important;
+      border: 2px solid #475569 !important;
+      border-radius: 8px !important;
+      color: #f8fafc !important;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .ui-autocomplete .ui-menu-item {
+      padding: 8px 12px !important;
+      border-bottom: 1px solid #475569 !important;
+    }
+
+    .ui-autocomplete .ui-menu-item:hover,
+    .ui-autocomplete .ui-menu-item.ui-state-focus {
+      background: #0891b2 !important;
+      color: white !important;
+    }
+
+    .person-badge {
+      background: linear-gradient(135deg, #0891b2 0%, #10b981 100%);
+      color: white;
+      padding: 8px 14px;
+      border-radius: 20px;
+      margin: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .remove-person {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .empty-state {
+      color: #64748b;
+      font-style: italic;
+      text-align: center;
+      padding: 20px;
+      background: #475569;
+      border-radius: 8px;
+      border: 2px dashed #64748b;
+    }
   </style>
 </head>
-<body>
-  <!-- HEADER -->
-  <header class="bg-[rgba(26,26,26,0.95)] backdrop-blur-md border-b-2 border-[var(--imdb-yellow)] px-3 md:px-5 py-4">
-    <div class="flex items-center gap-3">
-      <i class="bx bx-movie-play text-[var(--imdb-yellow)] text-3xl"></i>
-      <h1 class="text-xl font-bold text-[var(--imdb-yellow)] mb-0"><?= $actionText ?></h1>
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100">
+  
+  <!-- Header -->
+  <header class="bg-slate-800 shadow-lg border-b border-slate-600 px-4 md:px-8 py-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 bg-gradient-to-br from-cyan-600 to-emerald-500 rounded-full flex items-center justify-center">
+          <i class="bx bx-movie-play text-white text-2xl"></i>
+        </div>
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold text-white"><?= $actionText ?></h1>
+          <p class="text-slate-300 font-medium">Manage your movie collection</p>
+        </div>
+      </div>
     </div>
   </header>
 
-  <!-- MAIN -->
-  <main class="container mx-auto py-5 px-4">
-    <div class="bg-[var(--imdb-card)] border border-[#404040] rounded-xl shadow-lg">
-      <div class="p-6 md:p-10">
-        <form action="../db/movieRequests.php" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <input type="hidden" name="action" value="<?= $submitAction ?>" />
-          <?php if ($editing): ?>
-            <input type="hidden" name="id" value="<?= $movieData['id'] ?>" />
-          <?php endif; ?>
+  <!-- Main Content -->
+  <main class="max-w-6xl mx-auto py-8 px-4 md:px-8">
+    <div class="bg-slate-800 border border-slate-600 rounded-2xl shadow-2xl overflow-hidden">
+      <form action="../db/movieRequests.php" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="action" value="<?= $submitAction ?>" />
+        <?php if ($editing): ?>
+          <input type="hidden" name="id" value="<?= $movieData['id'] ?>" />
+        <?php endif; ?>
 
-          <!-- Title -->
-          <div>
-            <label class="text-[var(--imdb-yellow)] font-semibold mb-2 block">
-              <i class="bx bx-movie mr-2"></i>Title <span class="text-red-500">*</span>
-            </label>
-            <input type="text" name="title" value="<?= htmlspecialchars($movieData['title']) ?>" required class="input input-bordered w-full bg-[var(--imdb-dark)] text-white border-[#404040] focus:border-[var(--imdb-yellow)]" />
-          </div>
-
-          <!-- Release Year -->
-          <div>
-            <label class="text-[var(--imdb-yellow)] font-semibold mb-2 block">
-              <i class="bx bx-calendar mr-2"></i>Release Year
-            </label>
-            <input type="number" name="release_year" value="<?= $movieData['release_year'] ?>" min="1960" max="<?= date('Y') ?>" class="input input-bordered w-full bg-[var(--imdb-dark)] text-white border-[#404040] focus:border-[var(--imdb-yellow)]" />
-          </div>
-
-          <!-- Country -->
-          <div>
-            <label class="text-[var(--imdb-yellow)] font-semibold mb-2 block">
-              <i class="bx bx-world mr-2"></i>Country <span class="text-red-500">*</span>
-            </label>
-            <select name="countryName" required class="select select-bordered w-full bg-[var(--imdb-dark)] text-white border-[#404040] focus:border-[var(--imdb-yellow)]">
-              <option value="">-- Select Country --</option>
-              <?php foreach ($countries as $country): ?>
-                <option value="<?= htmlspecialchars($country['name']) ?>" <?= ($editing && $movieData['country_name'] === $country['name']) ? 'selected' : '' ?>>
-                  <?= htmlspecialchars($country['name']) ?>
-                </option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-
-          <!-- Language -->
-          <div>
-            <label class="text-[var(--imdb-yellow)] font-semibold mb-2 block">
-              <i class="bx bx-message mr-2"></i>Language <span class="text-red-500">*</span>
-            </label>
-            <select name="languageName" required class="select select-bordered w-full bg-[var(--imdb-dark)] text-white border-[#404040] focus:border-[var(--imdb-yellow)]">
-              <option value="">-- Select Language --</option>
-              <?php foreach ($languages as $language): ?>
-                <option value="<?= htmlspecialchars($language['name']) ?>" <?= ($editing && $movieData['language_name'] === $language['name']) ? 'selected' : '' ?>>
-                  <?= htmlspecialchars($language['name']) ?>
-                </option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-
-          <!-- Poster -->
-          <div>
-            <label class="text-[var(--imdb-yellow)] font-semibold mb-2 block">
-              <i class="bx bx-image mr-2"></i>Poster Image <?= $editing ? '' : '<span class="text-red-500">*</span>' ?>
-            </label>
-            <input type="file" name="poster_file" <?= $editing ? '' : 'required' ?> class="file-input file-input-bordered w-full bg-[var(--imdb-dark)] text-white border-[#404040]" />
-            <?php if ($editing && !empty($movieData['poster_url'])): ?>
-              <div class="mt-3">
-                <img src="../<?= htmlspecialchars($movieData['poster_url']) ?>" alt="Current Poster" class="max-h-72 object-cover rounded-lg border shadow-md" />
+        <!-- Basic Information Section -->
+        <details class="accordion-section border-b border-slate-600" open>
+          <summary class="bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 cursor-pointer p-6 flex items-center gap-3 text-lg font-semibold text-white transition-all duration-300">
+            <i class="bx bx-chevron-right accordion-icon text-xl"></i>
+            <i class="bx bx-info-circle text-cyan-400"></i>
+            Basic Information
+          </summary>
+          <div class="p-8 bg-slate-800">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 text-slate-300 font-medium text-sm">
+                  <i class="bx bx-movie text-cyan-400"></i>
+                  Title <span class="text-red-400">*</span>
+                </label>
+                <input type="text" name="title" value="<?= htmlspecialchars($movieData['title']) ?>" 
+                       class="w-full px-4 py-3 bg-slate-700 border-2 border-slate-600 rounded-lg text-white placeholder-slate-400 focus:border-cyan-500 focus:ring-0 focus:outline-none transition-all duration-300" 
+                       placeholder="Enter movie title..." required />
               </div>
-            <?php endif; ?>
-          </div>
-
-          <!-- Trailer -->
-          <div>
-            <label class="text-[var(--imdb-yellow)] font-semibold mb-2 block">
-              <i class="bx bx-play-circle mr-2"></i>Trailer URL
-            </label>
-            <input type="text" name="trailer_url" value="<?= htmlspecialchars($movieData['trailer_url']) ?>" class="input input-bordered w-full bg-[var(--imdb-dark)] text-white border-[#404040]" />
-            <?php if ($editing && !empty($movieData['trailer_url'])): ?>
-              <div class="mt-3 aspect-video">
-                <?php
-                  $trailerUrl = $movieData['trailer_url'];
-                  if (strpos($trailerUrl, "youtube.com") !== false || strpos($trailerUrl, "youtu.be") !== false) {
-                    if (preg_match('/(youtu\.be\/|v=)([^&]+)/', $trailerUrl, $matches)) {
-                      $videoId = $matches[2];
-                      echo '<iframe src="https://www.youtube.com/embed/' . htmlspecialchars($videoId) . '" title="Trailer" class="w-full h-full rounded-lg" allowfullscreen></iframe>';
-                    }
-                  } else {
-                    echo '<video controls class="w-full rounded-lg"><source src="' . htmlspecialchars($trailerUrl) . '" type="video/mp4"></video>';
-                  }
-                ?>
+              
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 text-slate-300 font-medium text-sm">
+                  <i class="bx bx-calendar text-cyan-400"></i>
+                  Release Year
+                </label>
+                <input type="number" name="release_year" value="<?= $movieData['release_year'] ?>" min="1960" max="<?= date('Y') ?>" 
+                       class="w-full px-4 py-3 bg-slate-700 border-2 border-slate-600 rounded-lg text-white placeholder-slate-400 focus:border-cyan-500 focus:ring-0 focus:outline-none transition-all duration-300" 
+                       placeholder="<?= date('Y') ?>" />
               </div>
-            <?php endif; ?>
-          </div>
-
-          <!-- Description -->
-          <div class="col-span-1 md:col-span-2">
-            <label class="text-[var(--imdb-yellow)] font-semibold mb-2 block">
-              <i class="bx bx-text mr-2"></i>Description
-            </label>
-            <textarea name="description" rows="5" class="textarea textarea-bordered w-full bg-[var(--imdb-dark)] text-white border-[#404040]" placeholder="Enter movie description..."><?= htmlspecialchars($movieData['description']) ?></textarea>
-          </div>
-
-          <!-- Directors -->
-          <div class="col-span-1 md:col-span-2">
-            <div class="people-section">
-              <h5><i class="bx bx-user-voice"></i> Directors</h5>
-              <div id="directors-list" class="people-list min-h-[60px] p-3 bg-[var(--imdb-black)] rounded-lg border border-[#404040] mb-3">
-                <div class="empty-state">No directors added yet</div>
+              
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 text-slate-300 font-medium text-sm">
+                  <i class="bx bx-world text-cyan-400"></i>
+                  Country <span class="text-red-400">*</span>
+                </label>
+                <select name="countryName" 
+                        class="w-full px-4 py-3 bg-slate-700 border-2 border-slate-600 rounded-lg text-white focus:border-cyan-500 focus:ring-0 focus:outline-none transition-all duration-300" required>
+                  <option value="">-- Select Country --</option>
+                  <?php foreach ($countries as $country): ?>
+                    <option value="<?= htmlspecialchars($country['name']) ?>" <?= ($editing && $movieData['country_name'] === $country['name']) ? 'selected' : '' ?>>
+                      <?= htmlspecialchars($country['name']) ?>
+                    </option>
+                  <?php endforeach; ?>
+                </select>
               </div>
-              <input type="text" id="director-input" class="input input-bordered w-full bg-[var(--imdb-black)] text-white border-[#404040]" placeholder="Type director name and press Enter...">
+              
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 text-slate-300 font-medium text-sm">
+                  <i class="bx bx-message text-cyan-400"></i>
+                  Language <span class="text-red-400">*</span>
+                </label>
+                <select name="languageName" 
+                        class="w-full px-4 py-3 bg-slate-700 border-2 border-slate-600 rounded-lg text-white focus:border-cyan-500 focus:ring-0 focus:outline-none transition-all duration-300" required>
+                  <option value="">-- Select Language --</option>
+                  <?php foreach ($languages as $language): ?>
+                    <option value="<?= htmlspecialchars($language['name']) ?>" <?= ($editing && $movieData['language_name'] === $language['name']) ? 'selected' : '' ?>>
+                      <?= htmlspecialchars($language['name']) ?>
+                    </option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
             </div>
           </div>
+        </details>
 
-          <!-- Actors -->
-          <div class="col-span-1 md:col-span-2">
-            <div class="people-section">
-              <h5><i class="bx bx-group"></i> Cast & Actors</h5>
-              <div id="actors-list" class="people-list min-h-[60px] p-3 bg-[var(--imdb-black)] rounded-lg border border-[#404040] mb-3">
-                <div class="empty-state">No actors added yet</div>
+        <!-- Media Files Section -->
+        <details class="accordion-section border-b border-slate-600">
+          <summary class="bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 cursor-pointer p-6 flex items-center gap-3 text-lg font-semibold text-white transition-all duration-300">
+            <i class="bx bx-chevron-right accordion-icon text-xl"></i>
+            <i class="bx bx-image text-emerald-400"></i>
+            Media Files
+          </summary>
+          <div class="p-8 bg-slate-800">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 text-slate-300 font-medium text-sm">
+                  <i class="bx bx-image text-emerald-400"></i>
+                  Poster Image <?= $editing ? '' : '<span class="text-red-400">*</span>' ?>
+                </label>
+                <input type="file" name="poster_file" <?= $editing ? '' : 'required' ?>
+                       class="w-full px-4 py-3 bg-slate-700 border-2 border-slate-600 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyan-500 file:text-white hover:file:bg-cyan-600 focus:border-cyan-500 focus:ring-0 focus:outline-none transition-all duration-300" />
+                <?php if ($editing && !empty($movieData['poster_url'])): ?>
+                  <div class="mt-4">
+                    <img src="../<?= htmlspecialchars($movieData['poster_url']) ?>" alt="Current Poster" 
+                         class="max-h-48 object-cover rounded-xl border-2 border-slate-600 shadow-lg" />
+                  </div>
+                <?php endif; ?>
               </div>
-              <input type="text" id="actor-input" class="input input-bordered w-full bg-[var(--imdb-black)] text-white border-[#404040]" placeholder="Type actor name and press Enter...">
+              
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 text-slate-300 font-medium text-sm">
+                  <i class="bx bx-landscape text-emerald-400"></i>
+                  Background Image
+                </label>
+                <input type="file" name="background_file" 
+                       class="w-full px-4 py-3 bg-slate-700 border-2 border-slate-600 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyan-500 file:text-white hover:file:bg-cyan-600 focus:border-cyan-500 focus:ring-0 focus:outline-none transition-all duration-300" />
+                <?php if ($editing && !empty($movieData['background_url'])): ?>
+                  <div class="mt-4">
+                    <img src="../<?= htmlspecialchars($movieData['background_url']) ?>" alt="Current Background" 
+                         class="max-h-48 object-cover rounded-xl border-2 border-slate-600 shadow-lg" />
+                  </div>
+                <?php endif; ?>
+              </div>
+              
+              <div class="md:col-span-2 space-y-2">
+                <label class="flex items-center gap-2 text-slate-300 font-medium text-sm">
+                  <i class="bx bx-play-circle text-emerald-400"></i>
+                  Trailer URL
+                </label>
+                <input type="text" name="trailer_url" value="<?= htmlspecialchars($movieData['trailer_url']) ?>" 
+                       class="w-full px-4 py-3 bg-slate-700 border-2 border-slate-600 rounded-lg text-white placeholder-slate-400 focus:border-cyan-500 focus:ring-0 focus:outline-none transition-all duration-300" 
+                       placeholder="https://www.youtube.com/watch?v=..." />
+                <?php if ($editing && !empty($movieData['trailer_url'])): ?>
+                  <div class="mt-4 max-w-2xl">
+                    <?php
+                      $trailerUrl = $movieData['trailer_url'];
+                      if (strpos($trailerUrl, "youtube.com") !== false || strpos($trailerUrl, "youtu.be") !== false) {
+                        if (preg_match('/(youtu\.be\/|v=)([^&]+)/', $trailerUrl, $matches)) {
+                          $videoId = $matches[2];
+                          echo '<iframe src="https://www.youtube.com/embed/' . htmlspecialchars($videoId) . '" title="Trailer" class="w-full aspect-video rounded-xl border-2 border-slate-600 shadow-lg" allowfullscreen></iframe>';
+                        }
+                      } else {
+                        echo '<video controls class="w-full rounded-xl border-2 border-slate-600 shadow-lg"><source src="' . htmlspecialchars($trailerUrl) . '" type="video/mp4"></video>';
+                      }
+                    ?>
+                  </div>
+                <?php endif; ?>
+              </div>
             </div>
           </div>
+        </details>
 
-          <!-- Genres -->
-          <div class="col-span-1 md:col-span-2">
-            <div class="bg-[var(--imdb-dark)] rounded-lg border border-[#404040] p-5">
-              <label class="text-[var(--imdb-yellow)] font-semibold mb-3 block">
-                <i class="bx bx-category mr-2"></i>Genres
+        <!-- Cast & Crew Section -->
+        <details class="accordion-section border-b border-slate-600">
+          <summary class="bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 cursor-pointer p-6 flex items-center gap-3 text-lg font-semibold text-white transition-all duration-300">
+            <i class="bx bx-chevron-right accordion-icon text-xl"></i>
+            <i class="bx bx-group text-purple-400"></i>
+            Cast & Crew
+          </summary>
+          <div class="p-8 bg-slate-800">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <!-- Directors Section -->
+              <div class="bg-slate-700 border-2 border-slate-600 rounded-xl p-6 space-y-4">
+                <h5 class="flex items-center gap-3 text-purple-400 font-semibold text-lg">
+                  <i class="bx bx-user-voice"></i>
+                  Directors
+                </h5>
+                <div id="directors-list" class="min-h-[80px] p-4 bg-slate-800 rounded-lg border-2 border-slate-600">
+                  <div class="text-slate-400 text-center italic py-4">No directors added yet</div>
+                </div>
+                <input type="text" id="director-input" 
+                       class="w-full px-4 py-3 bg-slate-600 border-2 border-slate-500 rounded-lg text-white placeholder-slate-300 focus:border-purple-400 focus:ring-0 focus:outline-none transition-all duration-300" 
+                       placeholder="Type director name and press Enter..." />
+              </div>
+              
+              <!-- Cast & Actors Section -->
+              <div class="bg-slate-700 border-2 border-slate-600 rounded-xl p-6 space-y-4">
+                <h5 class="flex items-center gap-3 text-purple-400 font-semibold text-lg">
+                  <i class="bx bx-group"></i>
+                  Cast & Actors
+                </h5>
+                <div id="actors-list" class="min-h-[80px] p-4 bg-slate-800 rounded-lg border-2 border-slate-600">
+                  <div class="text-slate-400 text-center italic py-4">No actors added yet</div>
+                </div>
+                <input type="text" id="actor-input" 
+                       class="w-full px-4 py-3 bg-slate-600 border-2 border-slate-500 rounded-lg text-white placeholder-slate-300 focus:border-purple-400 focus:ring-0 focus:outline-none transition-all duration-300" 
+                       placeholder="Type actor name and press Enter..." />
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- Description & Genres Section -->
+        <details class="accordion-section">
+          <summary class="bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 cursor-pointer p-6 flex items-center gap-3 text-lg font-semibold text-white transition-all duration-300">
+            <i class="bx bx-chevron-right accordion-icon text-xl"></i>
+            <i class="bx bx-text text-orange-400"></i>
+            Description & Genres
+          </summary>
+          <div class="p-8 bg-slate-800 space-y-8">
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 text-slate-300 font-medium text-sm">
+                <i class="bx bx-text text-orange-400"></i>
+                Description
               </label>
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              <textarea name="description" rows="6" 
+                        class="w-full px-4 py-3 bg-slate-700 border-2 border-slate-600 rounded-lg text-white placeholder-slate-400 focus:border-cyan-500 focus:ring-0 focus:outline-none transition-all duration-300 resize-none" 
+                        placeholder="Enter movie description..."><?= htmlspecialchars($movieData['description']) ?></textarea>
+            </div>
+            
+            <div class="space-y-4">
+              <label class="flex items-center gap-2 text-slate-300 font-medium text-sm">
+                <i class="bx bx-category text-orange-400"></i>
+                Genres
+              </label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                 <?php foreach ($allGenres as $genre): ?>
-                  <label class="flex items-center gap-2">
-                    <input type="checkbox" name="genres[]" value="<?= $genre['id'] ?>" class="checkbox checkbox-error" <?= in_array($genre['id'], $selectedGenres) ? 'checked' : '' ?>>
-                    <span><?= htmlspecialchars($genre['name']) ?></span>
+                  <label class="flex items-center gap-3 p-4 bg-slate-700 border-2 border-slate-600 rounded-lg cursor-pointer hover:border-orange-400 hover:bg-slate-600 transition-all duration-300 group">
+                    <input type="checkbox" name="genres[]" value="<?= $genre['id'] ?>" <?= in_array($genre['id'], $selectedGenres) ? 'checked' : '' ?> 
+                           class="w-4 h-4 text-orange-400 bg-slate-800 border-slate-500 rounded focus:ring-orange-400 focus:ring-2">
+                    <span class="text-left text-slate-200 group-hover:text-orange-300 font-medium"><?= htmlspecialchars($genre['name']) ?></span>
                   </label>
                 <?php endforeach; ?>
               </div>
             </div>
           </div>
+        </details>
 
-          <!-- Actions -->
-          <div class="col-span-1 md:col-span-2 flex flex-col sm:flex-row gap-4 pt-4">
-            <button type="submit" class="btn bg-[var(--imdb-yellow)] hover:bg-yellow-500 text-black font-bold">
-              <i class="bx <?= $editing ? 'bx-save' : 'bx-plus' ?> mr-2"></i> <?= htmlspecialchars($actionText) ?>
-            </button>
-            <a href="../index.php" class="btn border border-[var(--imdb-gray)] hover:border-[var(--imdb-yellow)] hover:text-[var(--imdb-yellow)]">
-              <i class="bx bx-arrow-back mr-2"></i> Back to Movies
-            </a>
-          </div>
-        </form>
-      </div>
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 p-8 bg-slate-700 border-t border-slate-600">
+          <button type="submit" 
+                  class="flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-600 to-emerald-500 hover:from-cyan-500 hover:to-emerald-400 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+            <i class="bx <?= $editing ? 'bx-save' : 'bx-plus' ?> text-xl"></i>
+            <?= htmlspecialchars($actionText) ?>
+          </button>
+          <a href="../index.php" 
+             class="flex items-center justify-center gap-3 px-8 py-4 bg-slate-600 hover:bg-slate-500 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105">
+            <i class="bx bx-arrow-back text-xl"></i>
+            Back to Movies
+          </a>
+        </div>
+      </form>
     </div>
   </main>
 
 
-  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    $('.tab-button').on('click', function() {
+        const tabId = $(this).data('tab');
+
+        $('.tab-button').removeClass('active');
+        $(this).addClass('active');
+
+        $('.tab-content').removeClass('active');
+        $('#' + tabId + '-tab').addClass('active');
+    });
+  </script>
   <script>
     const movieId = <?= $editing ? $movieData['id'] : 0 ?>;
 

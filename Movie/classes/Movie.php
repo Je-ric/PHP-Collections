@@ -4,6 +4,7 @@ require_once __DIR__ . '/../db/config.php';
 class Movie {
     private $db;
     private $uploadDir;
+    private $backgroundUploadDir;
 
     public function __construct() {
         $database = new Database();
@@ -11,6 +12,9 @@ class Movie {
 
         $this->uploadDir = __DIR__ . '/../uploads/posters/';
         if (!is_dir($this->uploadDir)) mkdir($this->uploadDir, 0777, true);
+    // Ensure background uploads directory exists as well
+    $this->backgroundUploadDir = __DIR__ . '/../uploads/backgrounds/';
+    if (!is_dir($this->backgroundUploadDir)) mkdir($this->backgroundUploadDir, 0777, true);
     }
 
     public function getAllMovies() {
@@ -43,17 +47,20 @@ class Movie {
     // ==========================
     // manageMovie.php
     // =========================== 
-    public function addMovie($title, $description, $releaseYear, $posterFile, $trailerUrl, $countryName, $languageName, $genreIds = []) {
+    public function addMovie($title, $description, $releaseYear, $posterFile, $backgroundFile, $trailerUrl, $countryName, $languageName, $genreIds = []) {
         $countryId = $this->getCountryId($countryName);
         $languageId = $this->getLanguageId($languageName);
         $posterPath = $this->handleUpload($posterFile, $title, $releaseYear);
+        $backgroundPath = (isset($backgroundFile['error']) && $backgroundFile['error'] === UPLOAD_ERR_OK)
+            ? $this->handleUploadTo($backgroundFile, $title, $releaseYear, 'backgrounds')
+            : null;
 
         $sql = "
-            INSERT INTO movies (title, description, release_year, poster_url, trailer_url, country_id, language_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO movies (title, description, release_year, poster_url, background_url, trailer_url, country_id, language_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ";
         $query = $this->db->prepare($sql);
-        $query->bind_param("ssissii", $title, $description, $releaseYear, $posterPath, $trailerUrl, $countryId, $languageId);
+        $query->bind_param("ssisssii", $title, $description, $releaseYear, $posterPath, $backgroundPath, $trailerUrl, $countryId, $languageId);
         $query->execute();
 
         $movieId = $query->insert_id;
@@ -62,21 +69,44 @@ class Movie {
         return $movieId;
     }
 
-    public function updateMovie($id, $title, $description, $releaseYear, $posterFile, $trailerUrl, $countryName, $languageName, $genreIds = []) {
+    public function updateMovie($id, $title, $description, $releaseYear, $posterFile, $backgroundFile, $trailerUrl, $countryName, $languageName, $genreIds = []) {
         $countryId = $this->getCountryId($countryName);
         $languageId = $this->getLanguageId($languageName);
+        $current = $this->getMovieById($id);
 
-        $posterPath = $posterFile['error'] === UPLOAD_ERR_OK
-            ? $this->handleUpload($posterFile, $title, $releaseYear)
-            : $this->getMovieById($id)['poster_url'];
+        // Determine poster path; if a new poster is provided, upload and delete old
+        $posterPath = $current['poster_url'];
+        if ($posterFile['error'] === UPLOAD_ERR_OK) {
+            $newPosterPath = $this->handleUpload($posterFile, $title, $releaseYear);
+            if ($newPosterPath) {
+                if (!empty($current['poster_url']) && $current['poster_url'] !== $newPosterPath) {
+                    $oldPosterFs = __DIR__ . '/../' . $current['poster_url'];
+                    if (file_exists($oldPosterFs)) @unlink($oldPosterFs);
+                }
+                $posterPath = $newPosterPath;
+            }
+        }
+
+        // Determine background path; if a new background is provided, upload and delete old
+        $backgroundPath = $current['background_url'] ?? null;
+        if (isset($backgroundFile['error']) && $backgroundFile['error'] === UPLOAD_ERR_OK) {
+            $newBgPath = $this->handleUploadTo($backgroundFile, $title, $releaseYear, 'backgrounds');
+            if ($newBgPath) {
+                if (!empty($current['background_url']) && $current['background_url'] !== $newBgPath) {
+                    $oldBgFs = __DIR__ . '/../' . $current['background_url'];
+                    if (file_exists($oldBgFs)) @unlink($oldBgFs);
+                }
+                $backgroundPath = $newBgPath;
+            }
+        }
 
         $sql = "
             UPDATE movies 
-            SET title=?, description=?, release_year=?, poster_url=?, trailer_url=?, country_id=?, language_id=?
+            SET title=?, description=?, release_year=?, poster_url=?, background_url=?, trailer_url=?, country_id=?, language_id=?
             WHERE id=?
         ";
         $query = $this->db->prepare($sql);
-        $query->bind_param("ssissiii", $title, $description, $releaseYear, $posterPath, $trailerUrl, $countryId, $languageId, $id);
+        $query->bind_param("ssisssiii", $title, $description, $releaseYear, $posterPath, $backgroundPath, $trailerUrl, $countryId, $languageId, $id);
         $query->execute();
 
         $this->updateMovieGenres($id, $genreIds);
@@ -88,6 +118,9 @@ class Movie {
 
         if ($movie && !empty($movie['poster_url']) && file_exists(__DIR__ . '/../' . $movie['poster_url'])) {
             unlink(__DIR__ . '/../' . $movie['poster_url']);
+        }
+        if ($movie && !empty($movie['background_url']) && file_exists(__DIR__ . '/../' . $movie['background_url'])) {
+            unlink(__DIR__ . '/../' . $movie['background_url']);
         }
 
         $sql = "DELETE FROM movies WHERE id=?";
@@ -107,6 +140,22 @@ class Movie {
         $destinationPath = $this->uploadDir . $newFileName;
         if (move_uploaded_file($uploadedFile['tmp_name'], $destinationPath)) {
             return 'uploads/posters/' . $newFileName;
+        }
+        return null;
+    }
+
+    private function handleUploadTo($uploadedFile, $movieTitle, $releaseYear, $subfolder) {
+        $safeTitle = preg_replace("/[^a-zA-Z0-9]/", "_", strtolower($movieTitle));
+        $fileExtension = pathinfo($uploadedFile['name'], PATHINFO_EXTENSION);
+        $newFileName = $safeTitle . '_' . $releaseYear . '.' . $fileExtension;
+
+        $subfolder = trim($subfolder, '/');
+        $targetDir = __DIR__ . '/../uploads/' . $subfolder . '/';
+        if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+
+        $destinationPath = $targetDir . $newFileName;
+        if (move_uploaded_file($uploadedFile['tmp_name'], $destinationPath)) {
+            return 'uploads/' . $subfolder . '/' . $newFileName;
         }
         return null;
     }
