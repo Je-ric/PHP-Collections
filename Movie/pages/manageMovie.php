@@ -39,6 +39,8 @@ $submitAction = $editing ? "update" : "add";
 // https://stackoverflow.com/questions/5830387/how-do-i-find-all-youtube-video-ids-in-a-string-using-a-regex
 // https://stackoverflow.com/questions/19050890/find-youtube-link-in-php-string-and-convert-it-into-embed-code
 // https://stackoverflow.com/questions/9656523/jquery-autocomplete-with-callback-ajax-json
+// https://stackoverflow.com/questions/22061558/ajax-jquery-toggle-button
+
 
 $countryJsonContent = file_get_contents(__DIR__ . '/../JSON/countries.json'); // load
 // $countryJsonContent = file_get_contents(__DIR__ . '/../JSON/country.json'); // load
@@ -447,17 +449,6 @@ $languages = json_decode($languageJsonContent, true);
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    $('.tab-button').on('click', function() {
-        const tabId = $(this).data('tab');
-
-        $('.tab-button').removeClass('active');
-        $(this).addClass('active');
-
-        $('.tab-content').removeClass('active');
-        $('#' + tabId + '-tab').addClass('active');
-    });
-  </script>
   <script>
     const movieId = <?= $editing ? $movieData['id'] : 0 ?>;
 
