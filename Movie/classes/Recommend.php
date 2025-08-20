@@ -209,6 +209,89 @@ class Recommend {
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
+    // Get user's top favorite genres (id, name, cnt)
+    public function getUserTopGenres(int $userId, int $limit = 5): array {
+        if ($userId <= 0) return [];
+        $limit = $this->clampLimit($limit, 10);
+        $sql = "
+            SELECT g.id, g.name, COUNT(*) AS cnt
+            FROM user_favorites uf
+            JOIN movie_genres mg ON mg.movie_id = uf.movie_id
+            JOIN genres g ON g.id = mg.genre_id
+            WHERE uf.user_id = ?
+            GROUP BY g.id, g.name
+            ORDER BY cnt DESC, g.name ASC
+            LIMIT ?
+        ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('ii', $userId, $limit);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    // Get overall top genres by favorite count; fallback to most common by movie count
+    public function getTopGenresOverall(int $limit = 5): array {
+        $limit = $this->clampLimit($limit, 10);
+        // Try by favorites
+        $sqlFav = "
+            SELECT g.id, g.name, COUNT(*) AS cnt
+            FROM user_favorites uf
+            JOIN movie_genres mg ON mg.movie_id = uf.movie_id
+            JOIN genres g ON g.id = mg.genre_id
+            GROUP BY g.id, g.name
+            ORDER BY cnt DESC, g.name ASC
+            LIMIT ?
+        ";
+        $stmt = $this->db->prepare($sqlFav);
+        $stmt->bind_param('i', $limit);
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        if (!empty($rows)) return $rows;
+
+        // Fallback by movie frequency
+        $sqlMovies = "
+            SELECT g.id, g.name, COUNT(*) AS cnt
+            FROM movie_genres mg
+            JOIN genres g ON g.id = mg.genre_id
+            GROUP BY g.id, g.name
+            ORDER BY cnt DESC, g.name ASC
+            LIMIT ?
+        ";
+        $stmt = $this->db->prepare($sqlMovies);
+        $stmt->bind_param('i', $limit);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    // Get movies by a specific genre; exclude user's favorites when userId>0
+    public function getByGenre(int $genreId, int $userId = 0, int $limit = 12): array {
+        if ($genreId <= 0) return [];
+        $limit = $this->clampLimit($limit);
+        $exclude = $userId > 0 ? "AND m.id NOT IN (SELECT movie_id FROM user_favorites WHERE user_id = ?)" : "";
+        $types = $userId > 0 ? 'iii' : 'ii';
+        $sql = "
+            SELECT m.*, c.name AS country_name, l.name AS language_name,
+                   AVG(r.rating) AS avg_rating, COUNT(r.id) AS total_reviews
+            FROM movies m
+            JOIN movie_genres mg ON mg.movie_id = m.id
+            LEFT JOIN ratings_reviews r ON r.movie_id = m.id
+            LEFT JOIN countries c ON m.country_id = c.id
+            LEFT JOIN languages l ON m.language_id = l.id
+            WHERE mg.genre_id = ? $exclude
+            GROUP BY m.id
+            ORDER BY (AVG(r.rating) IS NULL), AVG(r.rating) DESC, m.release_year DESC
+            LIMIT ?
+        ";
+        $stmt = $this->db->prepare($sql);
+        if ($userId > 0) {
+            $stmt->bind_param('iii', $genreId, $userId, $limit);
+        } else {
+            $stmt->bind_param('ii', $genreId, $limit);
+        }
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
     private function clampLimit(int $limit, int $max = 48): int {
         if ($limit <= 0) $limit = 12;
         if ($limit > $max) $limit = $max;

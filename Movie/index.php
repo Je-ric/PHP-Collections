@@ -21,6 +21,16 @@ $userId = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
 $recByGenres    = $userId ? $rec->basedOnFavoriteGenres($userId, 12) : [];
 $recByCountries = $userId ? $rec->basedOnFavoriteCountries($userId, 12) : [];
 $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
+
+// Genre shelves: pick top genres (from favorites if logged-in, otherwise overall), then fetch per-genre movies
+$topGenres = $userId ? $rec->getUserTopGenres($userId, 4) : $rec->getTopGenresOverall(4);
+$genreShelves = [];
+foreach ($topGenres as $g) {
+  $genreShelves[$g['id']] = [
+    'name' => $g['name'],
+    'movies' => $rec->getByGenre((int)$g['id'], $userId, 6)
+  ];
+}
 ?> 
 
 <!DOCTYPE html>
@@ -82,6 +92,7 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
 
     <?php if ($q !== ''): ?>
       <section class="mb-12">
+        <div class="border-t border-neutral-800 mb-6"></div>
         <div class="flex items-end justify-between mb-4">
           <h3 class="text-2xl font-semibold">Search results for "<?= htmlspecialchars($q) ?>"</h3>
           <span class="text-gray-400 text-sm"><?= count($searchResults) ?> result<?= count($searchResults) === 1 ? '' : 's' ?></span>
@@ -97,7 +108,7 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
             <div class="group rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-green-500/70 transition transform hover:-translate-y-2 hover:shadow-xl hover:shadow-green-500/20 flex flex-col">
               <div class="relative">
                 <a href="pages/viewMovie.php?id=<?= $m['id'] ?>">
-                  <img src="<?= htmlspecialchars($poster) ?>" alt="<?= htmlspecialchars($m['title']) ?>" class="w-full h-72 object-cover transition-transform duration-300 group-hover:scale-105">
+                  <img src="<?= htmlspecialchars($poster) ?>" alt="<?= htmlspecialchars($m['title']) ?>" class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105">
                 </a>
                 <?php if ($avgRating): ?>
                   <div class="absolute top-2 right-2">
@@ -113,6 +124,14 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
                     <?= htmlspecialchars($m['title']) ?>
                     <small class="text-gray-400 font-normal">(<?= htmlspecialchars($m['release_year']) ?>)</small>
                   </h5>
+                  <div class="text-gray-400 text-xs flex flex-wrap gap-2 mb-3">
+                    <?php if (!empty($m['country_name'])): ?>
+                      <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?= htmlspecialchars($m['country_name']) ?></span>
+                    <?php endif; ?>
+                    <?php if (!empty($m['language_name'])): ?>
+                      <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?= htmlspecialchars($m['language_name']) ?></span>
+                    <?php endif; ?>
+                  </div>
                   <?php if ($totalReviews > 0): ?>
                     <div class="text-gray-500 text-xs mb-3 flex items-center gap-1">
                       <i class="bx bx-message-dots"></i>
@@ -120,11 +139,7 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
                     </div>
                   <?php endif; ?>
                 </div>
-                <div class="flex flex-col gap-2 mt-auto">
-                  <a href="<?= htmlspecialchars($m['trailer_url']) ?>" target="_blank" class="text-green-500 hover:text-green-400 flex items-center gap-2 text-sm font-medium">
-                    <i class="bx bx-play-circle"></i> Watch Trailer
-                  </a>
-                </div>
+                <div class="flex flex-col gap-2 mt-auto"></div>
               </div>
             </div>
           <?php endforeach; ?>
@@ -134,6 +149,7 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
 
     <!-- Trending -->
     <section class="mb-12">
+      <div class="border-t border-neutral-800 mb-6"></div>
       <div class="flex items-end justify-between mb-4">
         <h3 class="text-2xl font-semibold">Trending now</h3>
       </div>
@@ -148,7 +164,7 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
           <div class="group rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-green-500/70 transition transform hover:-translate-y-2 hover:shadow-xl hover:shadow-green-500/20 flex flex-col">
             <div class="relative">
               <a href="pages/viewMovie.php?id=<?= $m['id'] ?>">
-                <img src="<?= htmlspecialchars($poster) ?>" alt="<?= htmlspecialchars($m['title']) ?>" class="w-full h-72 object-cover transition-transform duration-300 group-hover:scale-105">
+                <img src="<?= htmlspecialchars($poster) ?>" alt="<?= htmlspecialchars($m['title']) ?>" class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105">
               </a>
               <?php if ($avgRating): ?>
                 <div class="absolute top-2 right-2">
@@ -164,6 +180,14 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
                   <?= htmlspecialchars($m['title']) ?>
                   <small class="text-gray-400 font-normal">(<?= htmlspecialchars($m['release_year']) ?>)</small>
                 </h5>
+                <div class="text-gray-400 text-xs flex flex-wrap gap-2 mb-3">
+                  <?php if (!empty($m['country_name'])): ?>
+                    <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?= htmlspecialchars($m['country_name']) ?></span>
+                  <?php endif; ?>
+                  <?php if (!empty($m['language_name'])): ?>
+                    <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?= htmlspecialchars($m['language_name']) ?></span>
+                  <?php endif; ?>
+                </div>
                 <?php if ($totalReviews > 0): ?>
                   <div class="text-gray-500 text-xs mb-3 flex items-center gap-1">
                     <i class="bx bx-message-dots"></i>
@@ -171,11 +195,7 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
                   </div>
                 <?php endif; ?>
               </div>
-              <div class="flex flex-col gap-2 mt-auto">
-                <a href="<?= htmlspecialchars($m['trailer_url']) ?>" target="_blank" class="text-green-500 hover:text-green-400 flex items-center gap-2 text-sm font-medium">
-                  <i class="bx bx-play-circle"></i> Watch Trailer
-                </a>
-              </div>
+              <div class="flex flex-col gap-2 mt-auto"></div>
             </div>
           </div>
         <?php endforeach; ?>
@@ -184,6 +204,7 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
 
     <!-- Latest Releases -->
     <section class="mb-12">
+      <div class="border-t border-neutral-800 mb-6"></div>
       <div class="flex items-end justify-between mb-4">
         <h3 class="text-2xl font-semibold">Latest releases</h3>
       </div>
@@ -198,7 +219,7 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
           <div class="group rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-green-500/70 transition transform hover:-translate-y-2 hover:shadow-xl hover:shadow-green-500/20 flex flex-col">
             <div class="relative">
               <a href="pages/viewMovie.php?id=<?= $m['id'] ?>">
-                <img src="<?= htmlspecialchars($poster) ?>" alt="<?= htmlspecialchars($m['title']) ?>" class="w-full h-72 object-cover transition-transform duration-300 group-hover:scale-105">
+                <img src="<?= htmlspecialchars($poster) ?>" alt="<?= htmlspecialchars($m['title']) ?>" class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105">
               </a>
               <?php if ($avgRating): ?>
                 <div class="absolute top-2 right-2">
@@ -214,6 +235,14 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
                   <?= htmlspecialchars($m['title']) ?>
                   <small class="text-gray-400 font-normal">(<?= htmlspecialchars($m['release_year']) ?>)</small>
                 </h5>
+                <div class="text-gray-400 text-xs flex flex-wrap gap-2 mb-3">
+                  <?php if (!empty($m['country_name'])): ?>
+                    <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?= htmlspecialchars($m['country_name']) ?></span>
+                  <?php endif; ?>
+                  <?php if (!empty($m['language_name'])): ?>
+                    <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?= htmlspecialchars($m['language_name']) ?></span>
+                  <?php endif; ?>
+                </div>
                 <?php if ($totalReviews > 0): ?>
                   <div class="text-gray-500 text-xs mb-3 flex items-center gap-1">
                     <i class="bx bx-message-dots"></i>
@@ -221,25 +250,24 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
                   </div>
                 <?php endif; ?>
               </div>
-              <div class="flex flex-col gap-2 mt-auto">
-                <a href="<?= htmlspecialchars($m['trailer_url']) ?>" target="_blank" class="text-green-500 hover:text-green-400 flex items-center gap-2 text-sm font-medium">
-                  <i class="bx bx-play-circle"></i> Watch Trailer
-                </a>
-              </div>
+              <div class="flex flex-col gap-2 mt-auto"></div>
             </div>
           </div>
         <?php endforeach; ?>
       </div>
     </section>
 
-    <?php if ($userId): ?>
-      <?php if (!empty($recByGenres)): ?>
+    <?php if (!empty($genreShelves)): ?>
+      <?php foreach ($genreShelves as $genreId => $shelf): ?>
       <section class="mb-12">
+        <div class="border-t border-neutral-800 mb-6"></div>
         <div class="flex items-end justify-between mb-4">
-          <h3 class="text-2xl font-semibold">Because you like these genres</h3>
+          <h3 class="text-2xl font-semibold">
+            <?= $userId ? 'Because you like ' : 'Popular in ' ?><?= htmlspecialchars($shelf['name']) ?>
+          </h3>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-          <?php foreach ($recByGenres as $m): ?>
+          <?php foreach ($shelf['movies'] as $m): ?>
             <?php
               $avgRating = isset($m['avg_rating']) ? (float)$m['avg_rating'] : ($rate->getAverageRating($m['id'])['avg'] ?? null);
               $totalReviews = isset($m['total_reviews']) ? (int)$m['total_reviews'] : ($rate->getAverageRating($m['id'])['total'] ?? 0);
@@ -249,7 +277,7 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
             <div class="group rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-green-500/70 transition transform hover:-translate-y-2 hover:shadow-xl hover:shadow-green-500/20 flex flex-col">
               <div class="relative">
                 <a href="pages/viewMovie.php?id=<?= $m['id'] ?>">
-                  <img src="<?= htmlspecialchars($poster) ?>" alt="<?= htmlspecialchars($m['title']) ?>" class="w-full h-72 object-cover transition-transform duration-300 group-hover:scale-105">
+                  <img src="<?= htmlspecialchars($poster) ?>" alt="<?= htmlspecialchars($m['title']) ?>" class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105">
                 </a>
                 <?php if ($avgRating): ?>
                   <div class="absolute top-2 right-2">
@@ -265,12 +293,74 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
                     <?= htmlspecialchars($m['title']) ?>
                     <small class="text-gray-400 font-normal">(<?= htmlspecialchars($m['release_year']) ?>)</small>
                   </h5>
+                  <div class="text-gray-400 text-xs flex flex-wrap gap-2 mb-3">
+                    <?php if (!empty($m['country_name'])): ?>
+                      <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?php echo htmlspecialchars($m['country_name']); ?></span>
+                    <?php endif; ?>
+                    <?php if (!empty($m['language_name'])): ?>
+                      <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?php echo htmlspecialchars($m['language_name']); ?></span>
+                    <?php endif; ?>
+                  </div>
+                  <?php if ($totalReviews > 0): ?>
+                    <div class="text-gray-500 text-xs mb-3 flex items-center gap-1">
+                      <i class="bx bx-message-dots"></i>
+                      <?= $totalReviews ?> review<?= $totalReviews > 1 ? 's' : '' ?>
+                    </div>
+                  <?php endif; ?>
                 </div>
-                <div class="flex flex-col gap-2 mt-auto">
-                  <a href="<?= htmlspecialchars($m['trailer_url']) ?>" target="_blank" class="text-green-500 hover:text-green-400 flex items-center gap-2 text-sm font-medium">
-                    <i class="bx bx-play-circle"></i> Watch Trailer
-                  </a>
+                <div class="flex flex-col gap-2 mt-auto"></div>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </section>
+      <?php endforeach; ?>
+    <?php endif; ?>
+
+    <?php if ($userId): ?>
+      <?php if (!empty($recByGenres)): ?>
+      <section class="mb-12">
+        <div class="border-t border-neutral-800 mb-6"></div>
+        <div class="flex items-end justify-between mb-4">
+          <h3 class="text-2xl font-semibold">Because you like these genres</h3>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+          <?php foreach ($recByGenres as $m): ?>
+            <?php
+              $avgRating = isset($m['avg_rating']) ? (float)$m['avg_rating'] : ($rate->getAverageRating($m['id'])['avg'] ?? null);
+              $totalReviews = isset($m['total_reviews']) ? (int)$m['total_reviews'] : ($rate->getAverageRating($m['id'])['total'] ?? 0);
+              $ratingDisplay = $avgRating ? number_format($avgRating, 1) : "N/A";
+              $poster = $m['poster_url'] ?: 'https://placehold.co/300x450?text=No+Poster';
+            ?>
+            <div class="group rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-green-500/70 transition transform hover:-translate-y-2 hover:shadow-xl hover:shadow-green-500/20 flex flex-col">
+              <div class="relative">
+                <a href="pages/viewMovie.php?id=<?= $m['id'] ?>">
+                  <img src="<?= htmlspecialchars($poster) ?>" alt="<?= htmlspecialchars($m['title']) ?>" class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105">
+                </a>
+                <?php if ($avgRating): ?>
+                  <div class="absolute top-2 right-2">
+                    <span class="bg-green-600/90 text-white font-semibold text-xs px-2 py-1 rounded-md flex items-center gap-1">
+                      <i class="bx bxs-star text-yellow-300"></i> <?= $ratingDisplay ?>
+                    </span>
+                  </div>
+                <?php endif; ?>
+              </div>
+              <div class="p-4 flex flex-col flex-grow">
+                <div class="flex-grow">
+                  <h5 class="font-semibold text-base mb-1 text-white leading-tight">
+                    <?= htmlspecialchars($m['title']) ?>
+                    <small class="text-gray-400 font-normal">(<?= htmlspecialchars($m['release_year']) ?>)</small>
+                  </h5>
+                  <div class="text-gray-400 text-xs flex flex-wrap gap-2 mb-3">
+                    <?php if (!empty($m['country_name'])): ?>
+                      <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?= htmlspecialchars($m['country_name']) ?></span>
+                    <?php endif; ?>
+                    <?php if (!empty($m['language_name'])): ?>
+                      <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?= htmlspecialchars($m['language_name']) ?></span>
+                    <?php endif; ?>
+                  </div>
                 </div>
+                <div class="flex flex-col gap-2 mt-auto"></div>
               </div>
             </div>
           <?php endforeach; ?>
@@ -280,6 +370,7 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
 
       <?php if (!empty($recByCountries)): ?>
       <section class="mb-12">
+        <div class="border-t border-neutral-800 mb-6"></div>
         <div class="flex items-end justify-between mb-4">
           <h3 class="text-2xl font-semibold">From countries you favored</h3>
         </div>
@@ -292,7 +383,7 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
             <div class="group rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-green-500/70 transition transform hover:-translate-y-2 hover:shadow-xl hover:shadow-green-500/20 flex flex-col">
               <div class="relative">
                 <a href="pages/viewMovie.php?id=<?= $m['id'] ?>">
-                  <img src="<?= htmlspecialchars($poster) ?>" alt="<?= htmlspecialchars($m['title']) ?>" class="w-full h-72 object-cover transition-transform duration-300 group-hover:scale-105">
+                  <img src="<?= htmlspecialchars($poster) ?>" alt="<?= htmlspecialchars($m['title']) ?>" class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105">
                 </a>
                 <?php if ($avgRating): ?>
                   <div class="absolute top-2 right-2">
@@ -308,12 +399,16 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
                     <?= htmlspecialchars($m['title']) ?>
                     <small class="text-gray-400 font-normal">(<?= htmlspecialchars($m['release_year']) ?>)</small>
                   </h5>
+                  <div class="text-gray-400 text-xs flex flex-wrap gap-2 mb-3">
+                    <?php if (!empty($m['country_name'])): ?>
+                      <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?= htmlspecialchars($m['country_name']) ?></span>
+                    <?php endif; ?>
+                    <?php if (!empty($m['language_name'])): ?>
+                      <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?= htmlspecialchars($m['language_name']) ?></span>
+                    <?php endif; ?>
+                  </div>
                 </div>
-                <div class="flex flex-col gap-2 mt-auto">
-                  <a href="<?= htmlspecialchars($m['trailer_url']) ?>" target="_blank" class="text-green-500 hover:text-green-400 flex items-center gap-2 text-sm font-medium">
-                    <i class="bx bx-play-circle"></i> Watch Trailer
-                  </a>
-                </div>
+                <div class="flex flex-col gap-2 mt-auto"></div>
               </div>
             </div>
           <?php endforeach; ?>
@@ -323,6 +418,7 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
 
       <?php if (!empty($recByLanguages)): ?>
       <section class="mb-12">
+        <div class="border-t border-neutral-800 mb-6"></div>
         <div class="flex items-end justify-between mb-4">
           <h3 class="text-2xl font-semibold">In languages you enjoy</h3>
         </div>
@@ -335,7 +431,7 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
             <div class="group rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-green-500/70 transition transform hover:-translate-y-2 hover:shadow-xl hover:shadow-green-500/20 flex flex-col">
               <div class="relative">
                 <a href="pages/viewMovie.php?id=<?= $m['id'] ?>">
-                  <img src="<?= htmlspecialchars($poster) ?>" alt="<?= htmlspecialchars($m['title']) ?>" class="w-full h-72 object-cover transition-transform duration-300 group-hover:scale-105">
+                  <img src="<?= htmlspecialchars($poster) ?>" alt="<?= htmlspecialchars($m['title']) ?>" class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105">
                 </a>
                 <?php if ($avgRating): ?>
                   <div class="absolute top-2 right-2">
@@ -351,12 +447,16 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
                     <?= htmlspecialchars($m['title']) ?>
                     <small class="text-gray-400 font-normal">(<?= htmlspecialchars($m['release_year']) ?>)</small>
                   </h5>
+                  <div class="text-gray-400 text-xs flex flex-wrap gap-2 mb-3">
+                    <?php if (!empty($m['country_name'])): ?>
+                      <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?= htmlspecialchars($m['country_name']) ?></span>
+                    <?php endif; ?>
+                    <?php if (!empty($m['language_name'])): ?>
+                      <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?= htmlspecialchars($m['language_name']) ?></span>
+                    <?php endif; ?>
+                  </div>
                 </div>
-                <div class="flex flex-col gap-2 mt-auto">
-                  <a href="<?= htmlspecialchars($m['trailer_url']) ?>" target="_blank" class="text-green-500 hover:text-green-400 flex items-center gap-2 text-sm font-medium">
-                    <i class="bx bx-play-circle"></i> Watch Trailer
-                  </a>
-                </div>
+                <div class="flex flex-col gap-2 mt-auto"></div>
               </div>
             </div>
           <?php endforeach; ?>
@@ -365,7 +465,8 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
       <?php endif; ?>
     <?php endif; ?>
 
-    <!-- Movie grid -->
+  <div class="border-t border-neutral-800 my-10"></div>
+  <!-- Movie grid -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
       <?php foreach ($movies as $m): ?>
         <?php
@@ -380,8 +481,8 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
           <!-- Poster -->
           <div class="relative">
             <a href="pages/viewMovie.php?id=<?= $m['id'] ?>">
-              <img src="<?= htmlspecialchars($poster) ?>" alt="<?= htmlspecialchars($m['title']) ?>" 
-                   class="w-full h-72 object-cover transition-transform duration-300 group-hover:scale-105">
+        <img src="<?= htmlspecialchars($poster) ?>" alt="<?= htmlspecialchars($m['title']) ?>" 
+           class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105">
             </a>
             <?php if ($avgRating): ?>
               <div class="absolute top-2 right-2">
@@ -399,6 +500,14 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
                 <?= htmlspecialchars($m['title']) ?>
                 <small class="text-gray-400 font-normal">(<?= htmlspecialchars($m['release_year']) ?>)</small>
               </h5>
+              <div class="text-gray-400 text-xs flex flex-wrap gap-2 mb-3">
+                <?php if (!empty($m['country_name'])): ?>
+                  <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?= htmlspecialchars($m['country_name']) ?></span>
+                <?php endif; ?>
+                <?php if (!empty($m['language_name'])): ?>
+                  <span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700"><?= htmlspecialchars($m['language_name']) ?></span>
+                <?php endif; ?>
+              </div>
 
               <!-- <p class="text-gray-400 text-sm mb-3 leading-snug">
                 <?= htmlspecialchars(substr($m['description'], 0, 90)) ?>
@@ -414,25 +523,20 @@ $recByLanguages = $userId ? $rec->basedOnFavoriteLanguages($userId, 12) : [];
             </div>
 
             <div class="flex flex-col gap-2 mt-auto">
-              <!-- <a href="pages/viewMovie.php?id=<?= $m['id'] ?>" class="text-green-500 hover:text-green-400 flex items-center gap-2 text-sm font-medium">
-                <i class="bx bx-info-circle"></i> View Details
-              </a> -->
-              <a href="<?= htmlspecialchars($m['trailer_url']) ?>" target="_blank" class="text-green-500 hover:text-green-400 flex items-center gap-2 text-sm font-medium">
-                <i class="bx bx-play-circle"></i> Watch Trailer
-              </a>
-
               <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                <div class="pt-3 mt-2 border-t border-neutral-800 flex flex-col gap-1">
-                  <a href="pages/manageMovie.php?id=<?= $m['id'] ?>" class="text-gray-400 hover:text-white flex items-center gap-2 text-sm">
-                    <i class="bx bx-edit"></i> Edit Movie
-                  </a>
-                  <form action="db/movieRequests.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this movie?')">
-                    <input type="hidden" name="action" value="delete" />
-                    <input type="hidden" name="id" value="<?= $m['id'] ?>" />
-                    <button type="submit" class="text-red-500 hover:text-red-400 flex items-center gap-2 text-sm w-full text-left">
-                      <i class="bx bx-trash"></i> Delete
-                    </button>
-                  </form>
+                <div class="pt-3 mt-2 border-t border-neutral-800">
+                  <div class="flex items-center gap-4">
+                    <a href="pages/manageMovie.php?id=<?= $m['id'] ?>" class="text-gray-300 hover:text-white flex items-center gap-2 text-sm">
+                      <i class="bx bx-edit"></i> Edit
+                    </a>
+                    <form action="db/movieRequests.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this movie?')" class="inline">
+                      <input type="hidden" name="action" value="delete" />
+                      <input type="hidden" name="id" value="<?= $m['id'] ?>" />
+                      <button type="submit" class="text-red-500 hover:text-red-400 flex items-center gap-2 text-sm">
+                        <i class="bx bx-trash"></i> Delete
+                      </button>
+                    </form>
+                  </div>
                 </div>
               <?php endif; ?>
             </div>

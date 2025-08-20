@@ -40,6 +40,20 @@ try {
             $data = $rec->basedOnFavoriteLanguages($userId, $limit);
             echo json_encode(['success' => true, 'data' => $data]);
             break;
+        case 'topGenres':
+            if ($userId > 0) {
+                $data = $rec->getUserTopGenres($userId, 5);
+            } else {
+                $data = $rec->getTopGenresOverall(5);
+            }
+            echo json_encode(['success' => true, 'data' => $data]);
+            break;
+        case 'byGenre':
+            $genreId = (int)($_GET['genre_id'] ?? $_POST['genre_id'] ?? 0);
+            if ($genreId <= 0) { http_response_code(400); echo json_encode(['success' => false, 'message' => 'Invalid genre']); break; }
+            $data = $rec->getByGenre($genreId, $userId, $limit);
+            echo json_encode(['success' => true, 'data' => $data]);
+            break;
         default:
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Unknown action']);

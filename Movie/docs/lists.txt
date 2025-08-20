@@ -1,6 +1,6 @@
 Filter, Search: index
     New (latest)
-    Trending (rating)
+    Trending / Popular (rating)
     Genre
     Release Year
     Country
