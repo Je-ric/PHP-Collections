@@ -127,8 +127,9 @@ $favCount = $fav->countByMovie($m['id']);
 
 <body class="min-h-screen text-text-primary">
 
+    <?php include __DIR__ . '/../partials/header.php'; ?>
     <!-- Header -->
-    <header class="navbar bg-primary-bg/95 backdrop-blur-md border-b border-border-color sticky top-0 z-50">
+    <!-- <header class="navbar bg-primary-bg/95 backdrop-blur-md border-b border-border-color sticky top-0 z-50">
         <div class="container mx-auto">
             <div class="navbar-start">
                 <h1 class="text-xl font-bold bg-gradient-to-r from-accent to-accent-hover bg-clip-text text-transparent">
@@ -141,7 +142,7 @@ $favCount = $fav->countByMovie($m['id']);
                 </a>
             </div>
         </div>
-    </header>
+    </header> -->
 
     <div class="mx-auto relative z-10">
         <?php if (!empty($m['background_url'])): ?>

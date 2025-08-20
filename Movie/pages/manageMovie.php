@@ -61,7 +61,7 @@ $languages = json_decode($languageJsonContent, true);
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title><?= $actionText ?></title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
   <link href="https://fonts.googleapis.com/css2?family=Geist+Sans:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/ui-darkness/jquery-ui.css">
@@ -88,40 +88,29 @@ $languages = json_decode($languageJsonContent, true);
             }
         }
     </script>
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title><?= $actionText ?></title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Geist+Sans:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/ui-darkness/jquery-ui.css">
   <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'primary-bg': '#0f172a',
-                        'secondary-bg': '#1e293b',
-                        'card-bg': '#334155',
-                        'accent': '#10b981',
-                        'accent-hover': '#059669',
-                        'text-primary': '#f8fafc',
-                        'text-secondary': '#cbd5e1',
-                        'text-muted': '#64748b',
-                        'border-color': '#475569',
-                    },
-                    fontFamily: {
-                        'oswald': ['Oswald', 'sans-serif'],
-                        'anton': ['Anton', 'sans-serif'],
-                    }
-                }
-            }
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-bg': '#0f172a',
+            'secondary-bg': '#1e293b',
+            'card-bg': '#334155',
+            'accent': '#10b981',
+            'accent-hover': '#059669',
+            'text-primary': '#f8fafc',
+            'text-secondary': '#cbd5e1',
+            'text-muted': '#64748b',
+            'border-color': '#475569',
+          },
+          fontFamily: {
+            'oswald': ['Oswald', 'sans-serif'],
+            'anton': ['Anton', 'sans-serif'],
+          }
         }
-    </script>
+      }
+    }
+  </script>
   <style>
     body {
       font-family: 'Geist Sans', sans-serif;
@@ -196,7 +185,8 @@ $languages = json_decode($languageJsonContent, true);
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100">
   
-  <header class="bg-slate-800 shadow-lg border-b border-slate-600 px-4 md:px-8 py-6">
+  <?php include __DIR__ . '/../partials/header.php'; ?>  
+  <!-- <header class="bg-slate-800 shadow-lg border-b border-slate-600 px-4 md:px-8 py-6">
     <div class="max-w-6xl mx-auto">
       <div class="flex items-center gap-4">
         <div class="w-12 h-12 bg-gradient-to-br from-cyan-600 to-emerald-500 rounded-full flex items-center justify-center">
@@ -208,7 +198,7 @@ $languages = json_decode($languageJsonContent, true);
         </div>
       </div>
     </div>
-  </header>
+  </header> -->
 
   <!-- Main -->
   <main class="max-w-6xl mx-auto py-8 px-4 md:px-8">
