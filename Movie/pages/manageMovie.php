@@ -62,32 +62,11 @@ $languages = json_decode($languageJsonContent, true);
   <title><?= $actionText ?></title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
-  <link href="https://fonts.googleapis.com/css2?family=Geist+Sans:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/ui-darkness/jquery-ui.css">
-  <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'primary-bg': '#0f172a',
-                        'secondary-bg': '#1e293b',
-                        'card-bg': '#334155',
-                        'accent': '#10b981',
-                        'accent-hover': '#059669',
-                        'text-primary': '#f8fafc',
-                        'text-secondary': '#cbd5e1',
-                        'text-muted': '#64748b',
-                        'border-color': '#475569',
-                    },
-                    fontFamily: {
-                        'oswald': ['Oswald', 'sans-serif'],
-                        'anton': ['Anton', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
   <script>
     tailwind.config = {
       theme: {
@@ -104,8 +83,7 @@ $languages = json_decode($languageJsonContent, true);
             'border-color': '#475569',
           },
           fontFamily: {
-            'oswald': ['Oswald', 'sans-serif'],
-            'anton': ['Anton', 'sans-serif'],
+            'oswald': ['Oswald', 'sans-serif']
           }
         }
       }
@@ -113,7 +91,7 @@ $languages = json_decode($languageJsonContent, true);
   </script>
   <style>
     body {
-      font-family: 'Geist Sans', sans-serif;
+      font-family: 'Oswald', sans-serif;
     }
 
     .accordion-icon {
@@ -186,21 +164,6 @@ $languages = json_decode($languageJsonContent, true);
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100">
   
   <?php include __DIR__ . '/../partials/header.php'; ?>  
-  <!-- <header class="bg-slate-800 shadow-lg border-b border-slate-600 px-4 md:px-8 py-6">
-    <div class="max-w-6xl mx-auto">
-      <div class="flex items-center gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-cyan-600 to-emerald-500 rounded-full flex items-center justify-center">
-          <i class="bx bx-movie-play text-white text-2xl"></i>
-        </div>
-        <div>
-          <h1 class="text-2xl md:text-3xl font-bold text-white"><?= $actionText ?></h1>
-          <p class="text-slate-300 font-medium">Manage your movie collection</p>
-        </div>
-      </div>
-    </div>
-  </header> -->
-
-  <!-- Main -->
   <main class="max-w-6xl mx-auto py-8 px-4 md:px-8">
     <div class="bg-slate-800 border border-slate-600 rounded-2xl shadow-2xl overflow-hidden">
       <form action="../db/movieRequests.php" method="POST" enctype="multipart/form-data">
@@ -420,15 +383,11 @@ $languages = json_decode($languageJsonContent, true);
         <!-- Buttoness -->
         <div class="flex flex-col sm:flex-row gap-4 p-8 bg-slate-700 border-t border-slate-600">
           <button type="submit" 
-                  class="flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-600 to-emerald-500 hover:from-cyan-500 hover:to-emerald-400 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                  class="btn btn-accent"
+                  >
             <i class="bx <?= $editing ? 'bx-save' : 'bx-plus' ?> text-xl"></i>
             <?= htmlspecialchars($actionText) ?>
           </button>
-          <a href="../index.php" 
-             class="flex items-center justify-center gap-3 px-8 py-4 bg-slate-600 hover:bg-slate-500 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105">
-            <i class="bx bx-arrow-back text-xl"></i>
-            Back to Movies
-          </a>
         </div>
       </form>
     </div>
