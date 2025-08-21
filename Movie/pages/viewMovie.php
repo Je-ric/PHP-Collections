@@ -128,21 +128,6 @@ $favCount = $fav->countByMovie($m['id']);
 <body class="min-h-screen text-text-primary">
 
     <?php include __DIR__ . '/../partials/header.php'; ?>
-    <!-- Header -->
-    <!-- <header class="navbar bg-primary-bg/95 backdrop-blur-md border-b border-border-color sticky top-0 z-50">
-        <div class="container mx-auto">
-            <div class="navbar-start">
-                <h1 class="text-xl font-bold bg-gradient-to-r from-accent to-accent-hover bg-clip-text text-transparent">
-                    <i class='bx bx-movie-play mr-2'></i>Movie Recommendation
-                </h1>
-            </div>
-            <div class="navbar-end">
-                <a href="../index.php" class="btn btn-outline btn-accent">
-                    <i class='bx bx-arrow-back'></i> Back to Movies
-                </a>
-            </div>
-        </div>
-    </header> -->
 
     <div class="mx-auto relative z-10">
         <?php if (!empty($m['background_url'])): ?>
@@ -392,6 +377,8 @@ $favCount = $fav->countByMovie($m['id']);
     <?php if (isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'user'): ?>
         <?php include __DIR__ . '/../partials/rateReviewModal.php'; ?>
     <?php endif; ?>
+
+    <?php include __DIR__ . '/../partials/footer.php'; ?>
 
     <script>
         $(function() {

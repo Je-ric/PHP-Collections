@@ -28,7 +28,7 @@ $showBackToMovies = in_array($currentFile, ['viewMovie.php', 'manageMovie.php'])
 
         <?php if (isset($_SESSION['username'])): ?>
             <span class="hidden sm:inline text-text-secondary">
-                Hi, <?= htmlspecialchars($_SESSION['username']) ?> 👋
+                Hi, <?= htmlspecialchars($_SESSION['username']) ?> !
             </span>
 
             <form action="<?= htmlspecialchars($authHref) ?>" method="POST" class="inline-flex">

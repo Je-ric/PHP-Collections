@@ -164,6 +164,7 @@ $languages = json_decode($languageJsonContent, true);
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100">
   
   <?php include __DIR__ . '/../partials/header.php'; ?>  
+
   <main class="max-w-6xl mx-auto py-8 px-4 md:px-8">
     <div class="bg-slate-800 border border-slate-600 rounded-2xl shadow-2xl overflow-hidden">
       <form action="../db/movieRequests.php" method="POST" enctype="multipart/form-data">
@@ -393,7 +394,7 @@ $languages = json_decode($languageJsonContent, true);
     </div>
   </main>
 
-
+  <?php include __DIR__ . '/../partials/footer.php'; ?>
 
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>

@@ -545,5 +545,7 @@ foreach ($topGenres as $g) {
       <?php endforeach; ?>
     </div>
   </main>
+
+  <?php include __DIR__ . '/partials/footer.php'; ?>
 </body>
 </html>
