@@ -19,11 +19,18 @@ class Movie {
 
     public function getAllMovies() {
         $sql = "
-            SELECT m.*, c.name AS country_name, l.name AS language_name
+            SELECT m.*, c.name AS country_name, l.name AS language_name,
+                   AVG(r.rating) AS avg_rating, COUNT(r.id) AS total_reviews,
+                   GROUP_CONCAT(DISTINCT g.id) AS genre_ids,
+                   GROUP_CONCAT(DISTINCT g.name) AS genre_names
             FROM movies m
+            LEFT JOIN ratings_reviews r ON r.movie_id = m.id
             LEFT JOIN countries c ON m.country_id = c.id
             LEFT JOIN languages l ON m.language_id = l.id
-            ORDER BY release_year DESC
+            LEFT JOIN movie_genres mg ON mg.movie_id = m.id
+            LEFT JOIN genres g ON g.id = mg.genre_id
+            GROUP BY m.id
+            ORDER BY m.release_year DESC
         ";
         $result = $this->db->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);

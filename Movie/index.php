@@ -135,7 +135,7 @@ $userRole = $_SESSION['role'] ?? '';
       role: "<?= htmlspecialchars($userRole) ?>",
       genres: <?= json_encode($allGenres ?? []) ?>
     };
-  // Embed all movies so search/filter/sort are 100% client-side
+
   window.AppData = { allMovies: <?= json_encode($allMovies ?? []) ?> };
 
     (function($) {
@@ -152,11 +152,11 @@ $userRole = $_SESSION['role'] ?? '';
       // Helpers
       function buildCard(m) {
         const poster = m.poster_url && m.poster_url.length ? m.poster_url : 'https://placehold.co/300x450?text=No+Poster';
-        const rating = m.avg_rating ? Number(m.avg_rating).toFixed(1) : '';
+        const rating = (m.avg_rating !== null && m.avg_rating !== undefined) ? Number(m.avg_rating).toFixed(1) : 'N/A';
         const year = m.release_year ? `(${m.release_year})` : '';
         const country = m.country_name ? `<span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700">${escapeHtml(m.country_name)}</span>` : '';
         const language = m.language_name ? `<span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700">${escapeHtml(m.language_name)}</span>` : '';
-        const ratingBadge = rating ? `<div class="absolute top-2 right-2"><span class="bg-green-600/90 text-white font-semibold text-xs px-2 py-1 rounded-md flex items-center gap-1"><i class='bx bxs-star text-yellow-300'></i>${rating}</span></div>` : '';
+        const ratingBadge = `<div class="absolute top-2 right-2"><span class="bg-green-600/90 text-white font-semibold text-xs px-2 py-1 rounded-md flex items-center gap-1"><i class='bx bxs-star text-yellow-300'></i>${rating}</span></div>`;
 
         return `
       <div class="group rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-green-500/70 transition transform hover:-translate-y-2 hover:shadow-xl hover:shadow-green-500/20 flex flex-col">
@@ -198,12 +198,20 @@ $userRole = $_SESSION['role'] ?? '';
         const q = $('#search').val().trim().toLowerCase();
         const year = $('#yearFilter').val();
         const country = $('#countryFilter').val();
+        const genreId = $('#genreFilter').val();
         const sort = $('#sortSelect').val();
 
         let res = list;
         if (q) res = res.filter(m => String(m.title||'').toLowerCase().includes(q));
         if (year) res = res.filter(m => String(m.release_year||'') === String(year));
         if (country) res = res.filter(m => String(m.country_name||'') === country);
+        if (genreId) {
+          res = res.filter(m => {
+            if (!m.genre_ids) return false;
+            const ids = String(m.genre_ids).split(',').map(Number);
+            return ids.includes(Number(genreId));
+          });
+        }
 
         if (sort === 'year_desc') res = res.slice().sort((a,b)=>(b.release_year||0)-(a.release_year||0));
         else if (sort === 'year_asc') res = res.slice().sort((a,b)=>(a.release_year||0)-(b.release_year||0));
@@ -215,8 +223,8 @@ $userRole = $_SESSION['role'] ?? '';
 
       // Populate Year/Country filters based on data
       function populateFilters() {
-        const years = [...new Set(state.allMovies.map(m=>m.release_year).filter(Boolean))].sort((a,b)=>b-a);
-        const countries = [...new Set(state.allMovies.map(m=>m.country_name).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b)));
+  const years = [...new Set(state.allMovies.map(m=>m.release_year).filter(Boolean))].sort((a,b)=>b-a);
+  const countries = [...new Set(state.allMovies.map(m=>m.country_name).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b)));
         const $yf = $('#yearFilter').empty().append('<option value="">All Years</option>');
         const $cf = $('#countryFilter').empty().append('<option value="">All Countries</option>');
         years.forEach(y => $yf.append(`<option value="${y}">${y}</option>`));
@@ -226,7 +234,7 @@ $userRole = $_SESSION['role'] ?? '';
       // AJAX calls
   function fetchTrending(limit = 12) {
         return $.ajax({
-    url: 'db/recommendRequests.php', // use relative path
+    url: '/db/recommendRequests.php', // use relative path
             method: 'GET',
             data: {
               action: 'trending',
@@ -238,7 +246,7 @@ $userRole = $_SESSION['role'] ?? '';
 
       function fetchLatest(limit = 12) {
         return $.ajax({
-    url: 'db/recommendRequests.php',
+    url: '/db/recommendRequests.php',
             method: 'GET',
             data: {
               action: 'latest',
@@ -251,7 +259,7 @@ $userRole = $_SESSION['role'] ?? '';
       function fetchSearch(q, limit = 24) {
         if (!q) return Promise.resolve([]);
         return $.ajax({
-    url: 'db/recommendRequests.php',
+    url: '/db/recommendRequests.php',
             method: 'GET',
             data: {
               action: 'search',
@@ -264,7 +272,7 @@ $userRole = $_SESSION['role'] ?? '';
 
       function fetchTopGenres() {
         return $.ajax({
-    url: 'db/recommendRequests.php',
+    url: '/db/recommendRequests.php',
             method: 'GET',
             data: {
               action: 'topGenres'
@@ -275,7 +283,7 @@ $userRole = $_SESSION['role'] ?? '';
 
       function fetchByGenre(genreId, limit = 6) {
         return $.ajax({
-    url: 'db/recommendRequests.php',
+    url: '/db/recommendRequests.php',
             method: 'GET',
             data: {
               action: 'byGenre',
@@ -294,7 +302,7 @@ $userRole = $_SESSION['role'] ?? '';
         });
         return Promise.all([
           $.ajax({
-            url: 'db/recommendRequests.php',
+            url: '/db/recommendRequests.php',
             method: 'GET',
             data: {
               action: 'favGenres',
@@ -302,7 +310,7 @@ $userRole = $_SESSION['role'] ?? '';
             }
           }),
           $.ajax({
-            url: 'db/recommendRequests.php',
+            url: '/db/recommendRequests.php',
             method: 'GET',
             data: {
               action: 'favCountries',
@@ -310,7 +318,7 @@ $userRole = $_SESSION['role'] ?? '';
             }
           }),
           $.ajax({
-            url: 'db/recommendRequests.php',
+            url: '/db/recommendRequests.php',
             method: 'GET',
             data: {
               action: 'favLanguages',
