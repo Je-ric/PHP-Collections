@@ -123,13 +123,3 @@ INSERT INTO `genres` (`name`) VALUES
 ('Political'), ('Science Fiction'), ('Soap Opera'), ('Talk Show'),
 ('Thriller'), ('TV Movie'), ('War'), ('Short');
 
-
-INSERT INTO movies (title, description, release_year, poster_url, trailer_url, country_id, language_id)
-VALUES 
-('Inception', 'A thief who steals corporate secrets through dream-sharing technology.', 2010, NULL, NULL, NULL, NULL),
-('Parasite', 'A poor family schemes to become employed by a wealthy family.', 2019, NULL, NULL, NULL, NULL),
-('Interstellar', 'Explorers travel through a wormhole to ensure humanity''s survival.', 2014, NULL, NULL, NULL, NULL);
-
-
-INSERT INTO `users` (username, password, role) 
-VALUES ('jericjdc', '$2y$10$l9MDiCtVtI31R1282hKHKO1eSnj4FNMzJ/HnWF5TAr/aYJvWpiZpK', 'admin'); 
