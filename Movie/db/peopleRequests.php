@@ -13,60 +13,55 @@ $query   = isset($_POST['query']) ? trim($_POST['query']) : '';
 
 $people = new People();
 
-try {
-    if ($action === 'load' || $action === 'fetch') {
-        if ($movieId <= 0 || ($role !== 'Director' && $role !== 'Cast')) {
-            throw new Exception('Invalid params');
-        }
-        $data = $people->getMoviePeople($movieId, $role); // returns array of ['id','name']
-        echo json_encode($data); // frontend accepts array or {data:[]}
-        exit;
-    }
-
-    if ($action === 'add') {
-        if ($movieId <= 0 || $name === '' || !in_array($role, ['Director','Cast'], true)) {
-            throw new Exception('Invalid input data');
-        }
-        $personId = $people->addPerson($name);
-        $attached = $people->attachToMovie($movieId, $personId, $role);
-
-        if (!$attached) {
-            echo json_encode(['success' => false, 'message' => 'This person is already added as ' . strtolower($role)]);
-            exit;
-        }
-
-        echo json_encode(['success' => true, 'message' => ucfirst(strtolower($role)) . ' added successfully', 'person_id' => $personId]);
-        exit;
-    }
-
-    if ($action === 'remove') {
-        if ($id <= 0) throw new Exception('Invalid cast ID');
-        $removed = $people->removeFromMovie($id);
-        if (!$removed) {
-            echo json_encode(['success' => false, 'message' => 'Failed to remove person']);
-            exit;
-        }
-        echo json_encode(['success' => true, 'message' => 'Person removed successfully']);
-        exit;
-    }
-
-    if ($action === 'search') {
-        // return [] for empty queries
-        if ($query === '') {
-            echo json_encode([]);
-            exit;
-        }
-
-        // Use People::search (returns array of ['id','name'])
-        $results = $people->search($query) ?? [];
-        echo json_encode($results);
-        exit;
-    }
-
-    throw new Exception('Unknown action');
-} catch (Throwable $e) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+function respond($success, $data = null, $message = null, $code = 200)
+{
+    http_response_code($code);
+    echo json_encode([
+        'success' => $success,
+        'data'    => $data,
+        'message' => $message
+    ]);
     exit;
 }
+
+if ($action === 'load' || $action === 'fetch') {
+    if ($movieId <= 0 || ($role !== 'Director' && $role !== 'Cast')) {
+        respond(false, null, 'Invalid params', 400);
+    }
+    $data = $people->getMoviePeople($movieId, $role);
+    respond(true, $data);
+}
+
+if ($action === 'add') {
+    if ($movieId <= 0 || $name === '' || !in_array($role, ['Director','Cast'], true)) {
+        respond(false, null, 'Invalid input data', 400);
+    }
+    $personId = $people->addPerson($name);
+    $attached = $people->attachToMovie($movieId, $personId, $role);
+    if (!$attached) {
+        respond(false, null, 'This person is already added as ' . strtolower($role));
+    }
+    respond(true, ['person_id' => $personId], ucfirst(strtolower($role)) . ' added successfully');
+}
+
+if ($action === 'remove') {
+    if ($id <= 0) {
+        respond(false, null, 'Invalid cast ID', 400);
+    }
+    $removed = $people->removeFromMovie($id);
+    if (!$removed) {
+        respond(false, null, 'Failed to remove person');
+    }
+    respond(true, null, 'Person removed successfully');
+}
+
+if ($action === 'search') {
+    if ($query === '') {
+        respond(true, []);
+    }
+    $results = $people->search($query) ?? [];
+    respond(true, $results);
+}
+
+respond(false, null, 'Unknown action', 400);
 ?>

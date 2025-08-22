@@ -19,7 +19,6 @@ function respond($success, $data = null, $message = null, $code = 200)
     exit;
 }
 
-try {
     $rec = new Recommend();
 
     switch ($action) {
@@ -110,6 +109,3 @@ try {
         default:
             respond(false, null, 'Unknown action', 400);
     }
-} catch (Throwable $e) {
-    respond(false, null, $e->getMessage(), 500);
-}

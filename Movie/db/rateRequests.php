@@ -14,6 +14,17 @@ if (!isset($_SESSION['user_id']) || (isset($_SESSION['role']) && $_SESSION['role
 
 $rate = new RateReview();
 
+function respond($success, $data = null, $message = null, $code = 200)
+{
+    http_response_code($code);
+    echo json_encode([
+        'success' => $success,
+        'data'    => $data,
+        'message' => $message
+    ]);
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
 
@@ -27,20 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    try {
         $ok = $rate->addReview($userId, $movieId, $rating, $review);
         if ($ok) {
             $avg = $rate->getAverageRating($movieId);
-            echo json_encode([
-                'success' => true,
-                'message' => 'Review submitted.',
-                'average' => $avg
-            ]);
-        } else {
-            echo json_encode([ 'success' => false, 'message' => 'Failed to submit review.' ]);
+            respond(true, ['average' => $avg], 'Review submitted.');
         }
-    } catch (Throwable $e) {
-        echo json_encode([ 'success' => false, 'message' => $e->getMessage() ]);
-    }
-    exit;
+        respond(false, null, 'Failed to submit review.');
 }
