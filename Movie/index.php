@@ -119,14 +119,30 @@ $userRole = $_SESSION['role'] ?? '';
         allMovies: <?= json_encode($allMovies ?? []) ?>,
         trending: [],
       };
+      // maling gawin toh, but for the sake of this to work
+      const isAdmin = <?= json_encode($userRole === 'admin') ?>;
 
-      function buildCard(m) {
+      function buildCard(m, showActions = false) {
         const poster = m.poster_url || 'https://placehold.co/300x450?text=No+Poster';
         const rating = (m.avg_rating != null) ? Number(m.avg_rating).toFixed(1) : 'N/A';
         const year = m.release_year ? `(${m.release_year})` : '';
         const country = m.country_name ? `<span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700">${escapeHtml(m.country_name)}</span>` : '';
         const language = m.language_name ? `<span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700">${escapeHtml(m.language_name)}</span>` : '';
         const ratingBadge = `<div class="absolute top-2 right-2"><span class="bg-green-600/90 text-white font-semibold text-xs px-2 py-1 rounded-md flex items-center gap-1"><i class='bx bxs-star text-yellow-300'></i>${rating}</span></div>`;
+        const adminControls = showActions ? `
+          <div class="mt-auto pt-2">
+            <div class="flex gap-2">
+              <a href="pages/manageMovie.php?id=${m.id}" class="btn btn-xs btn-outline btn-info flex-1">
+                <i class='bx bx-edit'></i>
+                Edit
+              </a>
+              <button type="button" class="btn btn-xs btn-outline btn-error flex-1 btn-delete-movie" data-id="${m.id}">
+                <i class='bx bx-trash'></i>
+                Delete
+              </button>
+            </div>
+          </div>
+        ` : '';
 
         return `
       <div class="group rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-green-500/70 transition transform hover:-translate-y-2 hover:shadow-xl hover:shadow-green-500/20 flex flex-col" data-id="${m.id}">
@@ -143,24 +159,13 @@ $userRole = $_SESSION['role'] ?? '';
           <div class="text-gray-400 text-xs flex flex-wrap gap-2 mb-3">
             ${country}${language}
           </div>
-          <div class="mt-auto pt-2">
-            <div class="flex gap-2">
-              <a href="pages/manageMovie.php?id=${m.id}" class="btn btn-xs btn-outline btn-info flex-1">
-                <i class='bx bx-edit'></i>
-                Edit
-              </a>
-              <button type="button" class="btn btn-xs btn-outline btn-error flex-1 btn-delete-movie" data-id="${m.id}">
-                <i class='bx bx-trash'></i>
-                Delete
-              </button>
-            </div>
-          </div>
+          ${adminControls}
         </div>
       </div>`;
       }
 
-      function renderGrid($container, list) {
-        $container.html(list.map(buildCard).join(''));
+      function renderGrid($container, list, showActions = false) {
+        $container.html(list.map(m => buildCard(m, showActions)).join(''));
         // list = [
         //   { id: 1, title: "Inception" },
         //   { id: 2, title: "Avatar" }
@@ -252,7 +257,7 @@ $userRole = $_SESSION['role'] ?? '';
       function renderAllGrid() {
         // display all movies based sa filters
         const filtered = applySortAndFilter(state.allMovies);
-        renderGrid($('#allGrid'), filtered);
+  renderGrid($('#allGrid'), filtered, isAdmin);
         $('#allEmpty').toggleClass('hidden', filtered.length > 0);
       }
 
@@ -263,7 +268,7 @@ $userRole = $_SESSION['role'] ?? '';
 
         fetchTrending().then(list => {
           state.trending = list || [];
-          renderGrid($('#trendingGrid'), state.trending);
+          renderGrid($('#trendingGrid'), state.trending, false);
           updateTrendingVisibility();
         });
       }
@@ -296,7 +301,7 @@ $userRole = $_SESSION['role'] ?? '';
               state.allMovies = state.allMovies.filter(m => Number(m.id) !== Number(id));
               state.trending = (state.trending || []).filter(m => Number(m.id) !== Number(id));
               renderAllGrid();
-              renderGrid($('#trendingGrid'), state.trending);
+              renderGrid($('#trendingGrid'), state.trending, false);
             })
             .fail(() => {
               alert('Error deleting movie. Please try again.');

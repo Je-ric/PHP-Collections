@@ -16,7 +16,7 @@ $showBackToMovies = in_array($currentFile, ['viewMovie.php', 'manageMovie.php'])
 
     <!-- Logo -->
     <a href="<?= htmlspecialchars($homeHref) ?>" class="text-xl md:text-2xl font-bold text-accent flex items-center font-oswald">
-        <i class="bx bx-movie-play mr-2"></i>Movie Recommender
+        <i class="bx bx-movie-play mr-2"></i>Cinematch
     </a>
 
     <div class="flex items-center gap-3 text-sm">
