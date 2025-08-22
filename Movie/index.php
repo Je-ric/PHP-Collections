@@ -103,6 +103,11 @@ $userRole = $_SESSION['role'] ?? '';
         <h3 class="text-2xl font-semibold">All movies</h3>
       </div>
       <div id="allGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6"></div>
+      <!-- Empty placeholder -->
+      <div id="allEmpty" class="hidden py-16 text-center">
+        <i class='bx bx-search-alt text-5xl text-gray-600 mb-3 block'></i>
+        <p class="text-text-muted">No results found. Try adjusting your search or filters.</p>
+      </div>
     </section>
   </main>
 
@@ -253,6 +258,13 @@ $userRole = $_SESSION['role'] ?? '';
       function renderAllGrid() {
         const filtered = applySortAndFilter(state.allMovies);
         renderGrid($('#allGrid'), filtered);
+
+        const $empty = $('#allEmpty');
+        if (filtered.length === 0) {
+          $empty.removeClass('hidden');
+        } else {
+          $empty.addClass('hidden');
+        }
       }
 
       // Events (real-time)
