@@ -102,6 +102,12 @@ try {
             respond(true, $rec->getRatedCountsByLanguage($userId));
             break;
 
+        case 'related':
+            $movieId = (int)($_GET['movie_id'] ?? $_POST['movie_id'] ?? 0);
+            if ($movieId <= 0) respond(false, null, 'Invalid movie', 400);
+            respond(true, $rec->getRelatedToMovie($movieId, $limit));
+            break;
+
         default:
             respond(false, null, 'Unknown action', 400);
     }

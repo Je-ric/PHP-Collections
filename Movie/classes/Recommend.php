@@ -475,6 +475,35 @@ public function getByGenre(int $genreId, int $userId = 0, int $limit = 12): arra
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
+    // Movies related to a given movie (by shared genres)
+    public function getRelatedToMovie(int $movieId, int $limit = 12): array {
+        if ($movieId <= 0) return [];
+        $limit = $this->clampLimit($limit);
+
+        $sql = "
+            SELECT 
+                m.id, m.title, m.release_year, m.poster_url,
+                c.name AS country_name, l.name AS language_name,
+                COUNT(DISTINCT mg.genre_id) AS match_genres,
+                ROUND(COALESCE(AVG(r.rating),0),2) AS avg_rating,
+                COUNT(r.id) AS total_reviews
+            FROM movies m
+            JOIN movie_genres mg ON mg.movie_id = m.id
+            JOIN movie_genres ref ON ref.genre_id = mg.genre_id AND ref.movie_id = ?
+            LEFT JOIN ratings_reviews r ON r.movie_id = m.id
+            LEFT JOIN countries c ON m.country_id = c.id
+            LEFT JOIN languages l ON m.language_id = l.id
+            WHERE m.id <> ?
+            GROUP BY m.id
+            ORDER BY match_genres DESC, (AVG(r.rating) IS NULL), AVG(r.rating) DESC, m.release_year DESC
+            LIMIT ?
+        ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('iii', $movieId, $movieId, $limit);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
     private function clampLimit(int $limit, int $max = 48): int {
         if ($limit <= 0) $limit = 12;
         if ($limit > $max) $limit = $max;

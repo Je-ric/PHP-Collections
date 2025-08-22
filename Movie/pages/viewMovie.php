@@ -374,6 +374,17 @@ $favCount = $fav->countByMovie($m['id']);
         </div>
     </section>
 
+    <!-- Related movies -->
+    <section class="relative z-10 max-w-7xl mx-auto px-4 pb-16">
+        <div class="flex items-end justify-between mb-4">
+            <h2 class="text-2xl md:text-3xl font-bold text-accent">
+                Related to "<?= htmlspecialchars($m['title']) ?>"
+            </h2>
+        </div>
+        <div id="relatedGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6"></div>
+        <div id="relatedEmpty" class="text-text-muted text-sm mt-4 hidden">No related movies found.</div>
+    </section>
+
     <?php if (isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'user'): ?>
         <?php include __DIR__ . '/../partials/rateReviewModal.php'; ?>
     <?php endif; ?>
@@ -421,6 +432,73 @@ $favCount = $fav->countByMovie($m['id']);
             });
 
 
+        // Related movies
+        (function($) {
+            const movieId = <?= (int)$m['id'] ?>;
+
+            function escapeHtml(str) {
+                return String(str || '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            function buildCard(mv) {
+                const posterPath = mv.poster_url ? ('../' + mv.poster_url) : 'https://placehold.co/300x450?text=No+Poster';
+                const rating = (mv.avg_rating !== null && mv.avg_rating !== undefined) ? Number(mv.avg_rating).toFixed(1) : 'N/A';
+                const year = mv.release_year ? `(${mv.release_year})` : '';
+                const country = mv.country_name ? `<span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700">${escapeHtml(mv.country_name)}</span>` : '';
+                const language = mv.language_name ? `<span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700">${escapeHtml(mv.language_name)}</span>` : '';
+
+                return `
+                <div class="group rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-green-500/70 transition transform hover:-translate-y-2 hover:shadow-xl hover:shadow-green-500/20 flex flex-col">
+                    <div class="relative">
+                        <a href="viewMovie.php?id=${mv.id}">
+                            <img src="${escapeHtml(posterPath)}" alt="${escapeHtml(mv.title)}" class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105">
+                        </a>
+                        <div class="absolute top-2 right-2">
+                            <span class="bg-green-600/90 text-white font-semibold text-xs px-2 py-1 rounded-md flex items-center gap-1">
+                                <i class='bx bxs-star text-yellow-300'></i>${rating}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4 flex flex-col flex-grow">
+                        <div class="flex-grow">
+                            <h5 class="font-semibold text-base mb-1 text-white leading-tight">
+                                ${escapeHtml(mv.title)} <small class="text-gray-400 font-normal">${year}</small>
+                            </h5>
+                            <div class="text-gray-400 text-xs flex flex-wrap gap-2 mb-3">
+                                ${country}${language}
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            function renderRelated(list) {
+                const $grid = $('#relatedGrid');
+                const $empty = $('#relatedEmpty');
+                if (!Array.isArray(list) || list.length === 0) {
+                    $grid.empty();
+                    $empty.removeClass('hidden');
+                    return;
+                }
+                $empty.addClass('hidden');
+                $grid.html(list.map(buildCard).join(''));
+            }
+
+            function fetchRelated() {
+                $.getJSON('../db/recommendRequests.php', { action: 'related', movie_id: movieId, limit: 12 })
+                 .done(res => renderRelated(res && res.success ? res.data : []))
+                 .fail(() => renderRelated([]));
+            }
+
+            $(function() {
+                fetchRelated();
+            });
+        })(jQuery);
     </script>
 </body>
 
