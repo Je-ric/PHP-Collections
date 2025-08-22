@@ -129,7 +129,7 @@ $userRole = $_SESSION['role'] ?? '';
         const ratingBadge = `<div class="absolute top-2 right-2"><span class="bg-green-600/90 text-white font-semibold text-xs px-2 py-1 rounded-md flex items-center gap-1"><i class='bx bxs-star text-yellow-300'></i>${rating}</span></div>`;
 
         return `
-      <div class="group rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-green-500/70 transition transform hover:-translate-y-2 hover:shadow-xl hover:shadow-green-500/20 flex flex-col">
+      <div class="group rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-green-500/70 transition transform hover:-translate-y-2 hover:shadow-xl hover:shadow-green-500/20 flex flex-col" data-id="${m.id}">
         <div class="relative">
           <a href="pages/viewMovie.php?id=${m.id}">
             <img src="${escapeHtml(poster)}" alt="${escapeHtml(m.title)}" class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105">
@@ -142,6 +142,18 @@ $userRole = $_SESSION['role'] ?? '';
           </h5>
           <div class="text-gray-400 text-xs flex flex-wrap gap-2 mb-3">
             ${country}${language}
+          </div>
+          <div class="mt-auto pt-2">
+            <div class="flex gap-2">
+              <a href="pages/manageMovie.php?id=${m.id}" class="btn btn-xs btn-outline btn-info flex-1">
+                <i class='bx bx-edit'></i>
+                Edit
+              </a>
+              <button type="button" class="btn btn-xs btn-outline btn-error flex-1 btn-delete-movie" data-id="${m.id}">
+                <i class='bx bx-trash'></i>
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       </div>`;
@@ -264,6 +276,32 @@ $userRole = $_SESSION['role'] ?? '';
         $('#sortSelect, #genreFilter, #yearFilter, #countryFilter').on('change', () => {
           renderAllGrid();
           updateTrendingVisibility();
+        });
+
+        $(document).on('click', '.btn-delete-movie', function(e) {
+          e.preventDefault();
+          const id = $(this).data('id');
+          if (!id) return;
+          if (!confirm('Delete this movie? This cannot be undone.')) return;
+
+          const $btn = $(this);
+          $btn.addClass('loading').prop('disabled', true);
+
+          $.post('db/movieRequests.php', 
+          { 
+            action: 'delete',
+            id })
+            .done(() => {
+              // Update local state and re-render without full reload
+              state.allMovies = state.allMovies.filter(m => Number(m.id) !== Number(id));
+              state.trending = (state.trending || []).filter(m => Number(m.id) !== Number(id));
+              renderAllGrid();
+              renderGrid($('#trendingGrid'), state.trending);
+            })
+            .fail(() => {
+              alert('Error deleting movie. Please try again.');
+              $btn.removeClass('loading').prop('disabled', false);
+            });
         });
       }
 

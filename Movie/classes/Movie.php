@@ -1,23 +1,26 @@
 <?php
 require_once __DIR__ . '/../db/config.php';
 
-class Movie {
+class Movie
+{
     private $db;
     private $uploadDir;
     private $backgroundUploadDir;
 
-    public function __construct() {
+    public function __construct()
+    {
         $database = new Database();
         $this->db = $database->conn;
 
         $this->uploadDir = __DIR__ . '/../uploads/posters/';
         if (!is_dir($this->uploadDir)) mkdir($this->uploadDir, 0777, true);
-    // Ensure background uploads directory exists as well
-    $this->backgroundUploadDir = __DIR__ . '/../uploads/backgrounds/';
-    if (!is_dir($this->backgroundUploadDir)) mkdir($this->backgroundUploadDir, 0777, true);
+        // Ensure background uploads directory exists as well
+        $this->backgroundUploadDir = __DIR__ . '/../uploads/backgrounds/';
+        if (!is_dir($this->backgroundUploadDir)) mkdir($this->backgroundUploadDir, 0777, true);
     }
 
-    public function getAllMovies() {
+    public function getAllMovies()
+    {
         $sql = "
             SELECT m.*, c.name AS country_name, l.name AS language_name,
                    AVG(r.rating) AS avg_rating, COUNT(r.id) AS total_reviews,
@@ -36,7 +39,8 @@ class Movie {
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function getMovieById($id) {
+    public function getMovieById($id)
+    {
         $sql = "
             SELECT m.*, c.name AS country_name, l.name AS language_name
             FROM movies m
@@ -54,7 +58,8 @@ class Movie {
     // ==========================
     // manageMovie.php
     // =========================== 
-    public function addMovie($title, $description, $releaseYear, $posterFile, $backgroundFile, $trailerUrl, $countryName, $languageName, $genreIds = []) {
+    public function addMovie($title, $description, $releaseYear, $posterFile, $backgroundFile, $trailerUrl, $countryName, $languageName, $genreIds = [])
+    {
         $countryId = $this->getCountryId($countryName);
         $languageId = $this->getLanguageId($languageName);
         $posterPath = $this->handleUpload($posterFile, $title, $releaseYear);
@@ -76,7 +81,8 @@ class Movie {
         return $movieId;
     }
 
-    public function updateMovie($id, $title, $description, $releaseYear, $posterFile, $backgroundFile, $trailerUrl, $countryName, $languageName, $genreIds = []) {
+    public function updateMovie($id, $title, $description, $releaseYear, $posterFile, $backgroundFile, $trailerUrl, $countryName, $languageName, $genreIds = [])
+    {
         $countryId = $this->getCountryId($countryName);
         $languageId = $this->getLanguageId($languageName);
         $current = $this->getMovieById($id);
@@ -120,7 +126,8 @@ class Movie {
         return true;
     }
 
-    public function deleteMovie($id) {
+    public function deleteMovie($id)
+    {
         $movie = $this->getMovieById($id);
 
         if ($movie && !empty($movie['poster_url']) && file_exists(__DIR__ . '/../' . $movie['poster_url'])) {
@@ -139,7 +146,8 @@ class Movie {
     // ==========================
     // FILE UPLOAD HANDLER 
     // ===========================
-    private function handleUpload($uploadedFile, $movieTitle, $releaseYear) {
+    private function handleUpload($uploadedFile, $movieTitle, $releaseYear)
+    {
         $safeTitle = preg_replace("/[^a-zA-Z0-9]/", "_", strtolower($movieTitle));
         $fileExtension = pathinfo($uploadedFile['name'], PATHINFO_EXTENSION);
         $newFileName = $safeTitle . '_' . $releaseYear . '.' . $fileExtension;
@@ -151,7 +159,8 @@ class Movie {
         return null;
     }
 
-    private function handleUploadTo($uploadedFile, $movieTitle, $releaseYear, $subfolder) {
+    private function handleUploadTo($uploadedFile, $movieTitle, $releaseYear, $subfolder)
+    {
         $safeTitle = preg_replace("/[^a-zA-Z0-9]/", "_", strtolower($movieTitle));
         $fileExtension = pathinfo($uploadedFile['name'], PATHINFO_EXTENSION);
         $newFileName = $safeTitle . '_' . $releaseYear . '.' . $fileExtension;
@@ -170,42 +179,45 @@ class Movie {
     // ==========================
     // Getter
     // ===========================
-    public function getAllGenres() {
-      $sql = "SELECT * FROM genres ORDER BY name ASC";
-      $result = $this->db->query($sql);
+    public function getAllGenres()
+    {
+        $sql = "SELECT * FROM genres ORDER BY name ASC";
+        $result = $this->db->query($sql);
 
-      if ($result) {
-        return $result->fetch_all(MYSQLI_ASSOC);
-      }
+        if ($result) {
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
 
-      return [];
+        return [];
     }
 
-    public function getGenresByMovie($movieId, $return = 'name') {
-      // $return = 'name' or 'id'
-      $sql = "
+    public function getGenresByMovie($movieId, $return = 'name')
+    {
+        // $return = 'name' or 'id'
+        $sql = "
           SELECT g.id, g.name
           FROM movie_genres mg
           JOIN genres g ON mg.genre_id = g.id
           WHERE mg.movie_id = ?
       ";
-      $query = $this->db->prepare($sql);
-      $query->bind_param("i", $movieId);
-      $query->execute();
-      $result = $query->get_result();
+        $query = $this->db->prepare($sql);
+        $query->bind_param("i", $movieId);
+        $query->execute();
+        $result = $query->get_result();
 
-      $genres = [];
-      while ($row = $result->fetch_assoc()) {
-          if ($return === 'id') {
-              $genres[] = $row['id'];
-          } else {
-              $genres[] = $row['name'];
-          }
-      }
-      return $genres;
-  }
+        $genres = [];
+        while ($row = $result->fetch_assoc()) {
+            if ($return === 'id') {
+                $genres[] = $row['id'];
+            } else {
+                $genres[] = $row['name'];
+            }
+        }
+        return $genres;
+    }
 
-    public function updateMovieGenres($movieId, $genreIds) {
+    public function updateMovieGenres($movieId, $genreIds)
+    {
         $sql = "DELETE FROM movie_genres WHERE movie_id = ?";
         $query = $this->db->prepare($sql);
         $query->bind_param("i", $movieId);
@@ -222,7 +234,8 @@ class Movie {
     // ==========================
     // Getter
     // ===========================
-    private function getCountryId($countryName) {
+    private function getCountryId($countryName)
+    {
         $sql = "SELECT id FROM countries WHERE name = ?";
         $query = $this->db->prepare($sql);
         $query->bind_param("s", $countryName);
@@ -238,7 +251,8 @@ class Movie {
         return $query->insert_id;
     }
 
-    private function getLanguageId($languageName) {
+    private function getLanguageId($languageName)
+    {
         $sql = "SELECT id FROM languages WHERE name = ?";
         $query = $this->db->prepare($sql);
         $query->bind_param("s", $languageName);
