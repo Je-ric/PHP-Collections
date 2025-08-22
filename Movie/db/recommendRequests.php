@@ -8,7 +8,8 @@ $action = $_GET['action'] ?? $_POST['action'] ?? '';
 $userId = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
 $limit  = (int)($_GET['limit'] ?? $_POST['limit'] ?? 12);
 
-function respond($success, $data = null, $message = null, $code = 200) {
+function respond($success, $data = null, $message = null, $code = 200)
+{
     http_response_code($code);
     echo json_encode([
         'success' => $success,
@@ -74,7 +75,6 @@ try {
             respond(true, $rec->getByGenre($genreId, $userId, $limit));
             break;
 
-        // New aggregates for Favorites
         case 'favGenreCounts':
             if ($userId <= 0) respond(false, null, 'Login required', 401);
             respond(true, $rec->getFavCountsByGenre($userId));
@@ -88,7 +88,6 @@ try {
             respond(true, $rec->getFavCountsByLanguage($userId));
             break;
 
-        // New aggregates for Rated
         case 'ratedGenreCounts':
             if ($userId <= 0) respond(false, null, 'Login required', 401);
             respond(true, $rec->getRatedCountsByGenre($userId));

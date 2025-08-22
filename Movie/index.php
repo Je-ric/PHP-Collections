@@ -114,27 +114,15 @@ $userRole = $_SESSION['role'] ?? '';
   <?php include __DIR__ . '/partials/footer.php'; ?>
   <script src="src/js/jquery.mins.js"></script>
   <script>
-    window.AppConfig = {
-      userId: <?= (int)$userId ?>,
-      role: "<?= htmlspecialchars($userRole) ?>",
-      genres: <?= json_encode($allGenres ?? []) ?>
-    };
-
-    window.AppData = {
-      allMovies: <?= json_encode($allMovies ?? []) ?>
-    };
-
     (function($) {
       const state = {
-        allMovies: (window.AppData && window.AppData.allMovies) || [],
+        allMovies: <?= json_encode($allMovies ?? []) ?>,
         trending: [],
-        userId: (window.AppConfig && window.AppConfig.userId) || 0,
       };
 
-      // Helpers
       function buildCard(m) {
-        const poster = m.poster_url && m.poster_url.length ? m.poster_url : 'https://placehold.co/300x450?text=No+Poster';
-        const rating = (m.avg_rating !== null && m.avg_rating !== undefined) ? Number(m.avg_rating).toFixed(1) : 'N/A';
+        const poster = m.poster_url || 'https://placehold.co/300x450?text=No+Poster';
+        const rating = (m.avg_rating != null) ? Number(m.avg_rating).toFixed(1) : 'N/A';
         const year = m.release_year ? `(${m.release_year})` : '';
         const country = m.country_name ? `<span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700">${escapeHtml(m.country_name)}</span>` : '';
         const language = m.language_name ? `<span class="px-2 py-0.5 rounded bg-neutral-800/70 border border-neutral-700">${escapeHtml(m.language_name)}</span>` : '';
@@ -149,23 +137,31 @@ $userRole = $_SESSION['role'] ?? '';
           ${ratingBadge}
         </div>
         <div class="p-4 flex flex-col flex-grow">
-          <div class="flex-grow">
-            <h5 class="font-semibold text-base mb-1 text-white leading-tight">
-              ${escapeHtml(m.title)} <small class="text-gray-400 font-normal">${year}</small>
-            </h5>
-            <div class="text-gray-400 text-xs flex flex-wrap gap-2 mb-3">
-              ${country}${language}
-            </div>
+          <h5 class="font-semibold text-base mb-1 text-white leading-tight">
+            ${escapeHtml(m.title)} <small class="text-gray-400 font-normal">${year}</small>
+          </h5>
+          <div class="text-gray-400 text-xs flex flex-wrap gap-2 mb-3">
+            ${country}${language}
           </div>
         </div>
       </div>`;
       }
 
       function renderGrid($container, list) {
-        const html = list.map(buildCard).join('');
-        $container.html(html);
+        $container.html(list.map(buildCard).join(''));
+        // list = [
+        //   { id: 1, title: "Inception" },
+        //   { id: 2, title: "Avatar" }
+        // ];
+
+        // "<div>Inception</div>", 
+        // "<div>Avatar</div>"
+
+        // <div>Inception</div>
+        // <div>Avatar</div>
       }
 
+      // in simple words, it converts the special characters to html characters
       function escapeHtml(str) {
         return String(str || '')
           .replace(/&/g, '&amp;')
@@ -175,8 +171,8 @@ $userRole = $_SESSION['role'] ?? '';
           .replace(/'/g, '&#039;');
       }
 
-      // Real-time filter + sort
       function applySortAndFilter(list) {
+        // basta get input values
         const q = $('#search').val().trim().toLowerCase();
         const year = $('#yearFilter').val();
         const country = $('#countryFilter').val();
@@ -184,105 +180,96 @@ $userRole = $_SESSION['role'] ?? '';
         const sort = $('#sortSelect').val();
 
         let res = list;
-        if (q) res = res.filter(m => String(m.title || '').toLowerCase().includes(q));
-        if (year) res = res.filter(m => String(m.release_year || '') === String(year));
-        if (country) res = res.filter(m => String(m.country_name || '') === country);
+
+        if (q) res = res.filter(m => (m.title || '').toLowerCase().includes(q));
+        if (year) res = res.filter(m => String(m.release_year) === year);
+        if (country) res = res.filter(m => m.country_name === country);
         if (genreId) {
-          res = res.filter(m => {
-            if (!m.genre_ids) return false;
-            const ids = String(m.genre_ids).split(',').map(Number);
-            return ids.includes(Number(genreId));
+          res = res.filter(m => { // get genreID tapos, loop to each movie to find the genre.
+            if (!m.genre_ids) return false;  // skip if false
+            const genreArray = m.genre_ids.split(','); // split the string "1,2,3" into an array ["1", "2", "3"]
+            const genreNumbers = genreArray.map(Number); // string to numbers [1, 2, 3]
+            return genreNumbers.includes(Number(genreId)); // check kung yung genreId ay nasa Movie
           });
         }
 
-        if (sort === 'year_desc') res = res.slice().sort((a, b) => (b.release_year || 0) - (a.release_year || 0));
-        else if (sort === 'year_asc') res = res.slice().sort((a, b) => (a.release_year || 0) - (b.release_year || 0));
-        else if (sort === 'title_asc') res = res.slice().sort((a, b) => String(a.title || '').localeCompare(String(b.title || '')));
-        else if (sort === 'title_desc') res = res.slice().sort((a, b) => String(b.title || '').localeCompare(String(a.title || '')));
+        if (sort === 'year_desc') res.sort((a, b) => (b.release_year || 0) - (a.release_year || 0));
+        else if (sort === 'year_asc') res.sort((a, b) => (a.release_year || 0) - (b.release_year || 0));
+        else if (sort === 'title_asc') res.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+        else if (sort === 'title_desc') res.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
 
         return res;
       }
 
-      // Populate Year/Country filters based on data
+      // collect years, countries based sa movie data. 
+      // instead to have all countries as option, ginagamit lang natin yung meron sa database
       function populateFilters() {
-        const years = [...new Set(state.allMovies.map(m => m.release_year).filter(Boolean))].sort((a, b) => b - a);
-        const countries = [...new Set(state.allMovies.map(m => m.country_name).filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b)));
-        const $yf = $('#yearFilter').empty().append('<option value="">All Years</option>');
+        const years = [...new Set(state.allMovies.map(m => m.release_year).filter(Boolean))].sort((a, b) => b - a); // get year to each movie, desc
+        const countries = [...new Set(state.allMovies.map(m => m.country_name).filter(Boolean))].sort(); // get country, asc
+
+        const $yf = $('#yearFilter').empty().append('<option value="">All Years</option>'); 
         const $cf = $('#countryFilter').empty().append('<option value="">All Countries</option>');
-        years.forEach(y => $yf.append(`<option value="${y}">${y}</option>`));
-        countries.forEach(c => $cf.append(`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`));
+
+        years.forEach(y => $yf.append(`<option value="${y}">${y}</option>`)); // add each yf as an option
+        countries.forEach(c => $cf.append(`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`)); // same for cf
       }
 
-      // AJAX calls
       function fetchTrending(limit = 12) {
-        return $.ajax({
-          url: 'db/recommendRequests.php',
-          method: 'GET',
-          data: { action: 'trending', limit }
-        }).then(res => res && res.success ? res.data : []).fail(() => []);
+        return $.get('db/recommendRequests.php', {
+            action: 'trending',
+            limit
+          })
+          .then(res => res?.success ? res.data : [])
+          .fail(() => []);
       }
 
-      // UI: show/hide trending when any search/filter/sort is active
+      // checker kung may active filter, search or sort
       function hasActiveFilters() {
-        const q = $('#search').val().trim();
-        const hasQ = q.length > 0;
-        const hasYear = $('#yearFilter').val() !== '';
-        const hasCountry = $('#countryFilter').val() !== '';
-        const hasGenre = $('#genreFilter').val() !== '';
-        const sortVal = $('#sortSelect').val();
-        const hasSort = sortVal !== 'year_desc';
-        return hasQ || hasYear || hasCountry || hasGenre || hasSort;
+        return $('#search').val().trim() 
+            || $('#yearFilter').val() 
+            || $('#countryFilter').val() 
+            || $('#genreFilter').val() 
+            || $('#sortSelect').val() !== 'year_desc';
       }
 
       function updateTrendingVisibility() {
-        $('#trendingSection').toggleClass('hidden', hasActiveFilters());
+        // hide trending if may active
+        $('#trendingSection').toggleClass('hidden', !!hasActiveFilters());
       }
 
-      // Load initial data
-      function initialLoad() {
-        const $trending = $('#trendingGrid');
+      function renderAllGrid() {
+        // display all movies based sa filters
+        const filtered = applySortAndFilter(state.allMovies);
+        renderGrid($('#allGrid'), filtered);
+        $('#allEmpty').toggleClass('hidden', filtered.length > 0);
+      }
 
-        // render All grid immediately from embedded data
+      function initialLoad() {
         populateFilters();
         renderAllGrid();
         updateTrendingVisibility();
 
-        // fetch Trending
         fetchTrending().then(list => {
-          state.trending = Array.isArray(list) ? list : [];
-          renderGrid($trending, state.trending);
+          state.trending = list || [];
+          renderGrid($('#trendingGrid'), state.trending);
           updateTrendingVisibility();
         });
       }
 
-      function renderAllGrid() {
-        const filtered = applySortAndFilter(state.allMovies);
-        renderGrid($('#allGrid'), filtered);
-
-        const $empty = $('#allEmpty');
-        if (filtered.length === 0) {
-          $empty.removeClass('hidden');
-        } else {
-          $empty.addClass('hidden');
-        }
-      }
-
-      // Events (real-time)
       function wireEvents() {
-        $('#search').on('input', function() {
+        $('#search').on('input', () => {
           renderAllGrid();
           updateTrendingVisibility();
         });
-        $('#sortSelect, #genreFilter, #yearFilter, #countryFilter').on('change', function() {
+        $('#sortSelect, #genreFilter, #yearFilter, #countryFilter').on('change', () => {
           renderAllGrid();
           updateTrendingVisibility();
         });
       }
 
-      $(function() {
-        initialLoad();
-        wireEvents();
-      });
+      $(initialLoad);  // setup the page on load
+      $(wireEvents); // interactive
+
     })(jQuery);
   </script>
 </body>
