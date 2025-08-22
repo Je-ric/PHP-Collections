@@ -1,5 +1,8 @@
 Movie App — Lists, Filters, and Recommendations
 
+Index: Global (what everyone sees), Trending, Popular
+Profile: Favorites, Rated, Recommendations
+
 Filter/Search (index)
     - New (latest)
     - Trending / Popular (rating)

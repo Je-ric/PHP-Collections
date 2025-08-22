@@ -13,9 +13,9 @@ $showBackToMovies = in_array($currentFile, ['viewMovie.php', 'manageMovie.php'])
 
 <header class="bg-primary-bg/90 backdrop-blur-md border-b border-accent/50 px-6 md:px-10 py-4 flex items-center justify-between sticky top-0 z-50">
 
-    <h1 class="text-xl md:text-2xl font-bold text-accent flex items-center font-oswald">
+    <a href="<?= htmlspecialchars($homeHref) ?>" class="text-xl md:text-2xl font-bold text-accent flex items-center font-oswald">
         <i class="bx bx-movie-play mr-2"></i>Movie Recommender
-    </h1>
+    </a>
 
     <div class="flex items-center gap-3 text-sm">
         <?php if ($showBackToMovies): ?>

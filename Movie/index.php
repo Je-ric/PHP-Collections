@@ -105,14 +105,6 @@ $userRole = $_SESSION['role'] ?? '';
       <div id="trendingGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6"></div>
     </section>
 
-    <section class="mb-12">
-      <div class="border-t border-neutral-800 mb-6"></div>
-      <div class="flex items-end justify-between mb-4">
-        <h3 class="text-2xl font-semibold">Latest releases</h3>
-      </div>
-      <div id="latestGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6"></div>
-    </section>
-
     <div id="genreShelves"></div>
 
     <div id="personalShelves"></div>
@@ -136,13 +128,14 @@ $userRole = $_SESSION['role'] ?? '';
       genres: <?= json_encode($allGenres ?? []) ?>
     };
 
-  window.AppData = { allMovies: <?= json_encode($allMovies ?? []) ?> };
+    window.AppData = {
+      allMovies: <?= json_encode($allMovies ?? []) ?>
+    };
 
     (function($) {
       const state = {
         allMovies: (window.AppData && window.AppData.allMovies) || [],
         trending: [],
-        latest: [],
         shelves: [],
         personal: [],
         genres: (window.AppConfig && window.AppConfig.genres) || [],
@@ -193,7 +186,7 @@ $userRole = $_SESSION['role'] ?? '';
           .replace(/'/g, '&#039;');
       }
 
-      // Real-time filter + sort (short and readable)
+      // Real-time filter + sort
       function applySortAndFilter(list) {
         const q = $('#search').val().trim().toLowerCase();
         const year = $('#yearFilter').val();
@@ -202,9 +195,9 @@ $userRole = $_SESSION['role'] ?? '';
         const sort = $('#sortSelect').val();
 
         let res = list;
-        if (q) res = res.filter(m => String(m.title||'').toLowerCase().includes(q));
-        if (year) res = res.filter(m => String(m.release_year||'') === String(year));
-        if (country) res = res.filter(m => String(m.country_name||'') === country);
+        if (q) res = res.filter(m => String(m.title || '').toLowerCase().includes(q));
+        if (year) res = res.filter(m => String(m.release_year || '') === String(year));
+        if (country) res = res.filter(m => String(m.country_name || '') === country);
         if (genreId) {
           res = res.filter(m => {
             if (!m.genre_ids) return false;
@@ -213,18 +206,18 @@ $userRole = $_SESSION['role'] ?? '';
           });
         }
 
-        if (sort === 'year_desc') res = res.slice().sort((a,b)=>(b.release_year||0)-(a.release_year||0));
-        else if (sort === 'year_asc') res = res.slice().sort((a,b)=>(a.release_year||0)-(b.release_year||0));
-        else if (sort === 'title_asc') res = res.slice().sort((a,b)=>String(a.title||'').localeCompare(String(b.title||'')));
-        else if (sort === 'title_desc') res = res.slice().sort((a,b)=>String(b.title||'').localeCompare(String(a.title||'')));
+        if (sort === 'year_desc') res = res.slice().sort((a, b) => (b.release_year || 0) - (a.release_year || 0));
+        else if (sort === 'year_asc') res = res.slice().sort((a, b) => (a.release_year || 0) - (b.release_year || 0));
+        else if (sort === 'title_asc') res = res.slice().sort((a, b) => String(a.title || '').localeCompare(String(b.title || '')));
+        else if (sort === 'title_desc') res = res.slice().sort((a, b) => String(b.title || '').localeCompare(String(a.title || '')));
 
         return res;
       }
 
       // Populate Year/Country filters based on data
       function populateFilters() {
-  const years = [...new Set(state.allMovies.map(m=>m.release_year).filter(Boolean))].sort((a,b)=>b-a);
-  const countries = [...new Set(state.allMovies.map(m=>m.country_name).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b)));
+        const years = [...new Set(state.allMovies.map(m => m.release_year).filter(Boolean))].sort((a, b) => b - a);
+        const countries = [...new Set(state.allMovies.map(m => m.country_name).filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b)));
         const $yf = $('#yearFilter').empty().append('<option value="">All Years</option>');
         const $cf = $('#countryFilter').empty().append('<option value="">All Countries</option>');
         years.forEach(y => $yf.append(`<option value="${y}">${y}</option>`));
@@ -232,66 +225,50 @@ $userRole = $_SESSION['role'] ?? '';
       }
 
       // AJAX calls
-  function fetchTrending(limit = 12) {
+      function fetchTrending(limit = 12) {
         return $.ajax({
-    url: '/db/recommendRequests.php', // use relative path
-            method: 'GET',
-            data: {
-              action: 'trending',
-              limit
-            }
-          })
-          .then(res => res && res.success ? res.data : []);
-      }
-
-      function fetchLatest(limit = 12) {
-        return $.ajax({
-    url: '/db/recommendRequests.php',
-            method: 'GET',
-            data: {
-              action: 'latest',
-              limit
-            }
-          })
-          .then(res => res && res.success ? res.data : []);
+          url: 'db/recommendRequests.php',
+          method: 'GET',
+          data: {
+            action: 'trending',
+            limit
+          }
+        }).then(res => res && res.success ? res.data : []).fail(() => []);
       }
 
       function fetchSearch(q, limit = 24) {
         if (!q) return Promise.resolve([]);
         return $.ajax({
-    url: '/db/recommendRequests.php',
-            method: 'GET',
-            data: {
-              action: 'search',
-              q,
-              limit
-            }
-          })
-          .then(res => res && res.success ? res.data : []);
+          url: 'db/recommendRequests.php',
+          method: 'GET',
+          data: {
+            action: 'search',
+            q,
+            limit
+          }
+        }).then(res => res && res.success ? res.data : []).fail(() => []);
       }
 
       function fetchTopGenres() {
         return $.ajax({
-    url: '/db/recommendRequests.php',
-            method: 'GET',
-            data: {
-              action: 'topGenres'
-            }
-          })
-          .then(res => res && res.success ? res.data : []);
+          url: 'db/recommendRequests.php',
+          method: 'GET',
+          data: {
+            action: 'topGenres'
+          }
+        }).then(res => res && res.success ? res.data : []).fail(() => []);
       }
 
       function fetchByGenre(genreId, limit = 6) {
         return $.ajax({
-    url: '/db/recommendRequests.php',
-            method: 'GET',
-            data: {
-              action: 'byGenre',
-              genre_id: genreId,
-              limit
-            }
-          })
-          .then(res => res && res.success ? res.data : []);
+          url: 'db/recommendRequests.php',
+          method: 'GET',
+          data: {
+            action: 'byGenre',
+            genre_id: genreId,
+            limit
+          }
+        }).then(res => res && res.success ? res.data : []).fail(() => []);
       }
 
       function fetchFavShelves() {
@@ -302,7 +279,7 @@ $userRole = $_SESSION['role'] ?? '';
         });
         return Promise.all([
           $.ajax({
-            url: '/db/recommendRequests.php',
+            url: 'db/recommendRequests.php',
             method: 'GET',
             data: {
               action: 'favGenres',
@@ -310,7 +287,7 @@ $userRole = $_SESSION['role'] ?? '';
             }
           }),
           $.ajax({
-            url: '/db/recommendRequests.php',
+            url: 'db/recommendRequests.php',
             method: 'GET',
             data: {
               action: 'favCountries',
@@ -318,7 +295,7 @@ $userRole = $_SESSION['role'] ?? '';
             }
           }),
           $.ajax({
-            url: '/db/recommendRequests.php',
+            url: 'db/recommendRequests.php',
             method: 'GET',
             data: {
               action: 'favLanguages',
@@ -329,6 +306,10 @@ $userRole = $_SESSION['role'] ?? '';
           genres: g && g.success ? g.data : [],
           countries: c && c.success ? c.data : [],
           languages: l && l.success ? l.data : [],
+        })).catch(() => ({
+          genres: [],
+          countries: [],
+          languages: []
         }));
       }
 
@@ -351,34 +332,31 @@ $userRole = $_SESSION['role'] ?? '';
       // Load initial data
       function initialLoad() {
         const $trending = $('#trendingGrid');
-        const $latest = $('#latestGrid');
 
         // render All grid immediately from embedded data
         populateFilters();
         renderAllGrid();
 
-        // then fetch recommendation shelves
-        $.when(fetchTrending(), fetchLatest(), fetchTopGenres())
-          .done((tr, la, topG) => {
-            state.trending = Array.isArray(tr) ? tr : [];
-            state.latest = Array.isArray(la) ? la : [];
+        // fetch Trending independently so it always renders
+        fetchTrending().then(list => {
+          state.trending = Array.isArray(list) ? list : [];
+          renderGrid($trending, state.trending);
+        });
 
-            renderGrid($trending, state.trending);
-            renderGrid($latest, state.latest);
-
-            // build genre shelves
-            const topGenres = Array.isArray(topG) ? topG : [];
-            const $genreShelves = $('#genreShelves').empty();
-            const requests = topGenres.map(g => fetchByGenre(g.id, 6).then(list => ({
-              name: g.name,
-              list
-            })));
-            Promise.all(requests).then(rows => {
-              rows.forEach(r => renderShelfSection($genreShelves, `Popular in ${r.name}`, r.list));
-            });
+        // build genre shelves
+        fetchTopGenres().then(topG => {
+          const topGenres = Array.isArray(topG) ? topG : [];
+          const $genreShelves = $('#genreShelves').empty();
+          const requests = topGenres.map(g => fetchByGenre(g.id, 6).then(list => ({
+            name: g.name,
+            list
+          })));
+          Promise.all(requests).then(rows => {
+            rows.forEach(r => renderShelfSection($genreShelves, `Popular in ${r.name}`, r.list));
           });
+        });
 
-  // personalized shelves based on favorites
+        // personalized shelves based on favorites
         fetchFavShelves().then(({
           genres,
           countries,
@@ -389,16 +367,6 @@ $userRole = $_SESSION['role'] ?? '';
           renderShelfSection($personal, 'From countries you favored', countries);
           renderShelfSection($personal, 'In languages you enjoy', languages);
         });
-
-  // allMovies already from AppData
-      }
-
-      function dedupeById(list) {
-        const map = new Map();
-        list.forEach(m => {
-          if (!map.has(m.id)) map.set(m.id, m);
-        });
-        return Array.from(map.values());
       }
 
       function renderAllGrid() {
@@ -417,7 +385,6 @@ $userRole = $_SESSION['role'] ?? '';
         wireEvents();
       });
     })(jQuery);
-
   </script>
 </body>
 

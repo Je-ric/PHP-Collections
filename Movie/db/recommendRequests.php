@@ -6,59 +6,105 @@ require_once __DIR__ . '/../classes/Recommend.php';
 
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
 $userId = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
-$limit  = isset($_GET['limit']) ? (int)$_GET['limit'] : (isset($_POST['limit']) ? (int)$_POST['limit'] : 12);
+$limit  = (int)($_GET['limit'] ?? $_POST['limit'] ?? 12);
+
+function respond($success, $data = null, $message = null, $code = 200) {
+    http_response_code($code);
+    echo json_encode([
+        'success' => $success,
+        'data'    => $data,
+        'message' => $message
+    ]);
+    exit;
+}
 
 try {
     $rec = new Recommend();
 
     switch ($action) {
         case 'trending':
-            $data = $rec->getTrending($limit);
-            echo json_encode(['success' => true, 'data' => $data]);
+            respond(true, $rec->getTrending($limit));
             break;
+
         case 'latest':
-            $data = $rec->getLatest($limit);
-            echo json_encode(['success' => true, 'data' => $data]);
+            respond(true, $rec->getLatest($limit));
             break;
+
         case 'search':
             $term = trim($_GET['q'] ?? $_POST['q'] ?? '');
             $data = $term === '' ? [] : $rec->searchByTitle($term, $limit);
-            echo json_encode(['success' => true, 'data' => $data]);
+            respond(true, $data);
             break;
+
         case 'favGenres':
-            if ($userId <= 0) { http_response_code(401); echo json_encode(['success' => false, 'message' => 'Login required']); break; }
-            $data = $rec->basedOnFavoriteGenres($userId, $limit);
-            echo json_encode(['success' => true, 'data' => $data]);
+            if ($userId <= 0) respond(false, null, 'Login required', 401);
+            respond(true, $rec->basedOnFavoriteGenres($userId, $limit));
             break;
+
         case 'favCountries':
-            if ($userId <= 0) { http_response_code(401); echo json_encode(['success' => false, 'message' => 'Login required']); break; }
-            $data = $rec->basedOnFavoriteCountries($userId, $limit);
-            echo json_encode(['success' => true, 'data' => $data]);
+            if ($userId <= 0) respond(false, null, 'Login required', 401);
+            respond(true, $rec->basedOnFavoriteCountries($userId, $limit));
             break;
+
         case 'favLanguages':
-            if ($userId <= 0) { http_response_code(401); echo json_encode(['success' => false, 'message' => 'Login required']); break; }
-            $data = $rec->basedOnFavoriteLanguages($userId, $limit);
-            echo json_encode(['success' => true, 'data' => $data]);
+            if ($userId <= 0) respond(false, null, 'Login required', 401);
+            respond(true, $rec->basedOnFavoriteLanguages($userId, $limit));
             break;
+
+        case 'favorites':
+            if ($userId <= 0) respond(false, null, 'Login required', 401);
+            respond(true, $rec->getFavorites($userId, $limit));
+            break;
+
+        case 'rated':
+            if ($userId <= 0) respond(false, null, 'Login required', 401);
+            respond(true, $rec->getRated($userId, $limit));
+            break;
+
         case 'topGenres':
-            if ($userId > 0) {
-                $data = $rec->getUserTopGenres($userId, 5);
-            } else {
-                $data = $rec->getTopGenresOverall(5);
-            }
-            echo json_encode(['success' => true, 'data' => $data]);
+            $data = $userId > 0
+                ? $rec->getUserTopGenres($userId, 5)
+                : $rec->getTopGenresOverall(5);
+            respond(true, $data);
             break;
+
         case 'byGenre':
             $genreId = (int)($_GET['genre_id'] ?? $_POST['genre_id'] ?? 0);
-            if ($genreId <= 0) { http_response_code(400); echo json_encode(['success' => false, 'message' => 'Invalid genre']); break; }
-            $data = $rec->getByGenre($genreId, $userId, $limit);
-            echo json_encode(['success' => true, 'data' => $data]);
+            if ($genreId <= 0) respond(false, null, 'Invalid genre', 400);
+            respond(true, $rec->getByGenre($genreId, $userId, $limit));
             break;
+
+        // New aggregates for Favorites
+        case 'favGenreCounts':
+            if ($userId <= 0) respond(false, null, 'Login required', 401);
+            respond(true, $rec->getFavCountsByGenre($userId));
+            break;
+        case 'favCountryCounts':
+            if ($userId <= 0) respond(false, null, 'Login required', 401);
+            respond(true, $rec->getFavCountsByCountry($userId));
+            break;
+        case 'favLanguageCounts':
+            if ($userId <= 0) respond(false, null, 'Login required', 401);
+            respond(true, $rec->getFavCountsByLanguage($userId));
+            break;
+
+        // New aggregates for Rated
+        case 'ratedGenreCounts':
+            if ($userId <= 0) respond(false, null, 'Login required', 401);
+            respond(true, $rec->getRatedCountsByGenre($userId));
+            break;
+        case 'ratedCountryCounts':
+            if ($userId <= 0) respond(false, null, 'Login required', 401);
+            respond(true, $rec->getRatedCountsByCountry($userId));
+            break;
+        case 'ratedLanguageCounts':
+            if ($userId <= 0) respond(false, null, 'Login required', 401);
+            respond(true, $rec->getRatedCountsByLanguage($userId));
+            break;
+
         default:
-            http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'Unknown action']);
+            respond(false, null, 'Unknown action', 400);
     }
 } catch (Throwable $e) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    respond(false, null, $e->getMessage(), 500);
 }
