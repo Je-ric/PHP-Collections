@@ -103,17 +103,14 @@ Minimal data to rely on
 Recommended shelf lineup on the homepage
     - Order top rows by mix of relevance and discovery:
         1) For you (personal mix; top K blended from personal affinity + freshness)
-        2) Continue watching (if available)
-        3) Trending now
-        4) Popular this month
-        5) Because you like [Top Genre]
-        6) Featuring [Top Actor]
-        7) From [Top Country] / In [Top Language]
-        8) Highest rated (with min reviews)
+        2) Trending now
+        3) Popular this month
+        4) Because you like [Top Genre]
+        5) Featuring [Top Actor]
+        6) From [Top Country] / In [Top Language]
+        6) Highest rated (with min reviews)
         9) New & notable
         10) Similar to your favorites
-        11) Hidden gems in your genres (optional)
-        12) Award winners in your genres (optional)
 
 Quick corrections to labels
     - Keep both “Trending now” and “Popular this month” with definitions above.

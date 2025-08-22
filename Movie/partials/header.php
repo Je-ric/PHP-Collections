@@ -19,8 +19,8 @@ $showBackToMovies = in_array($currentFile, ['viewMovie.php', 'manageMovie.php'])
 
     <div class="flex items-center gap-3 text-sm">
         <?php if ($showBackToMovies): ?>
-            <a href="<?= htmlspecialchars($homeHref) ?>" 
-               class="btn btn-outline btn-accent flex items-center gap-1 text-sm">
+            <a href="<?= htmlspecialchars($homeHref) ?>"
+                class="btn btn-outline btn-accent flex items-center gap-1 text-sm">
                 <i class="bx bx-arrow-back"></i>
                 <span class="hidden sm:inline">Back to Movies</span>
             </a>
@@ -33,26 +33,35 @@ $showBackToMovies = in_array($currentFile, ['viewMovie.php', 'manageMovie.php'])
 
             <form action="<?= htmlspecialchars($authHref) ?>" method="POST" class="inline-flex">
                 <input type="hidden" name="action" value="logout" />
-                <button type="submit" 
-                        class="btn btn-accent flex items-center gap-1 text-sm">
+                <button type="submit"
+                    class="btn btn-accent flex items-center gap-1 text-sm">
                     <i class="bx bx-log-out"></i>
                     <span class="hidden sm:inline">Logout</span>
                 </button>
             </form>
 
             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                <a href="<?= htmlspecialchars($manageHref) ?>" 
-                   class="btn btn-accent flex items-center gap-1 text-sm">
+                <a href="<?= htmlspecialchars($manageHref) ?>"
+                    class="btn btn-accent flex items-center gap-1 text-sm">
                     <i class="bx bx-plus"></i>
                     <span class="hidden sm:inline">Add Movie</span>
                 </a>
             <?php endif; ?>
 
         <?php else: ?>
-            <a href="<?= htmlspecialchars($loginHref) ?>" 
-               class="btn btn-accent flex items-center gap-2 text-sm font-medium">
+            <a href="<?= htmlspecialchars($loginHref) ?>"
+                class="btn btn-accent flex items-center gap-2 text-sm font-medium">
                 <i class="bx bx-log-in"></i>
                 Login&nbsp;/&nbsp;Register
+            </a>
+        <?php endif; ?>
+
+
+        <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0): ?>
+            <a href="/PHP-Collections/Movie/pages/profile.php"
+                class="btn btn-accent flex items-center gap-1 text-sm">
+                <i class="bx bx-user"></i>
+                <span class="hidden sm:inline">My Profile</span>
             </a>
         <?php endif; ?>
     </div>
