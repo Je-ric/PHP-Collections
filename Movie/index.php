@@ -1,5 +1,4 @@
 <?php
-// AJAX-first home page; data will be loaded via jQuery without page reloads
 session_start();
 require_once __DIR__ . '/classes/Movie.php';
 
@@ -67,7 +66,7 @@ $userRole = $_SESSION['role'] ?? '';
           <span class="px-3"><i class="bx bx-search text-gray-400 text-lg"></i></span>
           <input id="search" type="text" placeholder="Search movies by title..." class="w-full bg-neutral-900 text-gray-200 placeholder-gray-500 focus:outline-none px-2 py-2 text-sm">
         </label>
-        <select id="sortSelect" class="select select-bordered select-sm bg-neutral-900 border-neutral-700 text-gray-2 00">
+        <select id="sortSelect" class="select select-bordered select-sm bg-neutral-900 border-neutral-700 text-gray-200">
           <option value="year_desc">Sort: Year (New → Old)</option>
           <option value="year_asc">Sort: Year (Old → New)</option>
           <option value="title_asc">Sort: Title (A→Z)</option>
@@ -88,16 +87,8 @@ $userRole = $_SESSION['role'] ?? '';
       </div>
     </div>
 
-    <section id="searchSection" class="mb-10 hidden">
-      <div class="border-t border-neutral-800 mb-6"></div>
-      <div class="flex items-end justify-between mb-4">
-        <h3 class="text-2xl font-semibold">Search results</h3>
-        <span id="searchCount" class="text-gray-400 text-sm">0 results</span>
-      </div>
-      <div id="searchGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6"></div>
-    </section>
-
-    <section class="mb-12">
+    <!-- Trending only -->
+    <section id="trendingSection" class="mb-12">
       <div class="border-t border-neutral-800 mb-6"></div>
       <div class="flex items-end justify-between mb-4">
         <h3 class="text-2xl font-semibold">Trending now</h3>
@@ -105,12 +96,8 @@ $userRole = $_SESSION['role'] ?? '';
       <div id="trendingGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6"></div>
     </section>
 
-    <div id="genreShelves"></div>
-
-    <div id="personalShelves"></div>
-
+    <!-- All movies -->
     <div class="border-t border-neutral-800 my-10"></div>
-
     <section>
       <div class="flex items-end justify-between mb-4">
         <h3 class="text-2xl font-semibold">All movies</h3>
@@ -136,9 +123,6 @@ $userRole = $_SESSION['role'] ?? '';
       const state = {
         allMovies: (window.AppData && window.AppData.allMovies) || [],
         trending: [],
-        shelves: [],
-        personal: [],
-        genres: (window.AppConfig && window.AppConfig.genres) || [],
         userId: (window.AppConfig && window.AppConfig.userId) || 0,
       };
 
@@ -229,104 +213,24 @@ $userRole = $_SESSION['role'] ?? '';
         return $.ajax({
           url: 'db/recommendRequests.php',
           method: 'GET',
-          data: {
-            action: 'trending',
-            limit
-          }
+          data: { action: 'trending', limit }
         }).then(res => res && res.success ? res.data : []).fail(() => []);
       }
 
-      function fetchSearch(q, limit = 24) {
-        if (!q) return Promise.resolve([]);
-        return $.ajax({
-          url: 'db/recommendRequests.php',
-          method: 'GET',
-          data: {
-            action: 'search',
-            q,
-            limit
-          }
-        }).then(res => res && res.success ? res.data : []).fail(() => []);
+      // UI: show/hide trending when any search/filter/sort is active
+      function hasActiveFilters() {
+        const q = $('#search').val().trim();
+        const hasQ = q.length > 0;
+        const hasYear = $('#yearFilter').val() !== '';
+        const hasCountry = $('#countryFilter').val() !== '';
+        const hasGenre = $('#genreFilter').val() !== '';
+        const sortVal = $('#sortSelect').val();
+        const hasSort = sortVal !== 'year_desc';
+        return hasQ || hasYear || hasCountry || hasGenre || hasSort;
       }
 
-      function fetchTopGenres() {
-        return $.ajax({
-          url: 'db/recommendRequests.php',
-          method: 'GET',
-          data: {
-            action: 'topGenres'
-          }
-        }).then(res => res && res.success ? res.data : []).fail(() => []);
-      }
-
-      function fetchByGenre(genreId, limit = 6) {
-        return $.ajax({
-          url: 'db/recommendRequests.php',
-          method: 'GET',
-          data: {
-            action: 'byGenre',
-            genre_id: genreId,
-            limit
-          }
-        }).then(res => res && res.success ? res.data : []).fail(() => []);
-      }
-
-      function fetchFavShelves() {
-        if (!state.userId) return Promise.resolve({
-          genres: [],
-          countries: [],
-          languages: []
-        });
-        return Promise.all([
-          $.ajax({
-            url: 'db/recommendRequests.php',
-            method: 'GET',
-            data: {
-              action: 'favGenres',
-              limit: 12
-            }
-          }),
-          $.ajax({
-            url: 'db/recommendRequests.php',
-            method: 'GET',
-            data: {
-              action: 'favCountries',
-              limit: 12
-            }
-          }),
-          $.ajax({
-            url: 'db/recommendRequests.php',
-            method: 'GET',
-            data: {
-              action: 'favLanguages',
-              limit: 12
-            }
-          }),
-        ]).then(([g, c, l]) => ({
-          genres: g && g.success ? g.data : [],
-          countries: c && c.success ? c.data : [],
-          languages: l && l.success ? l.data : [],
-        })).catch(() => ({
-          genres: [],
-          countries: [],
-          languages: []
-        }));
-      }
-
-      // Build shelves
-      function renderShelfSection($parent, title, list) {
-        if (!list || list.length === 0) return;
-        const section = $(`
-      <section class="mb-12">
-        <div class="border-t border-neutral-800 mb-6"></div>
-        <div class="flex items-end justify-between mb-4">
-          <h3 class="text-2xl font-semibold">${escapeHtml(title)}</h3>
-        </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6"></div>
-      </section>
-    `);
-        renderGrid(section.find('.grid'), list);
-        $parent.append(section);
+      function updateTrendingVisibility() {
+        $('#trendingSection').toggleClass('hidden', hasActiveFilters());
       }
 
       // Load initial data
@@ -336,36 +240,13 @@ $userRole = $_SESSION['role'] ?? '';
         // render All grid immediately from embedded data
         populateFilters();
         renderAllGrid();
+        updateTrendingVisibility();
 
-        // fetch Trending independently so it always renders
+        // fetch Trending
         fetchTrending().then(list => {
           state.trending = Array.isArray(list) ? list : [];
           renderGrid($trending, state.trending);
-        });
-
-        // build genre shelves
-        fetchTopGenres().then(topG => {
-          const topGenres = Array.isArray(topG) ? topG : [];
-          const $genreShelves = $('#genreShelves').empty();
-          const requests = topGenres.map(g => fetchByGenre(g.id, 6).then(list => ({
-            name: g.name,
-            list
-          })));
-          Promise.all(requests).then(rows => {
-            rows.forEach(r => renderShelfSection($genreShelves, `Popular in ${r.name}`, r.list));
-          });
-        });
-
-        // personalized shelves based on favorites
-        fetchFavShelves().then(({
-          genres,
-          countries,
-          languages
-        }) => {
-          const $personal = $('#personalShelves').empty();
-          renderShelfSection($personal, 'Because you like these genres', genres);
-          renderShelfSection($personal, 'From countries you favored', countries);
-          renderShelfSection($personal, 'In languages you enjoy', languages);
+          updateTrendingVisibility();
         });
       }
 
@@ -376,8 +257,14 @@ $userRole = $_SESSION['role'] ?? '';
 
       // Events (real-time)
       function wireEvents() {
-        $('#search').on('input', renderAllGrid);
-        $('#sortSelect, #genreFilter, #yearFilter, #countryFilter').on('change', renderAllGrid);
+        $('#search').on('input', function() {
+          renderAllGrid();
+          updateTrendingVisibility();
+        });
+        $('#sortSelect, #genreFilter, #yearFilter, #countryFilter').on('change', function() {
+          renderAllGrid();
+          updateTrendingVisibility();
+        });
       }
 
       $(function() {
