@@ -14,13 +14,12 @@ $showBackToMovies = in_array($currentFile, ['viewMovie.php', 'manageMovie.php'])
 
 <header class="bg-primary-bg/90 backdrop-blur-md border-b border-accent/50 px-6 md:px-10 py-4 flex items-center justify-between sticky top-0 z-50">
 
-    <!-- Logo -->
     <a href="<?= htmlspecialchars($homeHref) ?>" class="text-xl md:text-2xl font-bold text-accent flex items-center font-oswald">
         <i class="bx bx-movie-play mr-2"></i>Cinematch
     </a>
 
     <div class="flex items-center gap-3 text-sm">
-        <!-- Back -->
+
         <?php if ($showBackToMovies): ?>
             <a href="<?= htmlspecialchars($homeHref) ?>"
                 class="btn btn-outline btn-accent flex items-center gap-1 text-sm">
@@ -29,7 +28,7 @@ $showBackToMovies = in_array($currentFile, ['viewMovie.php', 'manageMovie.php'])
             </a>
         <?php endif; ?>
 
-        <!-- Authenticated -->
+    
         <?php if (isset($_SESSION['username'])): ?>
             <span class="hidden sm:inline text-text-secondary">
                 Hi, <?= htmlspecialchars($_SESSION['username']) ?> !
@@ -43,7 +42,7 @@ $showBackToMovies = in_array($currentFile, ['viewMovie.php', 'manageMovie.php'])
                 </a>
             <?php endif; ?>
 
-            <!-- Profile (hidden on profile page) -->
+            
             <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0 && $currentFile !== 'profile.php'): ?>
                 <a href="<?= htmlspecialchars($profileHref) ?>"
                     class="btn btn-circle btn-accent text-white tooltip flex items-center justify-center"
@@ -53,7 +52,6 @@ $showBackToMovies = in_array($currentFile, ['viewMovie.php', 'manageMovie.php'])
 
             <?php endif; ?>
 
-            <!-- Logout -->
             <form action="<?= htmlspecialchars($authHref) ?>" method="POST" class="inline-flex">
                 <input type="hidden" name="action" value="logout" />
                 <button type="submit"
@@ -63,7 +61,6 @@ $showBackToMovies = in_array($currentFile, ['viewMovie.php', 'manageMovie.php'])
                 </button>
             </form>
 
-            <!-- Not logged in -->
         <?php else: ?>
             <a href="<?= htmlspecialchars($loginHref) ?>"
                 class="btn btn-accent flex items-center gap-2 text-sm font-medium">
