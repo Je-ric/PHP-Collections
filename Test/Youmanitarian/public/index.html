@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agricultural Weather Forecast</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-green-100 to-green-200 text-green-800 p-5 min-h-screen">
+    <div class="container mx-auto max-w-4xl">
+        <h1 class="text-3xl font-bold text-center mb-8 text-green-900">
+            <i class='bx bx-leaf'></i> Agricultural Weather Monitor
+        </h1>
+
+        <div class="bg-white/90 p-6 rounded-xl shadow-lg mb-6">
+            <div class="flex flex-col md:flex-row gap-3 mb-4">
+                <input type="text" id="city" placeholder="City (e.g., Nairobi)" 
+                       class="border border-green-500 rounded-lg px-4 py-2 flex-grow">
+                <input type="text" id="province" placeholder="Province (e.g., Nairobi)" 
+                       class="border border-green-500 rounded-lg px-4 py-2 flex-grow">
+                <button onclick="getManualWeather()" 
+                        class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                    <i class='bx bx-search'></i> Get Weather
+                </button>
+                <button onclick="getLocation()" 
+                        class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                    <i class='bx bx-current-location'></i> Use My Location
+                </button>
+            </div>
+            <div id="error-container"></div>
+            <h2 id="current-location" class="text-lg font-semibold mt-4"></h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 mb-6">
+            <!-- Current Conditions Card -->
+            <div class="bg-white/90 p-6 rounded-xl shadow-lg">
+                <div class="flex justify-between items-center">
+                    <span class="flex items-center gap-2"><i class='bx bx-flag'></i> Country:</span>
+                    <span id="country-name" class="font-medium">-</span>
+                    <img id="countryFlag" class="w-10 h-6 rounded shadow" alt="Country Flag">
+                </div>
+                
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <i class='bx bx-cloud'></i> Current Conditions
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="flex items-center gap-2"><i class='bx bx-thermometer'></i> Temperature:</span>
+                        <span id="temperature" class="font-medium">-</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="flex items-center gap-2"><i class='bx bx-droplet'></i> Humidity:</span>
+                        <span id="humidity" class="font-medium">-</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="flex items-center gap-2"><i class='bx bx-umbrella'></i> Rain Chance:</span>
+                        <span id="rain-chance" class="font-medium">-</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="flex items-center gap-2"><i class='bx bx-wind'></i> Wind Speed:</span>
+                        <span id="wind-speed" class="font-medium">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agricultural Indicators Card -->
+            <div class="bg-white/90 p-6 rounded-xl shadow-lg">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <i class='bx bx-seed'></i> Agricultural Indicators
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                       
+                    </div>
+                    <div class="flex justify-between items-center">
+                        
+                    </div>
+                    <div class="flex justify-between items-center">
+                        
+                    </div>
+                    <div class="flex justify-between items-center">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-amber-100/90 p-4 rounded-xl mb-6">
+            <div class="flex items-center gap-2">
+                <i class='bx bx-info-circle text-xl'></i>
+                <strong class="text-lg">Farming Advisory:</strong>
+                <span id="advisory-text" class="font-medium">Select location to view advisories</span>
+            </div>
+        </div>
+
+        <h3 class="text-xl font-semibold mb-4">7-Day Forecast</h3>
+        <div class="grid grid-cols-2 md:grid-cols-7 gap-3" id="weekly-forecast"></div>
+    </div>
+
+    <script>
+        const WEATHER_API_URL = "https://api.open-meteo.com/v1/forecast";
+        const OPENWEATHER = "9505fd1df737e20152fbd78cdb289b6a";
+        
+        async function getWeatherData(lat, lon) {
+    try {
+        const openMeteoParams = new URLSearchParams({
+            latitude: lat,
+            longitude: lon,
+            hourly: 'temperature_2m,relativehumidity_2m,precipitation_probability,windspeed_10m',
+            daily: 'temperature_2m_max,temperature_2m_min,precipitation_probability_max',
+            timezone: 'auto',
+            forecast_days: 7
+        });
+
+        const openMeteoResponse = await fetch(`${WEATHER_API_URL}?${openMeteoParams}`);
+        if (!openMeteoResponse.ok) throw new Error('Weather data unavailable');
+        const openMeteoData = await openMeteoResponse.json();
+
+        const openWeatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHER}&units=metric`);
+        if (!openWeatherResponse.ok) throw new Error('OpenWeather data unavailable');
+        const openWeatherData = await openWeatherResponse.json();
+
+        updateWeatherDisplay(openMeteoData, openWeatherData);
+        displayWeeklyForecast(openMeteoData.daily);
+    } catch (error) {
+        showError(`Failed to get weather data: ${error.message}`);
+    }
+}
+
+function updateWeatherDisplay(openMeteoData, openWeatherData) {
+    document.getElementById('temperature').textContent = 
+        `${openWeatherData.main.temp}°C`;
+    document.getElementById('humidity').textContent = 
+        `${openWeatherData.main.humidity}%`;
+    document.getElementById('rain-chance').textContent = 
+        `${openMeteoData.hourly.precipitation_probability[0]}%`;
+    document.getElementById('wind-speed').textContent = 
+        `${openWeatherData.wind.speed} km/h`;
+}
+
+
+        function updateAgriculturalAdvisory(weatherData) {
+            const advisoryText = document.getElementById('advisory-text');
+            const temp = weatherData.hourly.temperature_2m[0];
+            const rain = weatherData.hourly.precipitation_probability[0];
+            const wind = weatherData.hourly.windspeed_10m[0];
+
+            let advisory = '';
+            if (rain > 70) {
+                advisory = 'High rainfall expected - postpone outdoor activities';
+            } else if (temp > 35) {
+                advisory = 'Extreme heat warning - protect crops and livestock';
+            } else if (temp < 5) {
+                advisory = 'Frost alert - cover sensitive crops';
+            } else if (wind > 20) {
+                advisory = 'High winds - secure equipment and structures';
+            } else {
+                advisory = 'Favorable conditions for farming activities';
+            }
+            
+            advisoryText.textContent = advisory;
+        }
+
+        function displayWeeklyForecast(dailyData) {
+            const container = document.getElementById('weekly-forecast');
+            container.innerHTML = '';
+            
+            dailyData.time.forEach((date, index) => {
+                const precip = dailyData.precipitation_probability_max[index];
+                const iconClass = precip > 50 ? 'bx-cloud-rain' : 'bx-sun';
+                
+                const card = document.createElement('div');
+                card.className = 'bg-white/90 p-4 rounded-xl text-center';
+                card.innerHTML = `
+                    <h4 class="font-semibold mb-2">${new Date(date).toLocaleDateString('en', {weekday: 'short'})}</h4>
+                    <i class='bx ${iconClass} text-3xl mb-2 ${precip > 50 ? 'text-blue-500' : 'text-yellow-500'}'></i>
+                    <div class="text-sm">▲ ${dailyData.temperature_2m_max[index]}°C</div>
+                    <div class="text-sm">▼ ${dailyData.temperature_2m_min[index]}°C</div>
+                    <div class="text-sm ${precip > 50 ? 'text-blue-500' : 'text-green-500'}">
+                        ${precip}% <i class='bx bx-water'></i>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function getCoordinates(locationName) {
+            const providers = [
+                'https://geocoding-api.open-meteo.com/v1/search?name=',
+                'https://nominatim.openstreetmap.org/search?format=json&q='
+            ];
+
+            for (const provider of providers) {
+                try {
+                    const response = await fetch(`${provider}${encodeURIComponent(locationName)}`);
+                    const data = await response.json();
+                    const result = provider.includes('open-meteo') ? data.results?.[0] : data?.[0];
+                    
+                    if (result) {
+                        return {
+                            lat: result.latitude || parseFloat(result.lat),
+                            lon: result.longitude || parseFloat(result.lon),
+                            name: result.name || result.display_name,
+                            admin1: result.admin1 || result.address.state
+                        };
+                    }
+                } catch (error) {
+                    continue;
+                }
+            }
+            throw new Error('Location not found');
+        }
+
+        async function getManualWeather() {
+            const city = document.getElementById('city').value.trim();
+            const province = document.getElementById('province').value.trim();
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.innerHTML = '';
+
+            if (!city || !province) {
+                showError('Please enter both city and province');
+                return;
+            }
+
+            try {
+                showLoading('Searching for location...');
+                const location = await getCoordinates(`${city}, ${province}`);
+                document.getElementById('current-location').textContent = 
+                    `Current Location: ${location.name}, ${location.admin1}`;
+                await getWeatherData(location.lat, location.lon);
+            } catch (error) {
+                showError(`Location not found: ${error.message}`);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function getLocation() {
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.innerHTML = '';
+
+            if (!navigator.geolocation) {
+                showError('Geolocation not supported');
+                return;
+            }
+
+            try {
+                showLoading('Getting your location...');
+                const position = await new Promise((resolve, reject) => 
+                    navigator.geolocation.getCurrentPosition(resolve, reject));
+                
+                showLoading('Looking up address...');
+                const reverseGeo = await fetch(
+                    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`
+                );
+                const locationData = await reverseGeo.json();
+                
+                document.getElementById('current-location').textContent = 
+                    `Current Location: ${locationData.address.city || locationData.address.town}, 
+                    ${locationData.address.state || locationData.address.country}`;
+                
+                await getWeatherData(position.coords.latitude, position.coords.longitude);
+            } catch (error) {
+                showError(`Location access denied: ${error.message}`);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function showError(message) {
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.innerHTML = `<div class="error-message">⚠️ ${message}</div>`;
+        }
+
+        function showLoading(message) {
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.innerHTML = `<div class="loading">⏳ ${message}</div>`;
+        }
+
+        function hideLoading() {
+            const loadingElement = document.querySelector('.loading');
+            if (loadingElement) loadingElement.remove();
+        }
+    </script>
+</body>
+</html>
