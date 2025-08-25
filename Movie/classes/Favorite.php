@@ -9,6 +9,8 @@ class Favorite {
         $this->conn = $db->conn;
     }
 
+    // to check if already favorited of user
+    // 1 because we only need to know if it exists
     public function isFavorited(int $userId, int $movieId): bool {
         if ($userId <= 0 || $movieId <= 0) return false;
         $sql = "SELECT 1 FROM user_favorites WHERE user_id = ? AND movie_id = ? LIMIT 1";
@@ -22,8 +24,10 @@ class Favorite {
         return $exists;
     }
 
+    // add
+    // on duplicate because we want to avoid errors if the entry already exists
     public function addFavorite(int $userId, int $movieId): bool {
-        if ($userId <= 0 || $movieId <= 0) return false;
+        if ($userId <= 0 || $movieId <= 0) return false; // invalid input (malabong mangyare, but incase)
         $sql = "INSERT INTO user_favorites (user_id, movie_id) 
                 VALUES (?, ?)
                 ON DUPLICATE KEY UPDATE user_id = user_id";
@@ -35,6 +39,7 @@ class Favorite {
         return $ok;
     }
 
+    // remove
     public function removeFavorite(int $userId, int $movieId): bool {
         if ($userId <= 0 || $movieId <= 0) return false;
         $sql = "DELETE FROM user_favorites WHERE user_id = ? AND movie_id = ?";
@@ -46,6 +51,7 @@ class Favorite {
         return $ok;
     }
 
+    // flip the state, favorited or unfavorited
     public function toggleFavorite(int $userId, int $movieId): bool {
         if ($this->isFavorited($userId, $movieId)) {
             $this->removeFavorite($userId, $movieId);
@@ -56,6 +62,7 @@ class Favorite {
         }
     }
 
+    // get all favorite per movie using movie_id
     public function countByMovie(int $movieId): int {
         if ($movieId <= 0) return 0;
         $sql = "SELECT COUNT(*) AS cnt FROM user_favorites WHERE movie_id = ?";
