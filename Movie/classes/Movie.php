@@ -22,18 +22,18 @@ class Movie
     public function getAllMovies()
     {
         $sql = "
-            SELECT m.*, c.name AS country_name, l.name AS language_name,
-                   AVG(r.rating) AS avg_rating, COUNT(r.id) AS total_reviews,
-                   GROUP_CONCAT(DISTINCT g.id) AS genre_ids,
-                   GROUP_CONCAT(DISTINCT g.name) AS genre_names
-            FROM movies m
-            LEFT JOIN ratings_reviews r ON r.movie_id = m.id
-            LEFT JOIN countries c ON m.country_id = c.id
-            LEFT JOIN languages l ON m.language_id = l.id
-            LEFT JOIN movie_genres mg ON mg.movie_id = m.id
-            LEFT JOIN genres g ON g.id = mg.genre_id
-            GROUP BY m.id
-            ORDER BY m.release_year DESC
+            SELECT movies.*, countries.name AS country_name, languages.name AS language_name,
+                   AVG(ratings_reviews.rating) AS avg_rating, COUNT(ratings_reviews.id) AS total_reviews,
+                   GROUP_CONCAT(DISTINCT genres.id) AS genre_ids,
+                   GROUP_CONCAT(DISTINCT genres.name) AS genre_names
+            FROM movies
+            LEFT JOIN ratings_reviews ON ratings_reviews.movie_id = movies.id
+            LEFT JOIN countries ON movies.country_id = countries.id
+            LEFT JOIN languages ON movies.language_id = languages.id
+            LEFT JOIN movie_genres ON movie_genres.movie_id = movies.id
+            LEFT JOIN genres ON genres.id = movie_genres.genre_id
+            GROUP BY movies.id
+            ORDER BY movies.release_year DESC
         ";
         $result = $this->db->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
@@ -42,11 +42,11 @@ class Movie
     public function getMovieById($id)
     {
         $sql = "
-            SELECT m.*, c.name AS country_name, l.name AS language_name
-            FROM movies m
-            LEFT JOIN countries c ON m.country_id = c.id
-            LEFT JOIN languages l ON m.language_id = l.id
-            WHERE m.id = ?
+            SELECT movies.*, countries.name AS country_name, languages.name AS language_name
+            FROM movies
+            LEFT JOIN countries ON movies.country_id = countries.id
+            LEFT JOIN languages ON movies.language_id = languages.id
+            WHERE movies.id = ?
         ";
         $query = $this->db->prepare($sql);
         $query->bind_param("i", $id);
@@ -68,11 +68,15 @@ class Movie
             : null;
 
         $sql = "
-            INSERT INTO movies (title, description, release_year, poster_url, background_url, trailer_url, country_id, language_id)
+            INSERT INTO movies (title, description, release_year,
+                                poster_url, background_url, trailer_url, 
+                                country_id, language_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ";
         $query = $this->db->prepare($sql);
-        $query->bind_param("ssisssii", $title, $description, $releaseYear, $posterPath, $backgroundPath, $trailerUrl, $countryId, $languageId);
+        $query->bind_param("ssisssii", $title, $description, $releaseYear, 
+                                    $posterPath, $backgroundPath, $trailerUrl, 
+                                    $countryId, $languageId);
         $query->execute();
 
         $movieId = $query->insert_id;
@@ -81,7 +85,9 @@ class Movie
         return $movieId;
     }
 
-    public function updateMovie($id, $title, $description, $releaseYear, $posterFile, $backgroundFile, $trailerUrl, $countryName, $languageName, $genreIds = [])
+    public function updateMovie($id, $title, $description, $releaseYear, 
+                                $posterFile, $backgroundFile, $trailerUrl, 
+                                $countryName, $languageName, $genreIds = [])
     {
         $countryId = $this->getCountryId($countryName);
         $languageId = $this->getLanguageId($languageName);
@@ -115,11 +121,15 @@ class Movie
 
         $sql = "
             UPDATE movies 
-            SET title=?, description=?, release_year=?, poster_url=?, background_url=?, trailer_url=?, country_id=?, language_id=?
+            SET title=?, description=?, release_year=?, 
+                poster_url=?, background_url=?, trailer_url=?, 
+                country_id=?, language_id=?
             WHERE id=?
         ";
         $query = $this->db->prepare($sql);
-        $query->bind_param("ssisssiii", $title, $description, $releaseYear, $posterPath, $backgroundPath, $trailerUrl, $countryId, $languageId, $id);
+        $query->bind_param("ssisssiii", $title, $description, $releaseYear, 
+                                        $posterPath, $backgroundPath, $trailerUrl,
+                                        $countryId, $languageId, $id);
         $query->execute();
 
         $this->updateMovieGenres($id, $genreIds);
@@ -159,6 +169,8 @@ class Movie
         return null;
     }
 
+    // delete poster and background, when movie deleted
+    // remove the old images if something new (update) is uploaded
     private function handleUploadTo($uploadedFile, $movieTitle, $releaseYear, $subfolder)
     {
         $safeTitle = preg_replace("/[^a-zA-Z0-9]/", "_", strtolower($movieTitle));
@@ -194,12 +206,12 @@ class Movie
     public function getGenresByMovie($movieId, $return = 'name')
     {
         // $return = 'name' or 'id'
-        $sql = "
-          SELECT g.id, g.name
-          FROM movie_genres mg
-          JOIN genres g ON mg.genre_id = g.id
-          WHERE mg.movie_id = ?
-      ";
+                $sql = "
+                    SELECT genres.id, genres.name
+                    FROM movie_genres
+                    JOIN genres ON movie_genres.genre_id = genres.id
+                    WHERE movie_genres.movie_id = ?
+            ";
         $query = $this->db->prepare($sql);
         $query->bind_param("i", $movieId);
         $query->execute();
