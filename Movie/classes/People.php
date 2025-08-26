@@ -1,15 +1,18 @@
 <?php
 require_once __DIR__ . '/../db/config.php';
 
-class People {
+class People
+{
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = (new Database())->conn;
     }
 
     // Add person if not exists; return person_id
-    public function addPerson(string $name): int {
+    public function addPerson(string $name): int
+    {
         $name = trim($name);
         if ($name === '') return 0;
 
@@ -34,8 +37,9 @@ class People {
     }
 
     // Attach person to movie (Director or Cast)
-    public function attachToMovie(int $movieId, int $personId, string $role): bool {
-        if (!in_array($role, ['Director','Cast'], true)) return false;
+    public function attachToMovie(int $movieId, int $personId, string $role): bool
+    {
+        if (!in_array($role, ['Director', 'Cast'], true)) return false;
 
         // Prevent duplicates
         $stmt = $this->db->prepare(
@@ -61,23 +65,24 @@ class People {
     }
 
     // Get all people linked to a movie (optional by role)
-    public function getMoviePeople(int $movieId, string $role = ''): array {
+    public function getMoviePeople(int $movieId, string $role = ''): array
+    {
         if ($role !== '') {
             $stmt = $this->db->prepare(
-                "SELECT mp.id, p.name 
-                 FROM movie_cast mp
-                 JOIN movie_people p ON mp.person_id = p.id
-                 WHERE mp.movie_id = ? AND mp.role = ?
-                 ORDER BY p.name"
+                "SELECT movie_cast.id, movie_people.name 
+                    FROM movie_cast
+                    JOIN movie_people ON movie_cast.person_id = movie_people.id
+                    WHERE movie_cast.movie_id = ? AND movie_cast.role = ?
+                    ORDER BY movie_people.name"
             );
             $stmt->bind_param("is", $movieId, $role);
         } else {
             $stmt = $this->db->prepare(
-                "SELECT mp.id, p.name 
-                 FROM movie_cast mp
-                 JOIN movie_people p ON mp.person_id = p.id
-                 WHERE mp.movie_id = ?
-                 ORDER BY p.name"
+                "SELECT movie_cast.id, movie_people.name 
+                    FROM movie_cast
+                    JOIN movie_people ON movie_cast.person_id = movie_people.id
+                    WHERE movie_cast.movie_id = ?
+                    ORDER BY movie_people.name"
             );
             $stmt->bind_param("i", $movieId);
         }
@@ -92,7 +97,8 @@ class People {
         return $rows;
     }
 
-    public function removeFromMovie(int $id): bool {
+    public function removeFromMovie(int $id): bool
+    {
         $stmt = $this->db->prepare("DELETE FROM movie_cast WHERE id = ?");
         $stmt->bind_param("i", $id);
         $ok = $stmt->execute();
@@ -100,11 +106,12 @@ class People {
         return $ok;
     }
 
-    public function search(string $term): array {
+    public function search(string $term): array
+    {
         $term = trim($term);
         if ($term === '') return [];
 
-        $db = $this->db; 
+        $db = $this->db;
 
         $sql = "SELECT id, name
                 FROM movie_people
