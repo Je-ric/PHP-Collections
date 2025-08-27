@@ -498,9 +498,14 @@ $favCount = $fav->countByMovie($m['id']);
             }
 
             function fetchRelated() {
-                $.getJSON('../db/recommendRequests.php', { action: 'related', movie_id: movieId, limit: 12 })
-                 .done(res => renderRelated(res && res.success ? res.data : []))
-                 .fail(() => renderRelated([]));
+                $.getJSON('../db/recommendRequests.php', 
+                { 
+                    action: 'related', 
+                    movie_id: movieId, 
+                    limit: 12 
+                })
+                .done(res => renderRelated(res && res.success ? res.data : []))
+                .fail(() => renderRelated([]));
             }
 
             $(function() {

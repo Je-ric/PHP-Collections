@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,89 +40,94 @@
     </script>
 </head>
 
-<body class="relative min-h-screen flex items-center justify-center font-oswald bg-no-repeat bg-cover bg-center"
+<body class="min-h-screen font-oswald bg-no-repeat bg-cover bg-center"
     style="background-image: url('../src/img/loginRegister-bg.avif');">
 
-    <div class="absolute inset-0 bg-gradient-to-t from-primary-bg via-primary-bg/80 to-transparent"></div>
+<?php include __DIR__ . '/../partials/header.php'; ?>
 
-    <div class="relative z-10 w-full max-w-md p-8 rounded-2xl shadow-xl
-                bg-neutral-900/40 backdrop-blur-md border border-white/20">
+<div class="relative min-h-[calc(100vh-64px)]">
+    <div class="absolute inset-0 bg-gradient-to-t from-primary-bg via-primary-bg/80 to-transparent pointer-events-none z-0"></div>
 
-        <!-- Login Form -->
-        <div id="login-form-container" class="form-container">
-            <div class="flex flex-col items-center mb-6">
-                <div class="flex flex-row items-center mb-6">
-                    <i class="bx bx-movie-play text-4xl text-accent"></i>
-                    <h1 class="text-2xl ml-3 text-center text-accent">CineMatch</h1>
+    <div class="relative z-10 flex items-center justify-center min-h-[calc(100vh-64px)] px-4">
+        <div class="w-full max-w-md p-8 rounded-2xl shadow-xl
+                    bg-neutral-900/40 backdrop-blur-md border border-white/20">
+
+            <!-- Login Form -->
+            <div id="login-form-container" class="form-container">
+                <div class="flex flex-col items-center mb-6">
+                    <div class="flex flex-row items-center mb-6">
+                        <i class="bx bx-movie-play text-4xl text-accent"></i>
+                        <h1 class="text-2xl ml-3 text-center text-accent">CineMatch</h1>
+                    </div>
+                    <h2 class="text-xl text-center text-text-primary">Sign In</h2>
                 </div>
-                <h2 class="text-xl text-center text-text-primary">Sign In</h2>
+
+                <form action="../db/authRequests.php" method="POST" class="space-y-4">
+                    <input type="hidden" name="action" value="login">
+
+                    <input type="text" name="username" placeholder="Username" required
+                        class="w-full px-4 py-2 bg-secondary-bg/60 border border-border-color rounded-lg 
+                               focus:ring-2 focus:ring-accent focus:outline-none 
+                               text-text-primary placeholder-text-muted">
+
+                    <input type="password" name="password" placeholder="Password" required
+                        class="w-full px-4 py-2 bg-secondary-bg/60 border border-border-color rounded-lg 
+                               focus:ring-2 focus:ring-accent focus:outline-none 
+                               text-text-primary placeholder-text-muted">
+
+                    <button type="submit"
+                        class="w-full bg-accent text-white py-2 rounded-lg hover:bg-accent-hover transition font-bold">
+                        Login
+                    </button>
+                </form>
+                <p class="mt-4 text-sm text-center text-text-secondary">
+                    Don’t have an account?
+                    <a href="#" onclick="toggleForms()" class="text-accent hover:underline">Register here</a>
+                </p>
             </div>
 
-            <form action="../db/authRequests.php" method="POST" class="space-y-4">
-                <input type="hidden" name="action" value="login">
-
-                <input type="text" name="username" placeholder="Username" required
-                    class="w-full px-4 py-2 bg-secondary-bg/60 border border-border-color rounded-lg 
-                           focus:ring-2 focus:ring-accent focus:outline-none 
-                           text-text-primary placeholder-text-muted">
-
-                <input type="password" name="password" placeholder="Password" required
-                    class="w-full px-4 py-2 bg-secondary-bg/60 border border-border-color rounded-lg 
-                           focus:ring-2 focus:ring-accent focus:outline-none 
-                           text-text-primary placeholder-text-muted">
-
-                <button type="submit"
-                    class="w-full bg-accent text-white py-2 rounded-lg hover:bg-accent-hover transition font-bold">
-                    Login
-                </button>
-            </form>
-            <p class="mt-4 text-sm text-center text-text-secondary">
-                Don’t have an account?
-                <a href="#" onclick="toggleForms()" class="text-accent hover:underline">Register here</a>
-            </p>
-        </div>
-
-        <!-- Register Form (hidden by default) -->
-        <div id="register-form-container" class="form-container hidden">
-            <div class="flex flex-col items-center mb-6">
-                <div class="flex flex-row items-center mb-6">
-                    <i class="bx bx-movie-play text-4xl text-accent"></i>
-                    <h1 class="text-2xl ml-3 text-center text-accent">CineMatch</h1>
+            <!-- Register Form (hidden by default) -->
+            <div id="register-form-container" class="form-container hidden">
+                <div class="flex flex-col items-center mb-6">
+                    <div class="flex flex-row items-center mb-6">
+                        <i class="bx bx-movie-play text-4xl text-accent"></i>
+                        <h1 class="text-2xl ml-3 text-center text-accent">CineMatch</h1>
+                    </div>
+                    <h2 class="text-xl text-center text-text-primary">Sign Up</h2>
                 </div>
-                <h2 class="text-xl text-center text-text-primary">Sign Up</h2>
+                <form action="../db/authRequests.php" method="POST" class="space-y-4">
+                    <input type="hidden" name="action" value="register">
+
+                    <input type="text" name="username" placeholder="Username" required
+                        class="w-full px-4 py-2 bg-secondary-bg/60 border border-border-color rounded-lg 
+                               focus:ring-2 focus:ring-accent focus:outline-none 
+                               text-text-primary placeholder-text-muted">
+
+                    <input type="password" name="password" placeholder="Password" required
+                        class="w-full px-4 py-2 bg-secondary-bg/60 border border-border-color rounded-lg 
+                               focus:ring-2 focus:ring-accent focus:outline-none 
+                               text-text-primary placeholder-text-muted">
+
+                    <button type="submit"
+                        class="w-full bg-accent text-white py-2 rounded-lg hover:bg-accent-hover transition font-bold">
+                        Register
+                    </button>
+                </form>
+                <p class="mt-4 text-sm text-center text-text-secondary">
+                    Already have an account?
+                    <a href="#" onclick="toggleForms()" class="text-accent hover:underline">Login here</a>
+                </p>
             </div>
-            <form action="../db/authRequests.php" method="POST" class="space-y-4">
-                <input type="hidden" name="action" value="register">
-
-                <input type="text" name="username" placeholder="Username" required
-                    class="w-full px-4 py-2 bg-secondary-bg/60 border border-border-color rounded-lg 
-                           focus:ring-2 focus:ring-accent focus:outline-none 
-                           text-text-primary placeholder-text-muted">
-
-                <input type="password" name="password" placeholder="Password" required
-                    class="w-full px-4 py-2 bg-secondary-bg/60 border border-border-color rounded-lg 
-                           focus:ring-2 focus:ring-accent focus:outline-none 
-                           text-text-primary placeholder-text-muted">
-
-                <button type="submit"
-                    class="w-full bg-accent text-white py-2 rounded-lg hover:bg-accent-hover transition font-bold">
-                    Register
-                </button>
-            </form>
-            <p class="mt-4 text-sm text-center text-text-secondary">
-                Already have an account?
-                <a href="#" onclick="toggleForms()" class="text-accent hover:underline">Login here</a>
-            </p>
         </div>
     </div>
+</div>
 
-    <script>
-        function toggleForms() {
-            document.getElementById('login-form-container').classList.toggle('hidden');
-            document.getElementById('register-form-container').classList.toggle('hidden');
-        }
-    </script>
-
+<script>
+    function toggleForms() {
+        document.getElementById('login-form-container').classList.toggle('hidden');
+        document.getElementById('register-form-container').classList.toggle('hidden');
+    }
+</script>
 </body>
 
 </html>

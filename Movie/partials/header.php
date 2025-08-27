@@ -9,7 +9,8 @@ $authHref   = $fromPages ? '../db/authRequests.php' : 'db/authRequests.php';
 $profileHref = $fromPages ? '../pages/profile.php' : 'pages/profile.php';
 
 $currentFile = basename($script);
-$showBackToMovies = in_array($currentFile, ['viewMovie.php', 'manageMovie.php']);
+$isAuthPage = ($currentFile === 'loginRegister.php'); // auth page
+$showBackToMovies = in_array($currentFile, ['viewMovie.php', 'manageMovie.php', 'loginRegister.php']); // include login
 ?>
 
 <header class="bg-primary-bg/90 backdrop-blur-md border-b border-accent/50 px-6 md:px-10 py-4 flex items-center justify-between sticky top-0 z-50">
@@ -42,14 +43,16 @@ $showBackToMovies = in_array($currentFile, ['viewMovie.php', 'manageMovie.php'])
                 </a>
             <?php endif; ?>
 
-            
-            <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0 && $currentFile !== 'profile.php'): ?>
+            <?php if (
+                isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0 &&
+                ($currentFile !== 'profile.php') &&
+                (($_SESSION['role'] ?? '') === 'user') // hide for admin
+            ): ?>
                 <a href="<?= htmlspecialchars($profileHref) ?>"
                     class="btn btn-circle btn-accent text-white tooltip flex items-center justify-center"
                     data-tip="My Profile">
                     <i class="bx bx-user text-xl"></i>
                 </a>
-
             <?php endif; ?>
 
             <form action="<?= htmlspecialchars($authHref) ?>" method="POST" class="inline-flex">
@@ -62,11 +65,13 @@ $showBackToMovies = in_array($currentFile, ['viewMovie.php', 'manageMovie.php'])
             </form>
 
         <?php else: ?>
-            <a href="<?= htmlspecialchars($loginHref) ?>"
-                class="btn btn-accent flex items-center gap-2 text-sm font-medium">
-                <i class="bx bx-log-in"></i>
-                Login&nbsp;/&nbsp;Register
-            </a>
+            <?php if (!$isAuthPage): // don’t show “Login/Register” on the login page itself ?>
+                <a href="<?= htmlspecialchars($loginHref) ?>"
+                    class="btn btn-accent flex items-center gap-2 text-sm font-medium">
+                    <i class="bx bx-log-in"></i>
+                    Login&nbsp;/&nbsp;Register
+                </a>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 </header>
