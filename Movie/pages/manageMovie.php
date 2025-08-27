@@ -398,7 +398,6 @@ $languages = json_decode($languageJsonContent, true);
 
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const movieId = <?= $editing ? $movieData['id'] : 0 ?>;
 
@@ -422,13 +421,13 @@ $languages = json_decode($languageJsonContent, true);
                 role: role
             },
             success: function(res) {
-                let people = [];
+                let people = []; 
                 if (Array.isArray(res)) { // if array (ex. [ { id: 1, name: "John Doe" }, ... ])
                     people = res; 
                 } else if (res && res.data) { // if object with data
-                    people = res.data; // extract people from data (ex. [ { id: 1, name: "John Doe" }, ... ])
-                } else { 
-                    people = [];
+                    people = res.data; // extract people from data  { success: true, data : [{ id: 1, name: "John Doe" }, ...]}
+                } else {
+                    people = []; // probably pag creating or wala pang na-add
                 }
                 renderPeople(role, people);
             },
@@ -440,6 +439,7 @@ $languages = json_decode($languageJsonContent, true);
 
     function renderPeople(role, people) {
         const containerId = role === 'Director' ? '#directors-list' : '#actors-list';
+        // if director role, render in #directors-list and same lang sa #actors-list
         let html = '';
         
         if (people.length === 0) {
@@ -463,7 +463,7 @@ $languages = json_decode($languageJsonContent, true);
     // let's say movie is the parent, person is the child
     // we need a parent to have a child, getch?
     function addPerson(name, role) {
-        const trimmed = name.trim();
+        const trimmed = name.trim(); // remove extra spaces
         if (trimmed === '') {
             console.warn('[People] Add -> empty name, abort.');
             return;
@@ -535,6 +535,7 @@ $languages = json_decode($languageJsonContent, true);
         }
     });
 
+    // when enter, determine kung anong input ginamit to get the role then proceed to addPerson
     $('#director-input, #actor-input').on('keydown', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -553,7 +554,7 @@ $languages = json_decode($languageJsonContent, true);
             url: "../db/peopleRequests.php",
             method: "POST",
             dataType: "json",
-            data: { action: "search", query: request.term },
+            data: { action: "search", query: request.term }, // input then search
             success: function(res) {
               console.log('[Autocomplete] results:', res);
               const people = Array.isArray(res) ? res : (res.data || []);
@@ -565,7 +566,7 @@ $languages = json_decode($languageJsonContent, true);
             }
           });
         },
-        minLength: 2,
+        minLength: 2, // ---
         delay: 300
       });
     }

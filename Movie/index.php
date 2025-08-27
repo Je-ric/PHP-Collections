@@ -119,6 +119,16 @@ $userRole = $_SESSION['role'] ?? '';
         allMovies: <?= json_encode($allMovies ?? []) ?>,
         trending: [],
       };
+      // $allMovies = [
+      //   ["id" => 1, "title" => "Inception", "release_year" => 2010],
+      //   ["id" => 2, "title" => "Avatar", "release_year" => 2009],
+      // ];
+        // ------------------- php array to js object
+      // state.allMovies = [
+      //   { id: 1, title: "Inception", release_year: 2010 },
+      //   { id: 2, title: "Avatar", release_year: 2009 }
+      // ];
+
       // maling gawin toh, but for the sake of this to work
       const isAdmin = <?= json_encode($userRole === 'admin') ?>;
 
@@ -188,6 +198,8 @@ $userRole = $_SESSION['role'] ?? '';
           .replace(/'/g, '&#039;');
       }
 
+      // ofcourse list is just temporary array
+      // from renderAllGrid -> to applySortAndFilter -> to send this list to renderGrid -> to buildCard
       function applySortAndFilter(list) {
         // basta get input values
         const q = $('#search').val().trim().toLowerCase();
@@ -257,7 +269,7 @@ $userRole = $_SESSION['role'] ?? '';
       function renderAllGrid() {
         // display all movies based sa filters
         const filtered = applySortAndFilter(state.allMovies);
-  renderGrid($('#allGrid'), filtered, isAdmin);
+        renderGrid($('#allGrid'), filtered, isAdmin);
         $('#allEmpty').toggleClass('hidden', filtered.length > 0);
       }
 
@@ -266,6 +278,7 @@ $userRole = $_SESSION['role'] ?? '';
         renderAllGrid();
         updateTrendingVisibility();
 
+        // fetch trending movies from server
         fetchTrending().then(list => {
           state.trending = list || [];
           renderGrid($('#trendingGrid'), state.trending, false);

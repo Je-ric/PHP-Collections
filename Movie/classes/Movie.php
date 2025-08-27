@@ -12,9 +12,10 @@ class Movie
         $database = new Database();
         $this->db = $database->conn;
 
+        // create if not existing
         $this->uploadDir = __DIR__ . '/../uploads/posters/';
         if (!is_dir($this->uploadDir)) mkdir($this->uploadDir, 0777, true);
-        // Ensure background uploads directory exists as well
+
         $this->backgroundUploadDir = __DIR__ . '/../uploads/backgrounds/';
         if (!is_dir($this->backgroundUploadDir)) mkdir($this->backgroundUploadDir, 0777, true);
     }
@@ -23,9 +24,9 @@ class Movie
     {
         $sql = "
             SELECT movies.*, countries.name AS country_name, languages.name AS language_name,
-                   AVG(ratings_reviews.rating) AS avg_rating, COUNT(ratings_reviews.id) AS total_reviews,
-                   GROUP_CONCAT(DISTINCT genres.id) AS genre_ids,
-                   GROUP_CONCAT(DISTINCT genres.name) AS genre_names
+                    AVG(ratings_reviews.rating) AS avg_rating, COUNT(ratings_reviews.id) AS total_reviews,
+                    GROUP_CONCAT(DISTINCT genres.id) AS genre_ids,
+                    GROUP_CONCAT(DISTINCT genres.name) AS genre_names
             FROM movies
             LEFT JOIN ratings_reviews ON ratings_reviews.movie_id = movies.id
             LEFT JOIN countries ON movies.country_id = countries.id

@@ -67,7 +67,7 @@ class People
     // Get all people linked to a movie (optional by role)
     public function getMoviePeople(int $movieId, string $role = ''): array
     {
-        if ($role !== '') {
+        if ($role !== '') { // when role is given, mainly used
             $stmt = $this->db->prepare(
                 "SELECT movie_cast.id, movie_people.name 
                     FROM movie_cast
@@ -76,7 +76,7 @@ class People
                     ORDER BY movie_people.name"
             );
             $stmt->bind_param("is", $movieId, $role);
-        } else {
+        } else { // return all without filter, parang fallback lang incase
             $stmt = $this->db->prepare(
                 "SELECT movie_cast.id, movie_people.name 
                     FROM movie_cast
