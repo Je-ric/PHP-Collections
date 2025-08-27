@@ -56,6 +56,13 @@ if ($userId <= 0) {
     <main class="px-6 md:px-10 py-10">
         <h1 class="text-3xl font-bold mb-8">My Profile</h1>
 
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+            <div class="mb-6 p-4 rounded-lg bg-yellow-900/60 border border-yellow-700 text-yellow-200 text-lg font-semibold">
+    You are logged in as an <span class="font-bold">Admin</span>. You can manage movies, but adding favorites and submitting ratings or reviews is not available for your role.
+</div>
+<?php endif; ?>
+
+
         <!-- Tabs -->
         <div role="tablist" class="tabs tabs-bordered">
             <input type="radio" name="profile_tabs" role="tab" class="tab" aria-label="Favorites" checked />
@@ -66,6 +73,10 @@ if ($userId <= 0) {
                     <div id="favAggLanguages"></div>
                 </div>
                 <section id="shelfFavorites"></section>
+                    <div id="emptyFavorites" class="hidden text-center py-10 text-gray-400">
+                        <i class="bx bx-heart text-5xl mb-2"></i>
+                        <div class="text-lg">You haven't favorited any movies yet.</div>
+                    </div>
             </div>
 
             <input type="radio" name="profile_tabs" role="tab" class="tab" aria-label="Rated" />
@@ -76,6 +87,10 @@ if ($userId <= 0) {
                     <div id="ratedAggLanguages"></div>
                 </div>
                 <section id="shelfRated"></section>
+                    <div id="emptyRated" class="hidden text-center py-10 text-gray-400">
+                        <i class="bx bx-star text-5xl mb-2"></i>
+                        <div class="text-lg">You haven't rated any movies yet.</div>
+                    </div>
             </div>
 
             <input type="radio" name="profile_tabs" role="tab" class="tab" aria-label="Recommendations" />
@@ -126,15 +141,27 @@ if ($userId <= 0) {
         }
 
         function renderShelf($root, title, items) {
-            if (!items || !items.length) return;
-            const html = items.map(buildCard).join('');
-            $root.html(`
-        <div class="border-t border-neutral-800 mb-6"></div>
-        <h3 class="text-2xl font-semibold mb-4">${title}</h3>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-          ${html}
-        </div>
-      `);
+                if (!items || !items.length) {
+                    if ($root.attr('id') === 'shelfFavorites') {
+                        $('#emptyFavorites').removeClass('hidden');
+                        $root.empty();
+                    } else if ($root.attr('id') === 'shelfRated') {
+                        $('#emptyRated').removeClass('hidden');
+                        $root.empty();
+                    }
+                    return;
+                } else {
+                    if ($root.attr('id') === 'shelfFavorites') $('#emptyFavorites').addClass('hidden');
+                    if ($root.attr('id') === 'shelfRated') $('#emptyRated').addClass('hidden');
+                }
+                const html = items.map(buildCard).join('');
+                $root.html(`
+            <div class="border-t border-neutral-800 mb-6"></div>
+            <h3 class="text-2xl font-semibold mb-4">${title}</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+              ${html}
+            </div>
+          `);
         }
 
         function escapeHtml(str) {
