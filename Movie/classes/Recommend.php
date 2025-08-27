@@ -13,8 +13,8 @@ class Recommend
 
     /**
      * Trending based on average rating (then release year)
-     * Endpoint action: 'trending'
-     * Pages: index.php (home)
+     * Used in: db/recommendRequests.php (action: 'trending'), 
+     *          index.php (home page)
      */
     public function getTrending(int $limit = 12): array
     {
@@ -45,10 +45,8 @@ class Recommend
 
     /**
      * Latest by release year
-     * Endpoint action: 'latest'
-     * Pages: exposed via API; not directly used in current pages
+     * Used in: db/recommendRequests.php (action: 'latest')
      */
-
     public function getLatest(int $limit = 12): array
     {
         $limit = $this->clampLimit($limit);
@@ -77,8 +75,8 @@ class Recommend
     }
 
     /**
-     * Endpoint action: 'search'
-     * Pages: exposed via API; not directly used (index uses client-side filter)
+     * Search by movie title
+     * Used in: db/recommendRequests.php (action: 'search')
      */
     public function searchByTitle(string $term, int $limit = 24): array
     {
@@ -110,8 +108,9 @@ class Recommend
     }
 
     /**
-     * Endpoint action: 'favGenres'
-     * Pages: pages/profile.php (Recommendation tab)
+     * Recommendations based on user's favorite genres
+     * Used in: db/recommendRequests.php (action: 'favGenres'), 
+     *          pages/profile.php (recommendation tab)
      */
     public function basedOnFavoriteGenres(int $userId, int $limit = 12): array
     {
@@ -167,8 +166,9 @@ class Recommend
     }
 
     /**
-     * Endpoint action: 'favCountries'
-     * Pages: pages/profile.php (Recommendation tab)
+     * Recommendations based on user's favorite countries
+     * Used in: db/recommendRequests.php (action: 'favCountries'), 
+     *          pages/profile.php (recommendation tab)
      */
     public function basedOnFavoriteCountries(int $userId, int $limit = 12): array
     {
@@ -221,8 +221,9 @@ class Recommend
     }
 
     /**
-     * Endpoint action: 'favLanguages'
-     * Pages: pages/profile.php (Recommendation tab)
+     * Recommendations based on user's favorite languages
+     * Used in: db/recommendRequests.php (action: 'favLanguages'), 
+     *          pages/profile.php (recommendation tab)
      */
     public function basedOnFavoriteLanguages(int $userId, int $limit = 12): array
     {
@@ -276,8 +277,8 @@ class Recommend
 
     /**
      * Movies the user favorited
-     * Endpoint action: 'favorites'
-     * Pages: pages/profile.php (Favorites tab)
+     * Used in: db/recommendRequests.php (action: 'favorites'), 
+     *          pages/profile.php (favorites tab)
      */
     public function getFavorites(int $userId, int $limit = 12): array
     {
@@ -312,8 +313,8 @@ class Recommend
 
     /**
      * Movies the user rated/reviewed
-     * Endpoint action: 'rated'
-     * Pages: pages/profile.php (Rated tab)
+     * Used in: db/recommendRequests.php (action: 'rated'), 
+     *          pages/profile.php (rated tab)
      */
     public function getRated(int $userId, int $limit = 12): array
     {
@@ -348,8 +349,10 @@ class Recommend
 
     /**
      * Get user's top genres (with counts)
-     * Endpoint action: 'topGenres' (when logged in)
-     * Pages: pages/profile.php (Recommendation tab)
+     * Used in: db/recommendRequests.php (action: 'topGenres'), 
+     *          pages/profile.php (recommendation tab)
+     * If logged in:
+     * Popular in your favorites
      */
     public function getUserTopGenres(int $userId, int $limit = 5): array
     {
@@ -374,8 +377,10 @@ class Recommend
 
     /**
      * Get overall top genres across all users
-     * Endpoint action: 'topGenres' (when not logged in)
-     * Pages: exposed via API; fallback variant, not directly used in profile
+     * Used in: db/recommendRequests.php (action: 'topGenres')
+     * 
+     * If not logged in:
+     * - Show popular genres based on overall favorites in movie
      */
     public function getTopGenresOverall(int $limit = 5): array
     {
@@ -398,8 +403,8 @@ class Recommend
 
     /**
      * Get movies by genre (optionally excluding user's favorites)
-     * Endpoint action: 'byGenre'
-     * Pages: pages/profile.php (Popular in <genre> shelves)
+     * Used in: db/recommendRequests.php (action: 'byGenre'), 
+     *          pages/profile.php (genre shelves)
      */
     public function getByGenre(int $genreId, int $userId = 0, int $limit = 12): array
     {
@@ -448,8 +453,8 @@ class Recommend
     
     /**
      * how many times a user has favorited movies of each genre
-     * Endpoint action: 'favGenreCounts'
-     * Pages: pages/profile.php (Favorites pills)
+     * Used in: db/recommendRequests.php (action: 'favGenreCounts'), 
+     *          pages/profile.php (Favorites pills)
      */
     public function getFavCountsByGenre(int $userId): array
     {
@@ -472,8 +477,8 @@ class Recommend
 
     /**
      * favorites grouped by movie country
-     * Endpoint action: 'favCountryCounts'
-     * Pages: pages/profile.php (Favorites pills)
+     * Used in: db/recommendRequests.php (action: 'favCountryCounts'), 
+     *          pages/profile.php (Favorites pills)
      */
     public function getFavCountsByCountry(int $userId): array
     {
@@ -496,8 +501,8 @@ class Recommend
 
     /**
      * how many distinct rated movies fall under each language
-     * Endpoint action: 'favLanguageCounts'
-     * Pages: pages/profile.php (Favorites pills)
+     * Used in: db/recommendRequests.php (action: 'favLanguageCounts'), 
+     *          pages/profile.php (Favorites pills)
      */
     public function getFavCountsByLanguage(int $userId): array
     {
@@ -520,8 +525,8 @@ class Recommend
 
     /**
      * how many unique movies a user has rated/reviewed, grouped by genre
-     * Endpoint action: 'ratedGenreCounts'
-     * Pages: pages/profile.php (Rated pills)
+     * Used in: db/recommendRequests.php (action: 'ratedGenreCounts'), 
+     *          pages/profile.php (Rated pills)
      */
     public function getRatedCountsByGenre(int $userId): array
     {
@@ -545,8 +550,8 @@ class Recommend
 
     /**
      * how many unique movies a user has rated/reviewed, grouped by the country
-     * Endpoint action: 'ratedCountryCounts'
-     * Pages: pages/profile.php (Rated pills)
+     * Used in: db/recommendRequests.php (action: 'ratedCountryCounts'), 
+     *          pages/profile.php (Rated pills)
      */
     public function getRatedCountsByCountry(int $userId): array
     {
@@ -571,8 +576,8 @@ class Recommend
 
     /**
      * how many unique movies a user has rated/reviewed, grouped by language
-     * Endpoint action: 'ratedLanguageCounts'
-     * Pages: pages/profile.php (Rated pills)
+     * Used in: db/recommendRequests.php (action: 'ratedLanguageCounts'), 
+     *          pages/profile.php (Rated pills)
      */
     public function getRatedCountsByLanguage(int $userId): array
     {
@@ -597,9 +602,15 @@ class Recommend
 
     /**
      * Movies related to a given movie (by shared genres)
-     * Endpoint action: 'related'
-     * Pages: pages/viewMovie.php (Related movies)
+     * Used in: db/recommendRequests.php (action: 'related'), 
+     *          pages/viewMovie.php (related movies)
+     * 
+     * More shared genres first (atleast 1)
+     * Movies with ratings come before unrated movies (IS NULL trick).
+     * Higher average rating first.
+     * Newer movies first.
      */
+
     public function getRelatedToMovie(int $movieId, int $limit = 12): array
     {
         if ($movieId <= 0) return [];
@@ -613,7 +624,7 @@ class Recommend
                 movies.poster_url,
                 countries.name AS country_name,
                 languages.name AS language_name,
-                COUNT(DISTINCT movie_genres.genre_id) AS match_genres,
+                COUNT(DISTINCT movie_genres.genre_id) AS match_genres, 
                 ROUND(COALESCE(AVG(ratings_reviews.rating), 0), 2) AS avg_rating,
                 COUNT(ratings_reviews.id) AS total_reviews
             FROM movies
@@ -624,7 +635,9 @@ class Recommend
             LEFT JOIN languages ON movies.language_id = languages.id
             WHERE movies.id <> ?
             GROUP BY movies.id
-            ORDER BY match_genres DESC, (AVG(ratings_reviews.rating) IS NULL), AVG(ratings_reviews.rating) DESC, movies.release_year DESC
+            ORDER BY match_genres DESC, (AVG(ratings_reviews.rating) IS NULL), 
+                                        AVG(ratings_reviews.rating) 
+                                        DESC, movies.release_year DESC
             LIMIT ?
         ";
         $stmt = $this->db->prepare($sql);

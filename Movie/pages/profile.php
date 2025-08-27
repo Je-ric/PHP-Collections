@@ -118,26 +118,26 @@ if ($userId <= 0) {
 
             const year = m.release_year ? `(${m.release_year})` : '';
             const ratingBadge = `<div class="absolute top-2 right-2">
-        <span class="bg-green-600/90 text-white font-semibold text-xs px-2 py-1 rounded-md flex items-center gap-1">
-          <i class='bx bxs-star text-yellow-300'></i>${rating}
-        </span>
-      </div>`;
+                <span class="bg-green-600/90 text-white font-semibold text-xs px-2 py-1 rounded-md flex items-center gap-1">
+                <i class='bx bxs-star text-yellow-300'></i>${rating}
+                </span>
+            </div>`;
 
-            return `
-        <div class="group rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-green-500/70 transition transform hover:-translate-y-2 hover:shadow-xl hover:shadow-green-500/20 flex flex-col">
-          <div class="relative">
-            <a href="../pages/viewMovie.php?id=${m.id}">
-              <img src="${poster}" alt="${escapeHtml(m.title)}" 
-                   class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105">
-            </a>
-            ${ratingBadge}
-          </div>
-          <div class="p-4 flex flex-col flex-grow">
-            <h5 class="font-semibold text-base mb-1 text-white leading-tight">
-              ${escapeHtml(m.title)} <small class="text-gray-400 font-normal">${year}</small>
-            </h5>
-          </div>
-        </div>`;
+                    return `
+                <div class="group rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-green-500/70 transition transform hover:-translate-y-2 hover:shadow-xl hover:shadow-green-500/20 flex flex-col">
+                <div class="relative">
+                    <a href="../pages/viewMovie.php?id=${m.id}">
+                    <img src="${poster}" alt="${escapeHtml(m.title)}" 
+                        class="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105">
+                    </a>
+                    ${ratingBadge}
+                </div>
+                <div class="p-4 flex flex-col flex-grow">
+                    <h5 class="font-semibold text-base mb-1 text-white leading-tight">
+                    ${escapeHtml(m.title)} <small class="text-gray-400 font-normal">${year}</small>
+                    </h5>
+                </div>
+                </div>`;
         }
 
         function renderShelf($root, title, items) {
@@ -156,12 +156,12 @@ if ($userId <= 0) {
                 }
                 const html = items.map(buildCard).join('');
                 $root.html(`
-            <div class="border-t border-neutral-800 mb-6"></div>
-            <h3 class="text-2xl font-semibold mb-4">${title}</h3>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-              ${html}
-            </div>
-          `);
+                        <div class="border-t border-neutral-800 mb-6"></div>
+                        <h3 class="text-2xl font-semibold mb-4">${title}</h3>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+                        ${html}
+                        </div>
+                    `);
         }
 
         function escapeHtml(str) {
@@ -203,7 +203,7 @@ if ($userId <= 0) {
                 if (res && res.success) renderShelf($('#shelfFavorites'), 'Your Favorites', res.data);
             });
 
-            // Favorites aggregates
+            // Favorites counts
             $.getJSON('../db/recommendRequests.php', {
                 action: 'favGenreCounts'
             }, res => {
@@ -228,7 +228,7 @@ if ($userId <= 0) {
                 if (res && res.success) renderShelf($('#shelfRated'), 'Movies You Rated', res.data);
             });
 
-            // Rated aggregates
+            // Rated counts
             $.getJSON('../db/recommendRequests.php', {
                 action: 'ratedGenreCounts'
             }, res => {
