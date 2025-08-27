@@ -154,7 +154,7 @@ $favCount = $fav->countByMovie($m['id']);
                 <div class="lg:col-span-2 space-y-6">
                     <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
                         <?= htmlspecialchars($m['title']) ?>
-                        <span class="text-text-muted text-2xl md:text-3xl ml-2">
+                        <span class="text-gray-300 text-2xl md:text-3xl ml-2">
                             (<?= htmlspecialchars($m['release_year']) ?>)
                         </span>
                     </h1>
@@ -241,7 +241,7 @@ $favCount = $fav->countByMovie($m['id']);
                             </a>
                         <?php endif; ?>
 
-                        <?php if (!empty($_SESSION['user_id'])): ?>
+                        <?php if (!empty($_SESSION['user_id']) && (($_SESSION['role'] ?? '') === 'user')): ?>
                             <button id="favorite-btn" type="button"
                                 class="btn <?= $isFavorited ? 'btn-accent' : 'btn-outline btn-accent' ?>"
                                 data-movie-id="<?= (int)$m['id'] ?>"
@@ -250,6 +250,14 @@ $favCount = $fav->countByMovie($m['id']);
                                 <span class="fav-text"><?= $isFavorited ? 'Favorited' : 'Add to Favorites' ?></span>
                                 <span class="ml-1 text-sm opacity-70 fav-count">(<?= (int)$favCount ?>)</span>
                             </button>
+                        <?php elseif (!empty($_SESSION['user_id']) && (($_SESSION['role'] ?? '') === 'admin')): ?>
+                            <button type="button" class="btn btn-outline btn-accent tooltip cursor-not-allowed" 
+                                data-tip="Admins cannot add favorites" disabled aria-disabled="true">
+                                <i class="bx bx-heart"></i>
+                                <span>Favorites disabled for admins</span>
+                                <span class="ml-1 text-sm opacity-70">(<?= (int)$favCount ?>)</span>
+                            </button>
+
                         <?php else: ?>
                             <a href="loginRegister.php" class="btn btn-outline btn-accent">
                                 <i class='bx bx-heart'></i> Login to Favorite
