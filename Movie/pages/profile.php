@@ -58,9 +58,9 @@ if ($userId <= 0) {
 
             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
             <div class="mb-6 p-4 rounded-lg bg-yellow-900/60 border border-yellow-700 text-yellow-200 text-lg font-semibold">
-    You are logged in as an <span class="font-bold">Admin</span>. You can manage movies, but adding favorites and submitting ratings or reviews is not available for your role.
-</div>
-<?php endif; ?>
+                You are logged in as an <span class="font-bold">Admin</span>. You can manage movies, but adding favorites and submitting ratings or reviews is not available for your role.
+            </div>
+            <?php endif; ?>
 
 
         <!-- Tabs -->
