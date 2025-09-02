@@ -43,19 +43,21 @@
 <script>
 $(function(){
 
+    // to all user reviews
     function refreshAverageRating(value) {
         if (value == null) return;
-        const formatted = parseFloat(value).toFixed(1);
-        $('#average-rating').text(formatted);
+        const formatted = parseFloat(value).toFixed(1); // 3.456 => 3.5
+        $('#average-rating').text(formatted); // getting the avg rating (viewMovie)
 
+        // determine kung ilan ang filled and empty
         const $iconContainer = $('#average-stars');
         if ($iconContainer.length) {
-            const full = Math.floor(value);
-            const empty = 5 - full;
+            const full = Math.floor(value); // kung 3 ang full
+            const empty = 5 - full;  // 5-3 = 2 ang empty
             let icons = '';
             for (let i = 0; i < full; i++) icons += "<i class='bx bxs-star star'></i>";
             for (let i = 0; i < empty; i++) icons += "<i class='bx bx-star star empty'></i>";
-            $iconContainer.html(icons);
+            $iconContainer.html(icons); // then return/insert the icons to the #average-stars
         }
 
         $('#no-ratings-placeholder').hide();
@@ -68,10 +70,12 @@ $(function(){
         $('#no-reviews-placeholder').hide();
     }
 
+    // just your own
     function insertUserReview(rating, comment) {
         const $section = $('#user-review-section');
         if (!$section.length) return;
 
+        // build star icons
         let icons = '';
         for (let i = 1; i <= 5; i++) {
             icons += `<i class='bx ${i <= rating ? "bxs-star text-yellow-400" : "bx-star empty"} star'></i>`;
@@ -95,7 +99,7 @@ $(function(){
 
     function resetAndCloseDialog(form) {
         form[0].reset();
-        $('#rating-selected').text('0');
+        $('#rating-selected').text('0'); // ofcourse, default 0
         if (window.review_modal?.close) {
             review_modal.close();
         } else {
@@ -104,22 +108,24 @@ $(function(){
         }
     }
 
+    // live update rating counter, kapag kiniclick yung star
     $(document).on('change', '#review-form input[name="rating"]', function() {
+        // find/determin which radio button is currently checked in the modal review form
         const val = $('input[name="rating"]:checked', '#review-form').val() || '0';
-        $('#rating-selected').text(val);
+        $('#rating-selected').text(val); // dinidisplay yung actual count ng star 
     });
 
     $('#review-form').on('submit', function(e) {
         e.preventDefault();
 
-        const $form = $(this);
+        const $form = $(this); //reference sa form
         const $btn = $('#submit-review');
         $btn.prop('disabled', true).text('Submitting...');
 
         $.ajax({
-            url: $form.attr('action'),
+            url: $form.attr('action'), // "../db/rateRequests.php" na kinukuha nalang sa form
             method: 'POST',
-            data: $form.serialize(),
+            data: $form.serialize(),  // all (movie_id, rating, review) 
             dataType: 'json'
         })
         .done(function(response) {
@@ -128,16 +134,17 @@ $(function(){
                 return;
             }
 
+            // update or like rerender review counter and and avg
             if (response.average) {
                 refreshAverageRating(response.average.avg);
                 if (typeof response.average.total !== 'undefined') {
                     refreshReviewCount(response.average.total);
                 }
             }
-
-            const ratingVal = parseInt($('input[name="rating"]:checked', $form).val(), 10) || 0;
-            const commentText = $form.find('textarea[name="review"]').val();
-            insertUserReview(ratingVal, commentText);
+            // find and get the value of star radio count, then convert string to number
+            const ratingVal = parseInt($('input[name="rating"]:checked', $form).val(), 10) || 0; // fallback incase walang selected, instead NaN is 0
+            const commentText = $form.find('textarea[name="review"]').val(); // search inside form what the user type
+            insertUserReview(ratingVal, commentText); // display in the user review section
 
             resetAndCloseDialog($form);
         })

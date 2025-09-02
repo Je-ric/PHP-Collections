@@ -287,7 +287,7 @@ $favCount = $fav->countByMovie($m['id']);
                     <h2 class="text-2xl font-bold mb-6 text-accent flex items-center gap-3">
                         <i class='bx bx-play-circle'></i> Trailer
                     </h2>
-                    <!-- Smaller, more reasonable trailer size -->
+
                     <div class="aspect-video rounded-lg overflow-hidden bg-base-300 max-w-lg mx-auto">
                         <?php
                         $trailerUrl = $m['trailer_url'];
@@ -305,6 +305,8 @@ $favCount = $fav->countByMovie($m['id']);
                 </div>
             <?php endif; ?>
 
+            <!-- Rating and Review -->
+            <!-- -========================================================================== -->
             <div class="bg-secondary-bg/90 backdrop-blur-sm border border-border-color rounded-lg p-6">
                 <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-accent">
                     <i class='bx bx-message-dots'></i> User Reviews
@@ -355,6 +357,7 @@ $favCount = $fav->countByMovie($m['id']);
                         }
                     ?>
                     <?php if (!empty($reviews)): ?>
+                        <!-- loop each movie review -->
                         <?php foreach ($reviews as $r): ?>
                             <?php if ($skipUserId !== null && isset($r['user_id']) && (int)$r['user_id'] === $skipUserId) { continue; } ?>
                             <div class="bg-card-bg/50 border border-border-color rounded-lg p-4 hover:bg-card-bg/70 transition-colors">
