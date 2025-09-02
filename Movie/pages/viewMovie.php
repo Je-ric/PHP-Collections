@@ -15,12 +15,12 @@ $m = $movie->getMovieById($_GET['id']);
 if (!$m) die("Movie not found.");
 
 $rate = new RateReview();
-$reviews = $rate->getReviewsByMovie($m['id']);
-$genres = $movie->getGenresByMovie($m['id'], 'name');
+$reviews = $rate->getReviewsByMovie($m['id']); // all reviews for this movie
+$genres = $movie->getGenresByMovie($m['id'], 'name'); // all genres for this movie
 
 $peopleObj = new People();
-$directors = $peopleObj->getMoviePeople($m['id'], 'Director');
-$actors = $peopleObj->getMoviePeople($m['id'], 'Cast');
+$directors = $peopleObj->getMoviePeople($m['id'], 'Director'); // all directors for this movie
+$actors = $peopleObj->getMoviePeople($m['id'], 'Cast'); // all actors for this movie
 
 $ratingInfo   = $rate->getAverageRating($m['id']);
 $avgRating    = $ratingInfo['avg'] ?? null;
@@ -28,7 +28,7 @@ $totalReviews = $ratingInfo['total'] ?? 0;
 
 $fav = new Favorite();
 $isFavorited = !empty($_SESSION['user_id']) ? $fav->isFavorited($_SESSION['user_id'], $m['id']) : false;
-$favCount = $fav->countByMovie($m['id']);
+$favCount = $fav->countByMovie($m['id']); 
 ?>
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
@@ -290,6 +290,17 @@ $favCount = $fav->countByMovie($m['id']);
 
                     <div class="aspect-video rounded-lg overflow-hidden bg-base-300 max-w-lg mx-auto">
                         <?php
+                        // strpos hinahanap yung "youtube.com" or yung "youtu.be" sa link (parang check kung yt talaga)
+                        // then preg_match gets the video (yt) ID
+                        // the [0] contains the full match (youtube.com/watch?v=...)
+                        // the [1] contains the type (youtu.be/ or v=)
+                        // the [2] contains the video ID
+
+                        // Example
+                        //  URL: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+                        // After preg_match, $matches[2] = dQw4w9WgXcQ
+                        // $videoId = dQw4w9WgXcQ
+                        
                         $trailerUrl = $m['trailer_url'];
                         if (strpos($trailerUrl, "youtube.com") !== false || strpos($trailerUrl, "youtu.be") !== false) {
                             preg_match('/(youtu\.be\/|v=)([^&]+)/', $trailerUrl, $matches);

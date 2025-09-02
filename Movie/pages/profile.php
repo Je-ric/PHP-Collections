@@ -106,7 +106,7 @@ if ($userId <= 0) {
     <?php include __DIR__ . '/../partials/footer.php'; ?>
     <script src="../src/js/jquery.mins.js"></script>
     <script>
-        // Reuse your buildCard + renderShelf functions
+        
         function buildCard(m) {
             const poster = m.poster_url && m.poster_url.length ?
                 `../${escapeHtml(m.poster_url)}` :
