@@ -46,11 +46,6 @@ function respond($success, $data = null, $message = null, $code = 200)
             respond(true, $rec->basedOnFavoriteCountries($userId, $limit));
             break;
 
-        case 'favLanguages':
-            if ($userId <= 0) respond(false, null, 'Login required', 401);
-            respond(true, $rec->basedOnFavoriteLanguages($userId, $limit));
-            break;
-
         case 'favorites':
             if ($userId <= 0) respond(false, null, 'Login required', 401);
             respond(true, $rec->getFavorites($userId, $limit));
@@ -83,10 +78,6 @@ function respond($success, $data = null, $message = null, $code = 200)
             if ($userId <= 0) respond(false, null, 'Login required', 401);
             respond(true, $rec->getFavCountsByCountry($userId));
             break;
-        case 'favLanguageCounts':
-            if ($userId <= 0) respond(false, null, 'Login required', 401);
-            respond(true, $rec->getFavCountsByLanguage($userId));
-            break;
 
         case 'ratedGenreCounts':
             if ($userId <= 0) respond(false, null, 'Login required', 401);
@@ -95,10 +86,6 @@ function respond($success, $data = null, $message = null, $code = 200)
         case 'ratedCountryCounts':
             if ($userId <= 0) respond(false, null, 'Login required', 401);
             respond(true, $rec->getRatedCountsByCountry($userId));
-            break;
-        case 'ratedLanguageCounts':
-            if ($userId <= 0) respond(false, null, 'Login required', 401);
-            respond(true, $rec->getRatedCountsByLanguage($userId));
             break;
 
         // viewMovie.php

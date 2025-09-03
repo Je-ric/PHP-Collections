@@ -153,7 +153,7 @@ class Recommend
             LEFT JOIN countries ON movies.country_id = countries.id
             LEFT JOIN languages ON movies.language_id = languages.id
             WHERE movie_genres.genre_id IN ($placeholders)
-              AND movies.id NOT IN (SELECT movie_id FROM user_favorites WHERE user_id = ?)
+                AND movies.id NOT IN (SELECT movie_id FROM user_favorites WHERE user_id = ?)
             GROUP BY movies.id
             ORDER BY match_genres DESC, (AVG(ratings_reviews.rating) IS NULL), AVG(ratings_reviews.rating) DESC, movies.release_year DESC
             LIMIT ?
@@ -215,61 +215,6 @@ class Recommend
         ";
         $stmt = $this->db->prepare($sql);
         $bindValues = array_merge($countryIds, [$userId, $limit]);
-        $this->bindParams($stmt, $bindTypes, $bindValues);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    }
-
-    /**
-     * Recommendations based on user's favorite languages
-     * Used in: db/recommendRequests.php (action: 'favLanguages'), 
-     *          pages/profile.php (recommendation tab)
-     */
-    public function basedOnFavoriteLanguages(int $userId, int $limit = 12): array
-    {
-        if ($userId <= 0) return [];
-        $limit = $this->clampLimit($limit);
-
-        $sqlTopLanguages = "
-            SELECT movies.language_id, COUNT(*) AS cnt
-            FROM user_favorites
-            JOIN movies ON movies.id = user_favorites.movie_id
-            WHERE user_favorites.user_id = ? AND movies.language_id IS NOT NULL
-            GROUP BY movies.language_id
-            ORDER BY cnt DESC
-            LIMIT 3
-        ";
-        $stmtTop = $this->db->prepare($sqlTopLanguages);
-        $stmtTop->bind_param('i', $userId);
-        $stmtTop->execute();
-        $topLanguageRows = $stmtTop->get_result()->fetch_all(MYSQLI_ASSOC);
-        if (empty($topLanguageRows)) return [];
-        $languageIds = array_column($topLanguageRows, 'language_id');
-
-        $placeholders = implode(',', array_fill(0, count($languageIds), '?'));
-        $bindTypes = str_repeat('i', count($languageIds)) . 'i' . 'i';
-
-        $sql = "
-            SELECT 
-                movies.id,
-                movies.title,
-                movies.release_year,
-                movies.poster_url,
-                countries.name AS country_name,
-                languages.name AS language_name,
-                ROUND(COALESCE(AVG(ratings_reviews.rating), 0), 2) AS avg_rating
-            FROM movies
-            LEFT JOIN ratings_reviews ON ratings_reviews.movie_id = movies.id
-            LEFT JOIN countries ON movies.country_id = countries.id
-            LEFT JOIN languages ON movies.language_id = languages.id
-            WHERE movies.language_id IN ($placeholders)
-              AND movies.id NOT IN (SELECT movie_id FROM user_favorites WHERE user_id = ?)
-            GROUP BY movies.id
-            ORDER BY (AVG(ratings_reviews.rating) IS NULL), AVG(ratings_reviews.rating) DESC, movies.release_year DESC
-            LIMIT ?
-        ";
-        $stmt = $this->db->prepare($sql);
-        $bindValues = array_merge($languageIds, [$userId, $limit]);
         $this->bindParams($stmt, $bindTypes, $bindValues);
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -500,30 +445,6 @@ class Recommend
     }
 
     /**
-     * how many distinct rated movies fall under each language
-     * Used in: db/recommendRequests.php (action: 'favLanguageCounts'), 
-     *          pages/profile.php (Favorites pills)
-     */
-    public function getFavCountsByLanguage(int $userId): array
-    {
-        if ($userId <= 0) return [];
-        $sql = "
-            SELECT languages.id, languages.name, COUNT(*) AS cnt
-            FROM user_favorites
-            JOIN movies ON movies.id = user_favorites.movie_id
-            JOIN languages ON languages.id = movies.language_id
-            WHERE user_favorites.user_id = ? AND movies.language_id IS NOT NULL
-            GROUP BY languages.id, languages.name
-            HAVING cnt > 0
-            ORDER BY cnt DESC, languages.name ASC
-        ";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param('i', $userId);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    }
-
-    /**
      * how many unique movies a user has rated/reviewed, grouped by genre
      * Used in: db/recommendRequests.php (action: 'ratedGenreCounts'), 
      *          pages/profile.php (Rated pills)
@@ -579,26 +500,7 @@ class Recommend
      * Used in: db/recommendRequests.php (action: 'ratedLanguageCounts'), 
      *          pages/profile.php (Rated pills)
      */
-    public function getRatedCountsByLanguage(int $userId): array
-    {
-        if ($userId <= 0) return [];
-        $sql = "
-            SELECT languages.id, languages.name, COUNT(*) AS cnt
-            FROM (
-                SELECT DISTINCT ratings_reviews.movie_id FROM ratings_reviews WHERE ratings_reviews.user_id = ?
-            ) user_movies
-            JOIN movies ON movies.id = user_movies.movie_id
-            JOIN languages ON languages.id = movies.language_id
-            WHERE movies.language_id IS NOT NULL
-            GROUP BY languages.id, languages.name
-            HAVING cnt > 0
-            ORDER BY cnt DESC, languages.name ASC
-        ";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param('i', $userId);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    }
+    public function getRatedCountsByLanguage(int $userId): array { return []; }
 
     /**
      * Movies related to a given movie (by shared genres)

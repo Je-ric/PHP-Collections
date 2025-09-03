@@ -56,11 +56,11 @@ if ($userId <= 0) {
     <main class="px-6 md:px-10 py-10">
         <h1 class="text-3xl font-bold mb-8">My Profile</h1>
 
-            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
             <div class="mb-6 p-4 rounded-lg bg-yellow-900/60 border border-yellow-700 text-yellow-200 text-lg font-semibold">
                 You are logged in as an <span class="font-bold">Admin</span>. You can manage movies, but adding favorites and submitting ratings or reviews is not available for your role.
             </div>
-            <?php endif; ?>
+        <?php endif; ?>
 
 
         <!-- Tabs -->
@@ -70,13 +70,12 @@ if ($userId <= 0) {
                 <div id="favAgg" class="mb-6 space-y-2">
                     <div id="favAggGenres"></div>
                     <div id="favAggCountries"></div>
-                    <div id="favAggLanguages"></div>
                 </div>
                 <section id="shelfFavorites"></section>
-                    <div id="emptyFavorites" class="hidden text-center py-10 text-gray-400">
-                        <i class="bx bx-heart text-5xl mb-2"></i>
-                        <div class="text-lg">You haven't favorited any movies yet.</div>
-                    </div>
+                <div id="emptyFavorites" class="hidden text-center py-10 text-gray-400">
+                    <i class="bx bx-heart text-5xl mb-2"></i>
+                    <div class="text-lg">You haven't favorited any movies yet.</div>
+                </div>
             </div>
 
             <input type="radio" name="profile_tabs" role="tab" class="tab" aria-label="Rated" />
@@ -84,13 +83,12 @@ if ($userId <= 0) {
                 <div id="ratedAgg" class="mb-6 space-y-2">
                     <div id="ratedAggGenres"></div>
                     <div id="ratedAggCountries"></div>
-                    <div id="ratedAggLanguages"></div>
                 </div>
                 <section id="shelfRated"></section>
-                    <div id="emptyRated" class="hidden text-center py-10 text-gray-400">
-                        <i class="bx bx-star text-5xl mb-2"></i>
-                        <div class="text-lg">You haven't rated any movies yet.</div>
-                    </div>
+                <div id="emptyRated" class="hidden text-center py-10 text-gray-400">
+                    <i class="bx bx-star text-5xl mb-2"></i>
+                    <div class="text-lg">You haven't rated any movies yet.</div>
+                </div>
             </div>
 
             <input type="radio" name="profile_tabs" role="tab" class="tab" aria-label="Recommendations" />
@@ -98,7 +96,6 @@ if ($userId <= 0) {
                 <section id="shelfFavGenres" class="mb-12"></section>
                 <section id="shelfTopGenres" class="mb-12"></section>
                 <section id="shelfFavCountries" class="mb-12"></section>
-                <section id="shelfFavLanguages" class="mb-12"></section>
             </div>
         </div>
     </main>
@@ -106,7 +103,6 @@ if ($userId <= 0) {
     <?php include __DIR__ . '/../partials/footer.php'; ?>
     <script src="../src/js/jquery.mins.js"></script>
     <script>
-        
         function buildCard(m) {
             const poster = m.poster_url && m.poster_url.length ?
                 `../${escapeHtml(m.poster_url)}` :
@@ -123,7 +119,7 @@ if ($userId <= 0) {
                 </span>
             </div>`;
 
-                    return `
+            return `
                 <div class="group rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-green-500/70 transition transform hover:-translate-y-2 hover:shadow-xl hover:shadow-green-500/20 flex flex-col">
                 <div class="relative">
                     <a href="../pages/viewMovie.php?id=${m.id}">
@@ -141,21 +137,21 @@ if ($userId <= 0) {
         }
 
         function renderShelf($root, title, items) {
-                if (!items || !items.length) {
-                    if ($root.attr('id') === 'shelfFavorites') {
-                        $('#emptyFavorites').removeClass('hidden');
-                        $root.empty();
-                    } else if ($root.attr('id') === 'shelfRated') {
-                        $('#emptyRated').removeClass('hidden');
-                        $root.empty();
-                    }
-                    return;
-                } else {
-                    if ($root.attr('id') === 'shelfFavorites') $('#emptyFavorites').addClass('hidden');
-                    if ($root.attr('id') === 'shelfRated') $('#emptyRated').addClass('hidden');
+            if (!items || !items.length) {
+                if ($root.attr('id') === 'shelfFavorites') {
+                    $('#emptyFavorites').removeClass('hidden');
+                    $root.empty();
+                } else if ($root.attr('id') === 'shelfRated') {
+                    $('#emptyRated').removeClass('hidden');
+                    $root.empty();
                 }
-                const html = items.map(buildCard).join('');
-                $root.html(`
+                return;
+            } else {
+                if ($root.attr('id') === 'shelfFavorites') $('#emptyFavorites').addClass('hidden');
+                if ($root.attr('id') === 'shelfRated') $('#emptyRated').addClass('hidden');
+            }
+            const html = items.map(buildCard).join('');
+            $root.html(`
                         <div class="border-t border-neutral-800 mb-6"></div>
                         <h3 class="text-2xl font-semibold mb-4">${title}</h3>
                         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
@@ -171,26 +167,37 @@ if ($userId <= 0) {
                 .replace(/'/g, '&#039;');
         }
 
-        function renderAggPills($root, label, items) {
-            if (!Array.isArray(items) || items.length === 0) {
-                $root.empty();
+        function renderPills($root, label, items) {
+            $root.empty(); // Clear container first
+            if (!Array.isArray(items) || items.length === 0) { 
                 return;
             }
-            const pills = items
-                .filter(it => Number(it.cnt) > 0)
-                .map(it => `
-          <span class="badge badge-outline border-neutral-700 text-gray-300 mr-2 mb-2">
-            ${escapeHtml(it.name)}: <span class="ml-1 font-semibold text-white">${it.cnt}</span>
-          </span>
-        `).join('');
-            if (!pills) {
-                $root.empty();
+
+            // create/build pill HTML para sa each genre with cnt > 0
+            var pills = [];
+            for (var i = 0; i < items.length; i++) {
+                var it = items[i];
+                var count = Number(it.cnt); // make sure na number
+                if (!isFinite(count) || count <= 0) continue; // skip if count is not positive  
+
+                var name = escapeHtml(it.name);
+                var pillHtml =
+                    '<span class="badge badge-outline border-neutral-700 text-gray-300 mr-2 mb-2">' +
+                        name + ': <span class="ml-1 font-semibold text-white">' + count + '</span>' +
+                    '</span>';
+                pills.push(pillHtml);
+            }
+
+            if (pills.length === 0) { // blank
                 return;
             }
-            $root.html(`
-        <div class="mb-1 text-sm text-gray-400">${escapeHtml(label)}</div>
-        <div class="flex flex-wrap">${pills}</div>
-      `);
+
+            //  print and display
+            var html =
+                '<div class="mb-1 text-sm text-gray-400">' + escapeHtml(label) + '</div>' +
+                '<div class="flex flex-wrap">' + pills.join('') + '</div>';
+
+            $root.html(html);
         }
 
         // Load shelves
@@ -207,17 +214,12 @@ if ($userId <= 0) {
             $.getJSON('../db/recommendRequests.php', {
                 action: 'favGenreCounts'
             }, res => {
-                if (res && res.success) renderAggPills($('#favAggGenres'), 'Genres you favorited', res.data);
+                if (res && res.success) renderPills($('#favAggGenres'), 'Genres you favorited', res.data);
             });
             $.getJSON('../db/recommendRequests.php', {
                 action: 'favCountryCounts'
             }, res => {
-                if (res && res.success) renderAggPills($('#favAggCountries'), 'Countries you favorited', res.data);
-            });
-            $.getJSON('../db/recommendRequests.php', {
-                action: 'favLanguageCounts'
-            }, res => {
-                if (res && res.success) renderAggPills($('#favAggLanguages'), 'Languages you favorited', res.data);
+                if (res && res.success) renderPills($('#favAggCountries'), 'Countries you favorited', res.data);
             });
 
             // Rated
@@ -232,17 +234,12 @@ if ($userId <= 0) {
             $.getJSON('../db/recommendRequests.php', {
                 action: 'ratedGenreCounts'
             }, res => {
-                if (res && res.success) renderAggPills($('#ratedAggGenres'), 'Genres you rated', res.data);
+                if (res && res.success) renderPills($('#ratedAggGenres'), 'Genres you rated', res.data);
             });
             $.getJSON('../db/recommendRequests.php', {
                 action: 'ratedCountryCounts'
             }, res => {
-                if (res && res.success) renderAggPills($('#ratedAggCountries'), 'Countries you rated', res.data);
-            });
-            $.getJSON('../db/recommendRequests.php', {
-                action: 'ratedLanguageCounts'
-            }, res => {
-                if (res && res.success) renderAggPills($('#ratedAggLanguages'), 'Languages you rated', res.data);
+                if (res && res.success) renderPills($('#ratedAggCountries'), 'Countries you rated', res.data);
             });
 
             // Recommendations
@@ -257,12 +254,6 @@ if ($userId <= 0) {
                 limit: 6
             }, res => {
                 if (res && res.success) renderShelf($('#shelfFavCountries'), 'From countries you like', res.data);
-            });
-            $.getJSON('../db/recommendRequests.php', {
-                action: 'favLanguages',
-                limit: 6
-            }, res => {
-                if (res && res.success) renderShelf($('#shelfFavLanguages'), 'In languages you like', res.data);
             });
             $.getJSON('../db/recommendRequests.php', {
                 action: 'topGenres',
