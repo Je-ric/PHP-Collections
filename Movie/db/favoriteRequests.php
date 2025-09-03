@@ -23,30 +23,11 @@ try {
     $fav = new Favorite();
 
     switch ($action) {
-        case 'status':
-            $favorited = $fav->isFavorited($userId, $movieId);
-            $count = $fav->countByMovie($movieId);
-            echo json_encode(['success' => true, 'favorited' => $favorited, 'count' => $count]);
-            break;
-
         case 'toggle':
             $favorited = $fav->toggleFavorite($userId, $movieId);
             $count = $fav->countByMovie($movieId);
             echo json_encode(['success' => true, 'favorited' => $favorited, 'count' => $count]);
             break;
-
-        case 'add':
-            $ok = $fav->addFavorite($userId, $movieId);
-            $count = $fav->countByMovie($movieId);
-            echo json_encode(['success' => $ok, 'favorited' => true, 'count' => $count]);
-            break;
-
-        case 'remove':
-            $ok = $fav->removeFavorite($userId, $movieId);
-            $count = $fav->countByMovie($movieId);
-            echo json_encode(['success' => $ok, 'favorited' => false, 'count' => $count]);
-            break;
-
         default:
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Unknown action']);

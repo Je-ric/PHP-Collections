@@ -14,14 +14,14 @@ class RateReview
     public function getReviewsByMovie($movieId)
     {
         $sql = "
-         SELECT ratings_reviews.rating,
-             ratings_reviews.review,
-             ratings_reviews.created_at,
-             users.username
-         FROM ratings_reviews
-         JOIN users ON ratings_reviews.user_id = users.id
-         WHERE ratings_reviews.movie_id = ?
-         ORDER BY ratings_reviews.created_at DESC
+            SELECT ratings_reviews.rating,
+                ratings_reviews.review,
+                ratings_reviews.created_at,
+                users.username
+            FROM ratings_reviews
+            JOIN users ON ratings_reviews.user_id = users.id
+            WHERE ratings_reviews.movie_id = ?
+            ORDER BY ratings_reviews.created_at DESC
         ";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("i", $movieId);

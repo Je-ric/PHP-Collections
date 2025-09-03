@@ -421,18 +421,11 @@ $languages = json_decode($languageJsonContent, true);
                 role: role
             },
             success: function(res) {
-                let people = []; 
-                if (Array.isArray(res)) { // if array (ex. [ { id: 1, name: "John Doe" }, ... ])
-                    people = res; 
-                } else if (res && res.data) { // if object with data
-                    people = res.data; // extract people from data  { success: true, data : [{ id: 1, name: "John Doe" }, ...]}
-                } else {
-                    people = []; // probably pag creating or wala pang na-add
-                }
-                renderPeople(role, people);
+                console.log('Nakadisplay na', res); 
+                renderPeople(role, res.data || []);
             },
-            error: function(error) {
-                console.error("Error loading " + role.toLowerCase() + "s:", error);
+            error: function(xhr) {
+                console.error('Hindi ma-load...', xhr.responseText); // respond()
             }
         });
     }
@@ -459,7 +452,7 @@ $languages = json_decode($languageJsonContent, true);
         $(containerId).html(html);
     }
 
-    // the downside is that, working lang ang adding ng person if the movieId exists.
+    // the downside is that, working lang ang adding ng person if the movie exists, since we need movieID.
     // let's say movie is the parent, person is the child
     // we need a parent to have a child, getch?
     function addPerson(name, role) {

@@ -38,10 +38,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-        $ok = $rate->addReview($userId, $movieId, $rating, $review);
-        if ($ok) {
+        $reviewAdded = $rate->addReview(
+                $userId, 
+                $movieId, 
+                $rating, 
+                $review);
+        if ($reviewAdded) {
             $avg = $rate->getAverageRating($movieId);
-            respond(true, ['average' => $avg], 'Review submitted.');
+            respond(true, 
+                    ['average' => $avg], 
+                    'Review submitted.');
         }
-        respond(false, null, 'Failed to submit review.');
+        respond(false, 
+                null, 
+                'Failed to submit review.');
 }

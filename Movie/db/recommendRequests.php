@@ -74,6 +74,7 @@ function respond($success, $data = null, $message = null, $code = 200)
             respond(true, $rec->getByGenre($genreId, $userId, $limit));
             break;
 
+        // profile.php (tabs)
         case 'favGenreCounts':
             if ($userId <= 0) respond(false, null, 'Login required', 401);
             respond(true, $rec->getFavCountsByGenre($userId));
@@ -100,6 +101,7 @@ function respond($success, $data = null, $message = null, $code = 200)
             respond(true, $rec->getRatedCountsByLanguage($userId));
             break;
 
+        // viewMovie.php
         case 'related':
             $movieId = (int)($_GET['movie_id'] ?? $_POST['movie_id'] ?? 0);
             if ($movieId <= 0) respond(false, null, 'Invalid movie', 400);

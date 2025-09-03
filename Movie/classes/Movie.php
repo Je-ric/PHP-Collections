@@ -244,9 +244,6 @@ class Movie
         }
     }
 
-    // ==========================
-    // Getter
-    // ===========================
     private function getCountryId($countryName)
     {
         $sql = "SELECT id FROM countries WHERE name = ?";
