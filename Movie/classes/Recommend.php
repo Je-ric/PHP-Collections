@@ -44,39 +44,9 @@ class Recommend
     }
 
     /**
-     * Latest by release year
-     * Used in: db/recommendRequests.php (action: 'latest')
-     */
-    public function getLatest(int $limit = 12): array
-    {
-        $limit = $this->clampLimit($limit);
-        $sql = "
-            SELECT 
-                movies.id,
-                movies.title,
-                movies.release_year,
-                movies.poster_url,
-                countries.name AS country_name,
-                languages.name AS language_name,
-                ROUND(COALESCE(AVG(ratings_reviews.rating), 0), 2) AS avg_rating,
-                COUNT(ratings_reviews.id) AS total_reviews
-            FROM movies
-            LEFT JOIN ratings_reviews ON ratings_reviews.movie_id = movies.id
-            LEFT JOIN countries ON movies.country_id = countries.id
-            LEFT JOIN languages ON movies.language_id = languages.id
-            GROUP BY movies.id
-            ORDER BY movies.release_year DESC, movies.id DESC
-            LIMIT ?
-        ";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param('i', $limit);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    }
-
-    /**
      * Search by movie title
      * Used in: db/recommendRequests.php (action: 'search')
+     *          index.php (home page)
      */
     public function searchByTitle(string $term, int $limit = 24): array
     {
@@ -107,118 +77,12 @@ class Recommend
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
-    /**
-     * Recommendations based on user's favorite genres
-     * Used in: db/recommendRequests.php (action: 'favGenres'), 
-     *          pages/profile.php (recommendation tab)
-     */
-    public function basedOnFavoriteGenres(int $userId, int $limit = 12): array
-    {
-        if ($userId <= 0) return [];
-        $limit = $this->clampLimit($limit);
 
-        // get top genres
-        $sqlTopGenres = "
-            SELECT movie_genres.genre_id, COUNT(*) AS cnt
-            FROM user_favorites
-            JOIN movie_genres ON movie_genres.movie_id = user_favorites.movie_id
-            WHERE user_favorites.user_id = ?
-            GROUP BY movie_genres.genre_id
-            ORDER BY cnt DESC
-            LIMIT 5
-        ";
-        $stmtTop = $this->db->prepare($sqlTopGenres);
-        $stmtTop->bind_param('i', $userId);
-        $stmtTop->execute();
-        $topGenres = $stmtTop->get_result()->fetch_all(MYSQLI_ASSOC);
-        if (empty($topGenres)) return [];
-        $genreIds = array_column($topGenres, 'genre_id');
-
-        $placeholders = implode(',', array_fill(0, count($genreIds), '?'));
-        $bindTypes = str_repeat('i', count($genreIds)) . 'i' . 'i';
-
-        $sql = "
-            SELECT 
-                movies.id,
-                movies.title,
-                movies.release_year,
-                movies.poster_url,
-                countries.name AS country_name,
-                languages.name AS language_name,
-                ROUND(COALESCE(AVG(ratings_reviews.rating), 0), 2) AS avg_rating,
-                COUNT(DISTINCT movie_genres.genre_id) AS match_genres
-            FROM movies
-            JOIN movie_genres ON movie_genres.movie_id = movies.id
-            LEFT JOIN ratings_reviews ON ratings_reviews.movie_id = movies.id
-            LEFT JOIN countries ON movies.country_id = countries.id
-            LEFT JOIN languages ON movies.language_id = languages.id
-            WHERE movie_genres.genre_id IN ($placeholders)
-                AND movies.id NOT IN (SELECT movie_id FROM user_favorites WHERE user_id = ?)
-            GROUP BY movies.id
-            ORDER BY match_genres DESC, (AVG(ratings_reviews.rating) IS NULL), AVG(ratings_reviews.rating) DESC, movies.release_year DESC
-            LIMIT ?
-        ";
-        $stmt = $this->db->prepare($sql);
-        $bindValues = array_merge($genreIds, [$userId, $limit]);
-        $this->bindParams($stmt, $bindTypes, $bindValues);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    }
-
-    /**
-     * Recommendations based on user's favorite countries
-     * Used in: db/recommendRequests.php (action: 'favCountries'), 
-     *          pages/profile.php (recommendation tab)
-     */
-    public function basedOnFavoriteCountries(int $userId, int $limit = 12): array
-    {
-        if ($userId <= 0) return [];
-        $limit = $this->clampLimit($limit);
-
-        $sqlTopCountries = "
-            SELECT movies.country_id, COUNT(*) AS cnt
-            FROM user_favorites
-            JOIN movies ON movies.id = user_favorites.movie_id
-            WHERE user_favorites.user_id = ? AND movies.country_id IS NOT NULL
-            GROUP BY movies.country_id
-            ORDER BY cnt DESC
-            LIMIT 3
-        ";
-        $stmtTop = $this->db->prepare($sqlTopCountries);
-        $stmtTop->bind_param('i', $userId);
-        $stmtTop->execute();
-        $topCountryRows = $stmtTop->get_result()->fetch_all(MYSQLI_ASSOC);
-        if (empty($topCountryRows)) return [];
-        $countryIds = array_column($topCountryRows, 'country_id');
-
-        $placeholders = implode(',', array_fill(0, count($countryIds), '?'));
-        $bindTypes = str_repeat('i', count($countryIds)) . 'i' . 'i';
-
-        $sql = "
-            SELECT 
-                movies.id,
-                movies.title,
-                movies.release_year,
-                movies.poster_url,
-                countries.name AS country_name,
-                languages.name AS language_name,
-                ROUND(COALESCE(AVG(ratings_reviews.rating), 0), 2) AS avg_rating
-            FROM movies
-            LEFT JOIN ratings_reviews ON ratings_reviews.movie_id = movies.id
-            LEFT JOIN countries ON movies.country_id = countries.id
-            LEFT JOIN languages ON movies.language_id = languages.id
-            WHERE movies.country_id IN ($placeholders)
-              AND movies.id NOT IN (SELECT movie_id FROM user_favorites WHERE user_id = ?)
-            GROUP BY movies.id
-            ORDER BY (AVG(ratings_reviews.rating) IS NULL), AVG(ratings_reviews.rating) DESC, movies.release_year DESC
-            LIMIT ?
-        ";
-        $stmt = $this->db->prepare($sql);
-        $bindValues = array_merge($countryIds, [$userId, $limit]);
-        $this->bindParams($stmt, $bindTypes, $bindValues);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Movies the user favorited
@@ -292,12 +156,87 @@ class Recommend
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Recommendations based on user's favorite genres
+     * Used in: db/recommendRequests.php (action: 'favGenres'), 
+     *          pages/profile.php (recommendation tab)
+     *          "Because you like these genres"
+     */
+    public function basedOnFavoriteGenres(int $userId, int $limit = 12): array
+    {
+        if ($userId <= 0) return [];
+        $limit = $this->clampLimit($limit);
+
+        // get top genres id (limit 5)
+        $sqlTopGenres = "
+            SELECT movie_genres.genre_id, COUNT(*) AS cnt
+            FROM user_favorites
+            JOIN movie_genres ON movie_genres.movie_id = user_favorites.movie_id
+            WHERE user_favorites.user_id = ?
+            GROUP BY movie_genres.genre_id
+            ORDER BY cnt DESC
+            LIMIT 5
+        ";
+        $stmtTop = $this->db->prepare($sqlTopGenres);
+        $stmtTop->bind_param('i', $userId);
+        $stmtTop->execute();
+        $topGenres = $stmtTop->get_result()->fetch_all(MYSQLI_ASSOC);
+        if (empty($topGenres)) return [];
+        $genreIds = array_column($topGenres, 'genre_id');
+
+        $placeholders = implode(',', array_fill(0, count($genreIds), '?'));
+
+        // get movies using the top genres, excluding (NOT IN) yung favorite na
+        $sql = "
+            SELECT 
+                movies.id,
+                movies.title,
+                movies.release_year,
+                movies.poster_url,
+                countries.name AS country_name,
+                languages.name AS language_name,
+                ROUND(COALESCE(AVG(ratings_reviews.rating), 0), 2) AS avg_rating,
+                COUNT(DISTINCT movie_genres.genre_id) AS match_genres
+            FROM movies
+            JOIN movie_genres ON movie_genres.movie_id = movies.id
+            LEFT JOIN ratings_reviews ON ratings_reviews.movie_id = movies.id
+            LEFT JOIN countries ON movies.country_id = countries.id
+            LEFT JOIN languages ON movies.language_id = languages.id
+            WHERE movie_genres.genre_id IN ($placeholders)
+                AND movies.id NOT IN (SELECT movie_id FROM user_favorites WHERE user_id = ?)
+            GROUP BY movies.id
+            ORDER BY match_genres DESC, (AVG(ratings_reviews.rating) IS NULL), AVG(ratings_reviews.rating) DESC, movies.release_year DESC
+            LIMIT ?
+        ";
+        $stmt = $this->db->prepare($sql);
+
+        // Inline dynamic bind_param
+        $types = str_repeat('i', count($genreIds) + 2); // N genre_ids + userId + limit
+        $params = [ &$types ];
+        foreach ($genreIds as $k => $gid) {
+            $genreIds[$k] = (int)$gid;
+            $params[] = &$genreIds[$k];
+        }
+        $params[] = &$userId;
+        $params[] = &$limit;
+        call_user_func_array([$stmt, 'bind_param'], $params);
+
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
     /**
      * Get user's top genres (with counts)
      * Used in: db/recommendRequests.php (action: 'topGenres'), 
      *          pages/profile.php (recommendation tab)
      * If logged in:
-     * Popular in your favorites
+     *      Popular in favorites (5 top genre), proceed to getByGenre para hanapin na yung movie
      */
     public function getUserTopGenres(int $userId, int $limit = 5): array
     {
@@ -305,43 +244,17 @@ class Recommend
         $limit = $this->clampLimit($limit, 10);
 
         $sql = "
-        SELECT genres.id, genres.name, COUNT(*) AS cnt
-        FROM user_favorites
-        JOIN movie_genres ON movie_genres.movie_id = user_favorites.movie_id
-        JOIN genres ON genres.id = movie_genres.genre_id
-        WHERE user_favorites.user_id = ?
-        GROUP BY genres.id, genres.name
-        ORDER BY cnt DESC
-        LIMIT ?
-    ";
+            SELECT genres.id, genres.name, COUNT(*) AS cnt
+            FROM user_favorites
+            JOIN movie_genres ON movie_genres.movie_id = user_favorites.movie_id
+            JOIN genres ON genres.id = movie_genres.genre_id
+            WHERE user_favorites.user_id = ?
+            GROUP BY genres.id, genres.name
+            ORDER BY cnt DESC
+            LIMIT ?
+        ";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('ii', $userId, $limit);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    }
-
-    /**
-     * Get overall top genres across all users
-     * Used in: db/recommendRequests.php (action: 'topGenres')
-     * 
-     * If not logged in:
-     * - Show popular genres based on overall favorites in movie
-     */
-    public function getTopGenresOverall(int $limit = 5): array
-    {
-        $limit = $this->clampLimit($limit, 10);
-
-        $sql = "
-        SELECT genres.id, genres.name, COUNT(*) AS cnt
-        FROM user_favorites
-        JOIN movie_genres ON movie_genres.movie_id = user_favorites.movie_id
-        JOIN genres ON genres.id = movie_genres.genre_id
-        GROUP BY genres.id, genres.name
-        ORDER BY cnt DESC
-        LIMIT ?
-    ";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param('i', $limit);
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
@@ -350,38 +263,40 @@ class Recommend
      * Get movies by genre (optionally excluding user's favorites)
      * Used in: db/recommendRequests.php (action: 'byGenre'), 
      *          pages/profile.php (genre shelves)
+     * after makuha yung top 5 genre, 
+     * nagfefetch ng movie from that genre and display sa "Popular in (genre)"
      */
     public function getByGenre(int $genreId, int $userId = 0, int $limit = 12): array
     {
         $limit = $this->clampLimit($limit);
 
         $sql = "
-        SELECT 
-            movies.id,
-            movies.title,
-            movies.release_year,
-            movies.poster_url,
-            countries.name AS country_name,
-            languages.name AS language_name,
-            ROUND(COALESCE(AVG(ratings_reviews.rating), 0), 2) AS avg_rating,
-            COUNT(ratings_reviews.id) AS total_reviews
-        FROM movies
-        JOIN movie_genres ON movie_genres.movie_id = movies.id
-        LEFT JOIN ratings_reviews ON ratings_reviews.movie_id = movies.id
-        LEFT JOIN countries ON movies.country_id = countries.id
-        LEFT JOIN languages ON movies.language_id = languages.id
-        WHERE movie_genres.genre_id = ?
-    ";
+            SELECT 
+                movies.id,
+                movies.title,
+                movies.release_year,
+                movies.poster_url,
+                countries.name AS country_name,
+                languages.name AS language_name,
+                ROUND(COALESCE(AVG(ratings_reviews.rating), 0), 2) AS avg_rating,
+                COUNT(ratings_reviews.id) AS total_reviews
+            FROM movies
+            JOIN movie_genres ON movie_genres.movie_id = movies.id
+            LEFT JOIN ratings_reviews ON ratings_reviews.movie_id = movies.id
+            LEFT JOIN countries ON movies.country_id = countries.id
+            LEFT JOIN languages ON movies.language_id = languages.id
+            WHERE movie_genres.genre_id = ?
+        ";
 
         if ($userId > 0) {
             $sql .= " AND movies.id NOT IN (SELECT movie_id FROM user_favorites WHERE user_id = ?)";
         }
 
         $sql .= "
-        GROUP BY movies.id
-        ORDER BY (AVG(ratings_reviews.rating) IS NULL), AVG(ratings_reviews.rating) DESC, movies.release_year DESC
-        LIMIT ?
-    ";
+            GROUP BY movies.id
+            ORDER BY (AVG(ratings_reviews.rating) IS NULL), AVG(ratings_reviews.rating) DESC, movies.release_year DESC
+            LIMIT ?
+        ";
 
         $stmt = $this->db->prepare($sql);
 
@@ -395,7 +310,79 @@ class Recommend
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
+    /**
+     * Recommendations based on user's favorite countries
+     * Used in: db/recommendRequests.php (action: 'favCountries'), 
+     *          pages/profile.php (recommendation tab) 
+     *          "From countries you like"
+     */
+    public function basedOnFavoriteCountries(int $userId, int $limit = 12): array
+    {
+        if ($userId <= 0) return [];
+        $limit = $this->clampLimit($limit);
+
+        // fetch yung top 3 country id
+        $sqlTopCountries = "
+            SELECT movies.country_id, COUNT(*) AS cnt
+            FROM user_favorites
+            JOIN movies ON movies.id = user_favorites.movie_id
+            WHERE user_favorites.user_id = ? AND movies.country_id IS NOT NULL
+            GROUP BY movies.country_id
+            ORDER BY cnt DESC
+            LIMIT 3
+        ";
+        $stmtTop = $this->db->prepare($sqlTopCountries);
+        $stmtTop->bind_param('i', $userId);
+        $stmtTop->execute();
+        $topCountryRows = $stmtTop->get_result()->fetch_all(MYSQLI_ASSOC);
+        if (empty($topCountryRows)) return [];
+        $countryIds = array_column($topCountryRows, 'country_id');
+
+        $placeholders = implode(',', array_fill(0, count($countryIds), '?'));
+
+        // fetch movie na gamit yung top 3 country id, excluding (NOT IN) yung favorite na 
+        $sql = "
+            SELECT 
+                movies.id,
+                movies.title,
+                movies.release_year,
+                movies.poster_url,
+                countries.name AS country_name,
+                languages.name AS language_name,
+                ROUND(COALESCE(AVG(ratings_reviews.rating), 0), 2) AS avg_rating
+            FROM movies
+            LEFT JOIN ratings_reviews ON ratings_reviews.movie_id = movies.id
+            LEFT JOIN countries ON movies.country_id = countries.id
+            LEFT JOIN languages ON movies.language_id = languages.id
+            WHERE movies.country_id IN ($placeholders)
+                AND movies.id NOT IN (SELECT movie_id FROM user_favorites WHERE user_id = ?)
+            GROUP BY movies.id
+            ORDER BY (AVG(ratings_reviews.rating) IS NULL), AVG(ratings_reviews.rating) DESC, movies.release_year DESC
+            LIMIT ?
+        ";
+        $stmt = $this->db->prepare($sql);
+
+        // Inline dynamic bind_param
+        $types = str_repeat('i', count($countryIds) + 2); // N country_ids + userId + limit
+        $params = [ &$types ];
+        foreach ($countryIds as $k => $cid) {
+            $countryIds[$k] = (int)$cid;
+            $params[] = &$countryIds[$k];
+        }
+        $params[] = &$userId;
+        $params[] = &$limit;
+        call_user_func_array([$stmt, 'bind_param'], $params);
+
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
     
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    // Counts
     /**
      * how many times a user has favorited movies of each genre
      * Used in: db/recommendRequests.php (action: 'favGenreCounts'), 
@@ -495,22 +482,21 @@ class Recommend
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
-    /**
-     * how many unique movies a user has rated/reviewed, grouped by language
-     * Used in: db/recommendRequests.php (action: 'ratedLanguageCounts'), 
-     *          pages/profile.php (Rated pills)
-     */
-    public function getRatedCountsByLanguage(int $userId): array { return []; }
 
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * Movies related to a given movie (by shared genres)
+     * Movies related to a given movie (by genres)
      * Used in: db/recommendRequests.php (action: 'related'), 
      *          pages/viewMovie.php (related movies)
      * 
      * More shared genres first (atleast 1)
-     * Movies with ratings come before unrated movies (IS NULL trick).
-     * Higher average rating first.
-     * Newer movies first.
+     * Movies with ratings come before unrated movies (IS NULL).
+     * Highest average rating first.
+     * Latest movies first.
      */
 
     public function getRelatedToMovie(int $movieId, int $limit = 12): array
@@ -547,6 +533,12 @@ class Recommend
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
     
     //   Ensure the requested limit is within a safe range.
     //   - limit <= 0  => default to 12
@@ -558,20 +550,87 @@ class Recommend
         return $limit;
     }
 
-    
-    // Example:
-    // $typeString = 'iii';
-    // $values = [10, 20, 30];
-    // $this->bindParams($stmt, $typeString, $values);
-    private function bindParams(mysqli_stmt $statement, string $typeString, array $values): void
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////
+    // Unused
+
+    /**
+     * Latest by release year
+     * Used in: db/recommendRequests.php (action: 'latest')
+     */
+    public function getLatest(int $limit = 12): array
     {
-        $paramRefs = [];
-        $paramRefs[] = &$typeString; // first is the types string, by reference
-        foreach ($values as $index => $value) {
-            // push each value by reference; don't use the $value copy
-            // kase yung $value copy lang, di magbabago pag nagbago yung original
-            $paramRefs[] = &$values[$index];
-        }
-        call_user_func_array([$statement, 'bind_param'], $paramRefs);
+        $limit = $this->clampLimit($limit);
+        $sql = "
+            SELECT 
+                movies.id,
+                movies.title,
+                movies.release_year,
+                movies.poster_url,
+                countries.name AS country_name,
+                languages.name AS language_name,
+                ROUND(COALESCE(AVG(ratings_reviews.rating), 0), 2) AS avg_rating,
+                COUNT(ratings_reviews.id) AS total_reviews
+            FROM movies
+            LEFT JOIN ratings_reviews ON ratings_reviews.movie_id = movies.id
+            LEFT JOIN countries ON movies.country_id = countries.id
+            LEFT JOIN languages ON movies.language_id = languages.id
+            GROUP BY movies.id
+            ORDER BY movies.release_year DESC, movies.id DESC
+            LIMIT ?
+        ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('i', $limit);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
+
+    /**
+     * Get overall top genres across all users
+     * Used in: db/recommendRequests.php (action: 'topGenres')
+     * 
+     * If not logged in:
+     * - Show popular genres based on overall favorites in movie
+     */
+    public function getTopGenresOverall(int $limit = 5): array
+    {
+        $limit = $this->clampLimit($limit, 10);
+
+        $sql = "
+        SELECT genres.id, genres.name, COUNT(*) AS cnt
+        FROM user_favorites
+        JOIN movie_genres ON movie_genres.movie_id = user_favorites.movie_id
+        JOIN genres ON genres.id = movie_genres.genre_id
+        GROUP BY genres.id, genres.name
+        ORDER BY cnt DESC
+        LIMIT ?
+    ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('i', $limit);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+
 }

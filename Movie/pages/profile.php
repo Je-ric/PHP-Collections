@@ -258,7 +258,7 @@ if ($userId <= 0) {
             $.getJSON('../db/recommendRequests.php', {
                 action: 'topGenres',
                 limit: 6
-            }, res => {
+            }, res => { // after getting the topGenres id, proceed sa byGenre to get movies excluding yung favorite na
                 if (!res || !res.success || !Array.isArray(res.data)) return;
                 const list = res.data.slice(0, 6);
                 const $wrap = $('#shelfTopGenres');
@@ -269,7 +269,7 @@ if ($userId <= 0) {
                         action: 'byGenre',
                         genre_id: g.id,
                         limit: 6
-                    }, res2 => {
+                    }, res2 => { // since top 5 genre, 6 movie each
                         if (res2 && res2.success) renderShelf($('#' + shelfId), `Popular in ${g.name}`, res2.data);
                     });
                 });
