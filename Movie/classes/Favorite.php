@@ -21,7 +21,7 @@ class Favorite {
         $stmt->store_result();
         $exists = $stmt->num_rows > 0;
         $stmt->close();
-        return $exists;
+        return $exists; 
     }
 
     // add
@@ -32,11 +32,11 @@ class Favorite {
                 VALUES (?, ?)
                 ON DUPLICATE KEY UPDATE user_id = user_id";
         $stmt = $this->conn->prepare($sql);
-        if (!$stmt) return false;
+        if (!$stmt) return false; // returns to toggleFavorite()
         $stmt->bind_param('ii', $userId, $movieId);
         $ok = $stmt->execute();
         $stmt->close();
-        return $ok;
+        return $ok; //  toggleFavorite() to confirm add
     }
 
     // remove
@@ -44,21 +44,21 @@ class Favorite {
         if ($userId <= 0 || $movieId <= 0) return false;
         $sql = "DELETE FROM user_favorites WHERE user_id = ? AND movie_id = ?";
         $stmt = $this->conn->prepare($sql);
-        if (!$stmt) return false;
+        if (!$stmt) return false; // returns to toggleFavorite()
         $stmt->bind_param('ii', $userId, $movieId);
         $ok = $stmt->execute();
         $stmt->close();
-        return $ok;
+        return $ok; // toggleFavorite() to confirm remove
     }
 
     // flip the state, favorited or unfavorited
     public function toggleFavorite(int $userId, int $movieId): bool {
         if ($this->isFavorited($userId, $movieId)) {
             $this->removeFavorite($userId, $movieId);
-            return false; // now unfavorited
+            return false; // JSON "favorited": false (unfavorited)
         } else {
             $this->addFavorite($userId, $movieId);
-            return true; // now favorited
+            return true; // JSON "favorited": true (favorited)
         }
     }
 

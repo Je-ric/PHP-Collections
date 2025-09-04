@@ -12,7 +12,7 @@ function respond($success, $data = null, $message = null, $code = 200)
         'success' => $success,
         'data'    => $data,
         'message' => $message
-    ]);
+    ]); 
     exit;
 }
 
@@ -60,7 +60,7 @@ switch ($action) {
         respond(true, ['person_id' => $personId], ucfirst(strtolower($role)) . ' added successfully');
     }
 
-    // Remove a person from a movie (by link ID)
+    // Remove a person from a movie
     case 'remove': {
         if ($id <= 0) {
             respond(false, null, 'Invalid link ID', 400);
