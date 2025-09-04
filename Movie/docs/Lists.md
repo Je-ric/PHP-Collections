@@ -25,7 +25,7 @@ Open issues / tasks
     - style modal
 
 Fields (undecided)
-    - average_rating (denormalize on movies for easy avg — fewer queries)
+    - average_rating (on movies for easy avg — fewer queries)
     - runtime
     - rated
         - G (General Audience) — Suitable for all ages. No offensive content. (Toy Story)

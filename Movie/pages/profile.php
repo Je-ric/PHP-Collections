@@ -192,7 +192,7 @@ if ($userId <= 0) {
                 return;
             }
 
-            //  print and display
+            //  display
             var html =
                 '<div class="mb-1 text-sm text-gray-400">' + escapeHtml(label) + '</div>' +
                 '<div class="flex flex-wrap">' + pills.join('') + '</div>';
