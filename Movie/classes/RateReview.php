@@ -26,7 +26,7 @@ class RateReview
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("i", $movieId);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); // pages/viewMovie.php ($reviews) - all reviews
     }
 
     public function addReview($userId, $movieId, $rating, $review)
@@ -37,7 +37,7 @@ class RateReview
         ";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("iiis", $userId, $movieId, $rating, $review);
-        return $stmt->execute();
+        return $stmt->execute(); // boolean para sa success/failure response for AJAX
     }
 
     public function hasReviewed($userId, $movieId)
@@ -51,7 +51,9 @@ class RateReview
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("ii", $userId, $movieId);
         $stmt->execute();
-        return $stmt->get_result()->num_rows > 0;
+        return $stmt->get_result()->num_rows > 0; 
+        // pages/viewMovie.php - controls "Leave a Review" button and skipping user's review in the list
+        // inshort hide yung button if review na
     }
 
     public function getUserReview($userId, $movieId)
@@ -65,8 +67,9 @@ class RateReview
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("ii", $userId, $movieId);
         $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
+        return $stmt->get_result()->fetch_assoc(); // pages/viewMovie.php - for own user review card
     }
+
     public function getAverageRating($movieId)
     {
         $sql = "
@@ -83,6 +86,6 @@ class RateReview
         $avg = $result['avg_rating'] ? floatval($result['avg_rating']) : null;
         $total = intval($result['total']);
 
-        return ['avg' => $avg, 'total' => $total];
+        return ['avg' => $avg, 'total' => $total]; // pages/viewMovie.php ($ratingInfo) and para sa AJAX response
     }
 }

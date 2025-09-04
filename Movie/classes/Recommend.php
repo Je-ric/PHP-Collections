@@ -40,7 +40,7 @@ class Recommend
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('i', $limit);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); // trending -> JSON for index.php
     }
 
     /**
@@ -74,7 +74,7 @@ class Recommend
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('si', $searchLike, $limit);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); // search -> JSON for home search UI
     }
 
 
@@ -117,7 +117,7 @@ class Recommend
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('ii', $userId, $limit);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); // favorites -> JSON for pages/profile.php (Favorites tab)
     }
 
     /**
@@ -153,7 +153,7 @@ class Recommend
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('ii', $userId, $limit);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); // rated -> JSON for pages/profile.php (Rated tab)
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -216,7 +216,6 @@ class Recommend
         ";
         $stmt = $this->db->prepare($sql);
 
-        // Inline dynamic bind_param
         $types = str_repeat('i', count($genreIds) + 2); // N genre_ids + userId + limit
         $params = [ &$types ];
         foreach ($genreIds as $k => $gid) {
@@ -228,7 +227,7 @@ class Recommend
         call_user_func_array([$stmt, 'bind_param'], $params);
 
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); // favGenres -> JSON for profile "Because you like these genres"
     }
 
     /**
@@ -256,7 +255,7 @@ class Recommend
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('ii', $userId, $limit);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); // topGenres -> used by user to request para sa byGenre shelves
     }
 
     /**
@@ -307,7 +306,7 @@ class Recommend
         }
 
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); // returns movies in a genre (excluding user's favorites) to byGenre -> JSON for "Popular in <genre>" shelves
     }
 
     /**
@@ -362,7 +361,6 @@ class Recommend
         ";
         $stmt = $this->db->prepare($sql);
 
-        // Inline dynamic bind_param
         $types = str_repeat('i', count($countryIds) + 2); // N country_ids + userId + limit
         $params = [ &$types ];
         foreach ($countryIds as $k => $cid) {
@@ -374,7 +372,7 @@ class Recommend
         call_user_func_array([$stmt, 'bind_param'], $params);
 
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); // favCountries -> JSON for profile "From countries you like"
     }
     
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -404,7 +402,7 @@ class Recommend
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('i', $userId);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); // favGenreCounts -> pills in profile (Favorites)
     }
 
     /**
@@ -428,7 +426,7 @@ class Recommend
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('i', $userId);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); // favCountryCounts -> pills in profile (Favorites)
     }
 
     /**
@@ -453,7 +451,7 @@ class Recommend
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('i', $userId);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); //ratedGenreCounts -> pills in profile (Rated)
     }
 
     /**
@@ -479,7 +477,7 @@ class Recommend
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('i', $userId);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); // ratedCountryCounts -> pills in profile (Rated)
     }
 
 
@@ -531,7 +529,7 @@ class Recommend
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('iii', $movieId, $movieId, $limit);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); // related -> JSON for pages/viewMovie.php related grid
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -603,7 +601,7 @@ class Recommend
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('i', $limit);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); 
     }
 
     /**
@@ -629,7 +627,7 @@ class Recommend
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('i', $limit);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC); 
     }
 
 
