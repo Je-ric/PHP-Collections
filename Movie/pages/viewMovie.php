@@ -59,8 +59,7 @@ $favCount = $fav->countByMovie($m['id']);
                         'border-color': '#475569',
                     },
                     fontFamily: {
-                        'oswald': ['Oswald', 'sans-serif'],
-                        'anton': ['Anton', 'sans-serif'],
+                        'oswald': ['Oswald', 'sans-serif']
                     }
                 }
             }
@@ -415,8 +414,8 @@ $favCount = $fav->countByMovie($m['id']);
 
     <script>
         $(function() {
-            const $btn = $('#favorite-btn');
-            const $icon = $btn.find('i');
+            const $btn = $('#favorite-btn'); 
+            const $icon = $btn.find('i'); 
             const $text = $btn.find('.fav-text');
             const $count = $btn.find('.fav-count');
 
